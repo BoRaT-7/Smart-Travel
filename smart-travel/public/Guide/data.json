@@ -1,0 +1,236 @@
+[
+  {
+    "id": 1,
+    "name": "Mikel Fride",
+    "location": "Nafakhum Waterfall",
+    "role": "Tour Guide",
+    "rating": 5,
+    "image": "https://i.ibb.co.com/s9Ytq12G/g5.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/mikelfride",
+      "facebook": "https://facebook.com/mikelfride"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Lara Watson",
+    "location": "Saint Martin Island",
+    "role": "Travel Photographer",
+    "rating": 4.5,
+    "image": "https://i.ibb.co.com/jpkqSS9/g6.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/larawatson",
+      "facebook": "https://facebook.com/larawatson"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Rahim Khan",
+    "location": "Sajek Valley",
+    "role": "Tour Manager",
+    "rating": 4.8,
+    "image": "https://i.ibb.co.com/zT6CNps4/g7.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/rahimkhan",
+      "facebook": "https://facebook.com/rahimkhan"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Nadia Hossain",
+    "location": "Jaflong Sylhet",
+    "role": "Travel Vlogger",
+    "rating": 4.6,
+    "image": "https://i.ibb.co.com/twqcMzWY/g8.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/nadiahossain",
+      "facebook": "https://facebook.com/nadiahossain"
+    }
+  },
+  {
+    "id": 5,
+    "name": "David Lee",
+    "location": "Cox’s Bazar",
+    "role": "Beach Guide",
+    "rating": 5,
+    "image": "https://i.ibb.co.com/TMqP541g/g9.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/davidlee",
+      "facebook": "https://facebook.com/davidlee"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Tania Ahmed",
+    "location": "Bandarban Hill",
+    "role": "Travel Planner",
+    "rating": 4.7,
+    "image": "https://i.ibb.co.com/y7Pj1y9/guide-home.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/taniaahmed",
+      "facebook": "https://facebook.com/taniaahmed"
+    }
+  },
+  {
+    "id": 7,
+    "name": "John Parker",
+    "location": "Kaptai Lake",
+    "role": "Boat Rider",
+    "rating": 4.9,
+    "image": "https://i.ibb.co.com/xK6qsn50/f7.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/johnparker",
+      "facebook": "https://facebook.com/johnparker"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Mim Rahman",
+    "location": "Rangamati",
+    "role": "Local Tour Expert",
+    "rating": 4.5,
+    "image": "https://i.ibb.co.com/bj2zKtgF/pexels-swagath-mohan-4166767-13524882.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/mimrahman",
+      "facebook": "https://facebook.com/mimrahman"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Alex Brown",
+    "location": "Kuakata Sea Beach",
+    "role": "Tour Photographer",
+    "rating": 4.8,
+    "image": "https://i.ibb.co.com/chnkFLRL/Untitled-design-2.png",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/alexbrown",
+      "facebook": "https://facebook.com/alexbrown"
+    }
+  },
+  {
+    "id": 10,
+    "name": "Rafiq Islam",
+    "location": "Sundarbans Forest",
+    "role": "Nature Guide",
+    "rating": 5,
+    "image": "https://i.ibb.co.com/9HzzgZyf/f1.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/rafiqislam",
+      "facebook": "https://facebook.com/rafiqislam"
+    }
+  },
+  {
+    "id": 11,
+    "name": "Sophia James",
+    "location": "Nilgiri Hills",
+    "role": "Adventure Specialist",
+    "rating": 4.7,
+    "image": "https://i.ibb.co.com/QjXYSYY5/f2.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/sophiajames",
+      "facebook": "https://facebook.com/sophiajames"
+    }
+  },
+  {
+    "id": 12,
+    "name": "Tanvir Hasan",
+    "location": "Patenga Beach",
+    "role": "City Explorer",
+    "rating": 4.6,
+    "image": "https://i.ibb.co.com/7dmLZw4y/f3.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/tanvirhasan",
+      "facebook": "https://facebook.com/tanvirhasan"
+    }
+  },
+  {
+    "id": 13,
+    "name": "Jenny Rose",
+    "location": "Lalbagh Fort",
+    "role": "Heritage Guide",
+    "rating": 4.9,
+    "image": "https://i.ibb.co.com/rGs0p2zJ/f4.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/jennyrose",
+      "facebook": "https://facebook.com/jennyrose"
+    }
+  },
+  {
+    "id": 14,
+    "name": "Mahmud Karim",
+    "location": "Paharpur",
+    "role": "History Researcher",
+    "rating": 4.8,
+    "image": "https://i.ibb.co.com/VdLcZ1L/f5.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/mahmudkarim",
+      "facebook": "https://facebook.com/mahmudkarim"
+    }
+  },
+  {
+    "id": 15,
+    "name": "Hannah White",
+    "location": "Tea Garden Sylhet",
+    "role": "Travel Blogger",
+    "rating": 4.7,
+    "image": "https://i.ibb.co.com/G3G7yM0K/f6.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/hannahwhite",
+      "facebook": "https://facebook.com/hannahwhite"
+    }
+  },
+  {
+    "id": 16,
+    "name": "Imran Chowdhury",
+    "location": "Chimbuk Hill",
+    "role": "Hiking Instructor",
+    "rating": 4.9,
+    "image": "https://i.ibb.co.com/YBWdx1V5/f8.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/imranchowdhury",
+      "facebook": "https://facebook.com/imranchowdhury"
+    }
+  },
+  {
+    "id": 17,
+    "name": "Sadia Noor",
+    "location": "Ratargul Swamp Forest",
+    "role": "Eco Guide",
+    "rating": 5,
+    "image": "https://i.ibb.co.com/kgKCPQKH/f9.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/sadianoor",
+      "facebook": "https://facebook.com/sadianoor"
+    }
+  },
+  {
+    "id": 18,
+    "name": "Oliver Khan",
+    "location": "Tanguar Haor",
+    "role": "Tour Operator",
+    "rating": 4.8,
+    "image": "https://i.ibb.co.com/1t7qHRzc/f10.jpg",
+    "social": {
+      "whatsapp": "https://wa.me/8801700000000",
+      "instagram": "https://instagram.com/oliverkhan",
+      "facebook": "https://facebook.com/oliverkhan"
+    }
+  }
+]

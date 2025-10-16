@@ -1,18 +1,30 @@
+// Router.jsx (fixed)
 import { createBrowserRouter } from "react-router-dom";
-import Homelayout from "../Layout/Homelayout"
+import Homelayout from "../Layout/Homelayout";
+import Login from "../Pages/Login";
+import Register from "../Pages/Register";
+import TopDestinationDetails from "../Pages/TopDestinationDetails"; // ✅ এই লাইনটা যোগ করো
 
 const Router = createBrowserRouter([
   {
-    path:"/",
-    element: <Homelayout></Homelayout>
+    path: "/",
+    element: <Homelayout />,
   },
   {
-    path:"/news",
-    element:<h1>News Layout</h1>
+    path: "/news",
+    element: <h1>News Layout</h1>,
   },
   {
-    path:"auth",
-    element:<h2>Login</h2>
+    path: "/destination/:id",
+    element: <TopDestinationDetails />, // ✅ এখন এটা কাজ করবে
+  },
+  {
+    path: "/auth/login",
+    element: <Login />,
+  },
+  {
+    path: "/auth/register",
+    element: <Register />, // ✅ ছোট ফিক্স
   },
   {
     path: "*",

@@ -11,7 +11,7 @@ const Header = () => {
             to="/"
             className="font-bold text-xl lg:text-2xl text-white flex items-center gap-1"
           >
-            <span className="text-orange-400 text-3xl">S</span>mart Travel
+            <span className="text-red-500 text-3xl">S</span>mart Travel
           </Link>
         </div>
 
@@ -55,11 +55,12 @@ const Header = () => {
         {/* Right: Buttons */}
         <div className="navbar-end flex gap-2">
           <Link
-            to="/auth/login"
-            className="btn btn-sm bg-white text-[#157ECE] hover:bg-blue-400 hover:text-white font-semibold border-none transition-all duration-200"
-          >
-            Login
-          </Link>
+  to="/auth/login"
+  className="btn btn-sm bg-white text-[#157ECE] hover:bg-blue-400 hover:text-white font-semibold border-none transition-all duration-200"
+>
+  Login
+</Link>
+
           <Link
             to="/auth/register"
             className="btn btn-sm bg-white text-[#157ECE] hover:bg-blue-400 hover:text-white font-semibold border-none transition-all duration-200"

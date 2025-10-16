@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { FaShoppingBag, FaMapMarkedAlt, FaRoute } from "react-icons/fa";
+
 import slide1 from "../assets/navberImages/slide1.jpg";
 import slide2 from "../assets/navberImages/slide2.jpg";
 import slide3 from "../assets/navberImages/slide3.jpg";
 import slide4 from "../assets/navberImages/slide4.jpg";
-
-import shopGear from "../assets/Logo/Shop Gear.png";
-import planTrip from "../assets/Logo/plan trip.png";
-import destinationLogo from "../assets/Logo/destination logo.png";
 
 const Navber = () => {
   const slides = [slide1, slide2, slide3, slide4];
@@ -19,69 +17,78 @@ const Navber = () => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  const prevSlide = () => {
-    setCurrent((current - 1 + slides.length) % slides.length);
-  };
+  const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
 
-  const nextSlide = () => {
-    setCurrent((current + 1) % slides.length);
-  };
+  const actions = [
+    { icon: <FaShoppingBag size={20} />, label: "Shop Gear", aria: "Shop Gear" },
+    { icon: <FaRoute size={20} />, label: "Plan Trip", aria: "Plan Trip" },
+    { icon: <FaMapMarkedAlt size={20} />, label: "Destination Guide", aria: "Destination Guide" },
+  ];
 
   return (
-    <div className="w-full h-[500px] relative overflow-hidden">
-      {/* Background Slideshow */}
-      <img
-        src={slides[current]}
-        alt={`Slide ${current + 1}`}
-        className="w-full h-full object-cover transition duration-1000"
-      />
+    <section className="relative w-full">
+      {/* Hero container */}
+      <div className="relative w-full h-[420px] md:h-[560px] lg:h-[620px] overflow-hidden  shadow-lg">
+        {/* Slide image */}
+        <img
+          src={slides[current]}
+          alt={`Slide ${current + 1}`}
+          className="w-full h-full object-cover transition-transform duration-[1100ms] ease-in-out"
+        />
 
-      {/* Overlay Text */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <h1 className="text-white font-extrabold text-5xl text-center drop-shadow-lg">
-          Find Your Destination
-        </h1>
-      </div>
+        {/* Top gradient for contrast */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
 
-      {/* Navigation Buttons */}
-      <div className="absolute inset-0 flex items-center justify-between px-5">
-        <button
-          onClick={prevSlide}
-          className="btn btn-circle bg-black/40 border-none text-white hover:bg-black/70 transition"
-        >
-          ❮
-        </button>
-        <button
-          onClick={nextSlide}
-          className="btn btn-circle bg-black/40 border-none text-white hover:bg-black/70 transition"
-        >
-          ❯
-        </button>
-      </div>
+        {/* Text */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+          <h1 className="text-white font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-lg tracking-tight">
+            Find Your <span className="text-[#38bdf8] underline decoration-4">Destination</span>
+          </h1>
+          <p className="mt-3 text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">
+            Discover new adventures, plan your journey, and explore the world with us.
+          </p>
+        </div>
 
-      {/* 3 Horizontal Buttons Section */}
-      <div className="absolute bottom-[-70px] left-1/2 -translate-x-1/2 w-full md:w-auto flex flex-col md:flex-row justify-center items-center gap-8 py-20 px-4 rounded-t-3xl shadow-lg">
-        {[
-          { img: shopGear, label: "Shop Gear" },
-          { img: planTrip, label: "Plan Trip" },
-          { img: destinationLogo, label: "Destination Guide" },
-        ].map((item, index) => (
+        {/* Arrows - always visible, semi-transparent */}
+        <div className="absolute inset-0 flex items-center justify-between px-3 md:px-8 pointer-events-none">
           <button
-            key={index}
-            className="flex items-center gap-3 bg-teal-600 hover:bg-[#0f304a] transition transform hover:scale-105 rounded-2xl px-4 py-3 text-white shadow-md"
+            onClick={prevSlide}
+            aria-label="Previous slide"
+            className="pointer-events-auto btn btn-circle bg-black/40 border-none text-white hover:bg-black/70 transition focus:outline-none focus:ring-2 focus:ring-white"
           >
-            <img
-              src={item.img}
-              alt={item.label}
-              className="h-8 w-8 object-contain"
-            />
-            <p className="font-semibold text-lg whitespace-nowrap">
-              {item.label}
-            </p>
+            ❮
           </button>
-        ))}
+
+          <button
+            onClick={nextSlide}
+            aria-label="Next slide"
+            className="pointer-events-auto btn btn-circle bg-black/40 border-none text-white hover:bg-black/70 transition focus:outline-none focus:ring-2 focus:ring-white"
+          >
+            ❯
+          </button>
+        </div>
       </div>
-    </div>
+
+      {/* Action buttons (responsive) */}
+      <div className="w-full flex justify-center">
+        {/* Desktop overlap: use negative translate on md and up; on small screens this becomes normal stacked area */}
+        <div className="mt-6 md:mt-0 md:-translate-y-16 lg:-translate-y-20 z-50 w-full max-w-5xl px-4">
+          <div className="mx-auto flex flex-col md:flex-row items-center md:justify-center gap-4 md:gap-6">
+            {actions.map((a, idx) => (
+              <button
+                key={idx}
+                aria-label={a.aria}
+                className="w-full md:w-auto flex items-center justify-center gap-3 bg-gradient-to-r from-[#157ECE] to-[#0F3554] text-white font-semibold rounded-xl px-5 py-3 shadow-2xl transform hover:scale-105 transition duration-200 focus:outline-none focus:ring-4 focus:ring-[#157ECE]/40"
+              >
+                <span className="text-lg">{a.icon}</span>
+                <span className="text-sm sm:text-base">{a.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 

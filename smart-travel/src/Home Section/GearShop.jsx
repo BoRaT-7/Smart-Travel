@@ -56,7 +56,7 @@ const GearShop = () => {
   {/* Rating stars */}
   <div className="flex -mt-2 items-center justify-center">
     {Array.from({ length: item.rating }).map((_, i) => (
-      <span key={i} className="text-yellow-400 text-lg">
+      <span key={i} className="text-red-400 text-lg">
         ★
       </span>
     ))}
