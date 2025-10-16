@@ -1,0 +1,165 @@
+{
+  "products": [
+    {
+      "name": "Pink Umbrella",
+      "price": "80$",
+      "description": "Bright pink umbrella for rain or shine — stylish and durable.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/cXLC1BZm/1000-F-295954712-T9xmyres-Rnm-Zm3-Is-Ag4c-PHJLi-Ar-ITFcn.jpg"
+    },
+    {
+      "name": "Travel Backpack",
+      "price": "60$",
+      "description": "Lightweight and durable backpack — perfect for travel lovers.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/SwRDvKSS/backpacking-discover-the-best-way-to-travel-on-a-budget.jpg"
+    },
+    {
+      "name": "Adventure Pack",
+      "price": "75$",
+      "description": "Strong and stylish backpack designed for outdoor trips.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/zW0zxKGF/ghk-0923-travelbackpacks-143-web-1-6515dd398e088.jpg"
+    },
+    {
+      "name": "Casual Day Bag",
+      "price": "45$",
+      "description": "Perfect for daily use — simple, light, and convenient.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/tTJN3L9P/gitanjali-parida-ZAHCf-Gj-DDa4-unsplash.jpg"
+    },
+    {
+      "name": "Wireless Headphones",
+      "price": "120$",
+      "description": "Experience high-quality sound with premium wireless headphones.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/xqnLy5qY/headphone.jpg"
+    },
+    {
+      "name": "Smart Speaker",
+      "price": "95$",
+      "description": "Voice-controlled smart speaker for your home and office.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/wF7V427t/hq720.jpg"
+    },
+    {
+      "name": "Compact Camera",
+      "price": "150$",
+      "description": "Capture your memories in HD with this compact travel camera.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/jZvXtMxH/images.jpg"
+    },
+    {
+      "name": "Bluetooth Earbuds",
+      "price": "70$",
+      "description": "Compact, high-quality sound earbuds with long battery life.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/RTtKGj1b/OIP.webp"
+    },
+    {
+      "name": "Sneakers Model 1",
+      "price": "85$",
+      "description": "Comfortable sneakers with modern design and durability.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/1YC28CmM/s1.jpg"
+    },
+    {
+      "name": "Sneakers Model 2",
+      "price": "89$",
+      "description": "Trendy sneakers built for both comfort and performance.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/dsnHDyPp/s2.jpg"
+    },
+    {
+      "name": "Sneakers Model 3",
+      "price": "79$",
+      "description": "Sporty and stylish footwear for everyday wear.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/cXSBNxf4/s3.jpg"
+    },
+    {
+      "name": "Sneakers Model 4",
+      "price": "82$",
+      "description": "Designed for comfort and energy return with each step.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/nMqmX6Z4/s4.jpg"
+    },
+    {
+      "name": "Sneakers Model 5",
+      "price": "95$",
+      "description": "Breathable and flexible sneakers for all-day wear.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/qFNNHcWD/s5.jpg"
+    },
+    {
+      "name": "Sneakers Model 6",
+      "price": "90$",
+      "description": "High-quality running shoes with lightweight support.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/ZRLvvnHt/s6.jpg"
+    },
+    {
+      "name": "Sneakers Model 7",
+      "price": "88$",
+      "description": "Comfort meets performance in this modern sneaker.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/JW7kqm52/s7.jpg"
+    },
+    {
+      "name": "Sneakers Model 8",
+      "price": "92$",
+      "description": "Premium design sneakers for daily comfort and fashion.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/QvGkf0vn/s8.jpg"
+    },
+    {
+      "name": "Sneakers Model 9",
+      "price": "80$",
+      "description": "Affordable stylish sneakers with great grip and fit.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/WNJG1GsL/s9.jpg"
+    },
+    {
+      "name": "Sneakers Model 10",
+      "price": "78$",
+      "description": "Sport-inspired everyday sneakers for men and women.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/KxVMsWDt/s10.jpg"
+    },
+    {
+      "name": "Sneakers Model 11",
+      "price": "85$",
+      "description": "Durable and flexible sneakers with cushioned sole.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/ZpdCn75G/s11.jpg"
+    },
+    {
+      "name": "Sneakers Model 12",
+      "price": "83$",
+      "description": "Lightweight, trendy sneakers for casual use.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/Q3sTVDpg/s12.jpg"
+    },
+    {
+      "name": "Home Decor Lamp",
+      "price": "110$",
+      "description": "Modern lamp that adds style and comfort to your home.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/DDT4wXm1/shop-home.png"
+    },
+    {
+      "name": "Sleep Mask",
+      "price": "30$",
+      "description": "Soft and comfortable sleep mask for a better night’s rest.",
+      "rating": 5,
+      "image_url": "https://i.ibb.co.com/Kp8k7mZt/sleepmasks-2048px-8562.webp"
+    },
+    {
+      "name": "Custom Design Poster",
+      "price": "25$",
+      "description": "Beautiful wall art poster — perfect for your room or office.",
+      "rating": 4,
+      "image_url": "https://i.ibb.co.com/ZpwNxYNV/Untitled-design-2.png"
+    }
+  ]
+}
