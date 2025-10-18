@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../provider/Authprovider";
+import { FaUserCircle } from "react-icons/fa"; // default icon
 
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
@@ -28,10 +29,20 @@ const Header = () => {
         <div className="flex gap-3 items-center">
           {user ? (
             <>
+              {/* Profile picture */}
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="profile"
+                  className="w-8 h-8 rounded-full border-2 border-white"
+                />
+              ) : (
+                <FaUserCircle size={28} />
+              )}
               <span className="font-semibold">{getFirstName()}</span>
               <button
                 onClick={logout}
-                className="btn btn-sm bg-white text-[#157ECE] hover:bg-blue-400 hover:text-white border-none"
+                className="btn btn-sm bg-white px-2 text-[#157ECE] hover:bg-blue-400 hover:text-white border-none"
               >
                 Logout
               </button>
