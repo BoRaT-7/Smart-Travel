@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { MapPin, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const TopDestination = () => {
   const [destinations, setDestinations] = useState([]);
   const [visibleCount, setVisibleCount] = useState(6);
   const [loading, setLoading] = useState(true);
-  const [query, setQuery] = useState(""); // search query
+  const [query, setQuery] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Fetch destinations from JSON
   useEffect(() => {
     fetch("/TopDestination/data.json")
       .then((res) => res.json())
@@ -18,30 +21,43 @@ const TopDestination = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading JSON:", err);
+        setError("Failed to load destinations.");
         setLoading(false);
       });
   }, []);
 
+  // Reset visibleCount on query change
+  useEffect(() => {
+    setVisibleCount(6);
+  }, [query]);
+
   const handleSeeMore = () => setVisibleCount(destinations.length);
 
-  // Filter destinations based on search query
-  const filteredDestinations = destinations.filter(
-    (item) =>
-      item.destination.toLowerCase().includes(query.toLowerCase()) ||
-      item.location.toLowerCase().includes(query.toLowerCase())
+  // Filter destinations by search query
+  const filteredDestinations = useMemo(
+    () =>
+      destinations.filter(
+        (item) =>
+          item.destination.toLowerCase().includes(query.toLowerCase()) ||
+          item.location.toLowerCase().includes(query.toLowerCase())
+      ),
+    [destinations, query]
   );
 
-  if (loading) {
+  if (loading)
     return (
       <div className="flex justify-center items-center py-20">
         <span className="loading loading-spinner loading-lg text-blue-600"></span>
       </div>
     );
-  }
+
+  if (error)
+    return (
+      <div className="text-center py-20 text-red-500 font-semibold">{error}</div>
+    );
 
   return (
-    <section className="">
+    <section className="bg-gradient-to-b from-gray-50 to-white py-12 -mt-12">
       {/* Header */}
       <div className="text-center max-w-4xl mx-auto mb-10 px-4">
         <p className="text-blue-600 font-medium text-lg md:text-xl tracking-wide uppercase">
@@ -73,14 +89,23 @@ const TopDestination = () => {
             <FaSearch /> Search
           </button>
         </form>
+
+        {filteredDestinations.length === 0 && (
+          <p className="text-center text-gray-500 mt-6">
+            No destinations match your search.
+          </p>
+        )}
       </div>
 
       {/* Destinations Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6 md:px-10 lg:px-20">
         {filteredDestinations.slice(0, visibleCount).map((item) => (
-          <div
+          <motion.div
             key={item.id}
             className="card bg-white/90 backdrop-blur-md shadow-md hover:shadow-2xl transition duration-300 rounded-2xl overflow-hidden border border-gray-100"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
             {/* Image */}
             <figure className="relative">
@@ -105,33 +130,39 @@ const TopDestination = () => {
                   From {item.price} <span className="text-red-500">{item.currency}</span>
                 </p>
               </div>
-              <div className="mt-5 flex justify-between items-center gap-3">
+              <div className="mt-5 flex flex-col sm:flex-row justify-between items-center gap-3">
                 <button
                   onClick={() => navigate(`/destination/${item.id}`)}
-                  className="btn btn-sm bg-blue-600 hover:bg-blue-700 border-none text-white font-semibold px-4 py-2 rounded-lg transition"
+                  className="btn btn-sm bg-blue-600 hover:bg-blue-700 border-none text-white font-semibold px-4 py-2 rounded-lg transition w-full sm:w-auto"
                 >
                   View Details
                 </button>
-                <button className="btn btn-sm bg-green-600 hover:bg-green-700 border-none text-white font-semibold px-4 py-2 rounded-lg transition">
+                <button
+                  onClick={() => alert(`Booking for ${item.destination} coming soon!`)}
+                  className="btn btn-sm bg-green-600 hover:bg-green-700 border-none text-white font-semibold px-4 py-2 rounded-lg transition w-full sm:w-auto"
+                >
                   Book Now
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* See More Button */}
-      {visibleCount < filteredDestinations.length && (
-        <div className="text-center mt-10">
-          <button
-            onClick={handleSeeMore}
-            className="btn bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded-lg font-semibold shadow-md transition-all"
-          >
-            See More
-          </button>
-        </div>
-      )}
+ 
+{visibleCount < filteredDestinations.length && (
+  <div className="text-center mt-4 px-4 sm:px-20">
+    <motion.button
+      onClick={handleSeeMore}
+      whileHover={{ scale: 1.03, boxShadow: "0px 8px 25px rgba(56,189,248,0.4)" }}
+      whileTap={{ scale: 0.97 }}
+      className="w-full px-6 py-3 font-medium text-black transition-all duration-300 rounded-full bg-gradient-to-r from-[#38bdf8] via-[#0ea5e9] to-[#157ECE] shadow-md hover:from-[#0ea5e9] hover:to-[#38bdf8]"
+    >
+      <span className="text-xl font-bold tracking-wide">See More</span>
+    </motion.button>
+  </div>
+)}
     </section>
   );
 };

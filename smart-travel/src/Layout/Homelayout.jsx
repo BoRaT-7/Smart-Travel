@@ -10,32 +10,16 @@ import TransportBooking from '../Home Section/TransportBooking';
 const Homelayout = () => {
   return (
     <div>
-      <header>
-        <Header />
-      </header>
-      <nav>
-        <Navber />
-      </nav>
+      <Header />
+      <Navber />
       <main>
-        <section id="top-destination">
-          <TopDestination />
-        </section>
-        <section id="gear-shop">
-          <GearShop />
-        </section>
-        <section id="hotel-booking">
-          <HotelBooking />
-        </section>
-        <section id="guide-slider">
-          <GuideSlider />
-        </section>
-        <section id="transport-booking">
-          <TransportBooking />
-        </section>
+        <section id="top-destination"><TopDestination /></section>
+        <section id="gear-shop"><GearShop /></section>
+        <section id="hotel-booking"><HotelBooking /></section>
+        <section id="guide-slider"><GuideSlider /></section>
+        <section id="transport-booking"><TransportBooking /></section>
       </main>
-      <footer>
-        <Footer />
-      </footer>
+      <Footer />
     </div>
   );
 };

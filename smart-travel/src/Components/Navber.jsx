@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  FaShoppingBag,
-  FaMapMarkedAlt,
-  FaRoute,
-  FaHotel,
-  FaBusAlt,
-} from "react-icons/fa";
+import { FaShoppingBag, FaMapMarkedAlt, FaRoute, FaHotel, FaBusAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 import slide1 from "../assets/navberImages/slide1.jpg";
@@ -24,25 +18,21 @@ const Navber = () => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  const prevSlide = () =>
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+  const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
 
-  // 👉 Function for smooth scroll
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const actions = [
-  { icon: <FaHotel size={20} />, label: "Hotel Booking", id: "hotel-booking" },
-  { icon: <FaShoppingBag size={20} />, label: "Shop Gear", id: "gear-shop" },
-  { icon: <FaRoute size={20} />, label: "Plan Trip", id: "top-destination" },
-  { icon: <FaMapMarkedAlt size={20} />, label: "Destination Guide", id: "guide-slider" },
-  { icon: <FaBusAlt size={20} />, label: "Transport Booking", id: "transport-booking" },
-];
+    { icon: <FaHotel size={20} />, label: "Hotel Booking", id: "hotel-booking" },
+    { icon: <FaShoppingBag size={20} />, label: "Shop Gear", id: "gear-shop" },
+    { icon: <FaRoute size={20} />, label: "Plan Trip", id: "top-destination" },
+    { icon: <FaMapMarkedAlt size={20} />, label: "Destination Guide", id: "guide-slider" },
+    { icon: <FaBusAlt size={20} />, label: "Transport Booking", id: "transport-booking" },
+  ];
 
   return (
     <section className="relative w-full">
@@ -123,12 +113,12 @@ const Navber = () => {
 
       {/* Action Buttons */}
       <div className="w-full flex justify-center">
-        <div className="mt-6 md:mt-0 md:-translate-y-16 lg:-translate-y-20 z-50 w-full max-w-6xl px-4">
+        <div className="z-50 w-full max-w-6xl px-4 -translate-y-24 md:-translate-y-16 lg:-translate-y-20 mt-0">
           <div className="mx-auto flex flex-wrap justify-center md:flex-nowrap items-center gap-3 overflow-x-auto scrollbar-hide">
             {actions.map((a, idx) => (
               <motion.button
                 key={idx}
-                onClick={() => scrollToSection(a.id)} // 👈 smooth scroll
+                onClick={() => scrollToSection(a.id)}
                 className="relative group flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/30
                   text-white font-medium rounded-full px-5 py-2.5 md:px-6 md:py-3
                   hover:bg-gradient-to-r hover:from-[#38bdf8] hover:to-[#157ECE]
@@ -140,7 +130,6 @@ const Navber = () => {
                 <span className="text-lg">{a.icon}</span>
                 <span className="text-sm md:text-base whitespace-nowrap">{a.label}</span>
 
-                {/* Glow line bottom */}
                 <motion.div
                   className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#38bdf8]"
                   whileHover={{ width: "100%" }}
