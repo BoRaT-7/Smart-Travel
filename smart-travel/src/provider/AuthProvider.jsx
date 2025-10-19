@@ -1,60 +1,75 @@
 import React, { createContext, useState, useEffect } from "react";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
-  GoogleAuthProvider,
   updateProfile,
+  sendEmailVerification,
   signOut,
   onAuthStateChanged
 } from "firebase/auth";
-import app from "../firebase/firebase.config";
+import { auth, googleProvider, db } from "../firebase/firebase.config";
+import { doc, setDoc } from "firebase/firestore";
 
 export const AuthContext = createContext();
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  // Persistent login
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  const createNewUser = (email, password, firstName) => {
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then(res => {
-        return updateProfile(res.user, { displayName: firstName }).then(() => {
-          setUser({ ...res.user, displayName: firstName, photoURL: null });
-          return res.user;
-        });
-      });
+  // Registration
+  const createNewUser = async (email, password, firstName) => {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(res.user, { displayName: firstName });
+    await sendEmailVerification(res.user); // Email verification
+    setUser({ ...res.user, photoURL: null });
+    // Save user in Firestore
+    await setDoc(doc(db, "users", res.user.uid), {
+      uid: res.user.uid,
+      email: res.user.email,
+      displayName: firstName,
+      photoURL: null,
+      createdAt: new Date()
+    });
+    return res.user;
   };
 
-  const loginUser = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password)
-      .then(res => {
-        setUser({ ...res.user, photoURL: null }); // default icon for email login
-        return res.user;
-      });
+  // Login with Email/Password
+  const loginUser = async (email, password) => {
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    setUser({ ...res.user, photoURL: null });
+    return res.user;
   };
 
-  const loginWithGoogle = () => {
-    return signInWithPopup(auth, googleProvider)
-      .then(res => {
-        setUser(res.user); // Google user has photoURL
-        return res.user;
-      });
+  // Login with Google
+  const loginWithGoogle = async () => {
+    const res = await signInWithPopup(auth, googleProvider);
+    setUser(res.user);
+    // Save/update user in Firestore
+    await setDoc(doc(db, "users", res.user.uid), {
+      uid: res.user.uid,
+      email: res.user.email,
+      displayName: res.user.displayName,
+      photoURL: res.user.photoURL,
+      lastLogin: new Date()
+    }, { merge: true });
+    return res.user;
   };
 
+  // Logout
   const logout = () => signOut(auth).then(() => setUser(null));
 
   return (
-    <AuthContext.Provider value={{ user, setUser, createNewUser, loginUser, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, setUser, loading, createNewUser, loginUser, loginWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );
