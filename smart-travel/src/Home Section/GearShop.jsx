@@ -53,9 +53,7 @@ const GearShop = () => {
     <div className="min-h-screen -mt-10">
       {/* Header */}
       <div className="text-center bg-gray-100 py-6 px-4 md:px-8 lg:px-20">
-        <p className="text-gray-800 font-normal text-lg md:text-2xl lg:text-3xl">
-          Read The Top
-        </p>
+        
         <h1 className="text-[#143E5F] font-bold mt-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight">
           Shop Gear
         </h1>

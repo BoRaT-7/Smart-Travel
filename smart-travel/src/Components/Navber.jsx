@@ -11,6 +11,7 @@ const Navber = () => {
   const slides = [slide1, slide2, slide3, slide4];
   const [current, setCurrent] = useState(0);
 
+  // Auto slide every 5s
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
@@ -21,9 +22,12 @@ const Navber = () => {
   const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
 
+  // Smooth scroll
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
-    if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   const actions = [
@@ -113,7 +117,7 @@ const Navber = () => {
 
       {/* Action Buttons */}
       <div className="w-full flex justify-center">
-        <div className="z-50 w-full max-w-6xl px-4 -translate-y-24 md:-translate-y-16 lg:-translate-y-20 mt-0">
+        <div className="z-50 w-full max-w-6xl px-4 -translate-y-12 md:-translate-y-16 lg:-translate-y-20 mt-0 md:mt-0">
           <div className="mx-auto flex flex-wrap justify-center md:flex-nowrap items-center gap-3 overflow-x-auto scrollbar-hide">
             {actions.map((a, idx) => (
               <motion.button
@@ -130,6 +134,7 @@ const Navber = () => {
                 <span className="text-lg">{a.icon}</span>
                 <span className="text-sm md:text-base whitespace-nowrap">{a.label}</span>
 
+                {/* Glow line bottom */}
                 <motion.div
                   className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#38bdf8]"
                   whileHover={{ width: "100%" }}
