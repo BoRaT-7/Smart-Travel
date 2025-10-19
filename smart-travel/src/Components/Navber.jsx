@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FaShoppingBag, FaMapMarkedAlt, FaRoute } from "react-icons/fa";
+import {
+  FaShoppingBag,
+  FaMapMarkedAlt,
+  FaRoute,
+  FaHotel,
+  FaBusAlt,
+} from "react-icons/fa";
 import { motion } from "framer-motion";
 
 import slide1 from "../assets/navberImages/slide1.jpg";
@@ -18,30 +24,38 @@ const Navber = () => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+  const prevSlide = () =>
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
 
+  // 👉 Function for smooth scroll
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   const actions = [
-    { icon: <FaShoppingBag size={20} />, label: "Shop Gear", aria: "Shop Gear" },
-    { icon: <FaRoute size={20} />, label: "Plan Trip", aria: "Plan Trip" },
-    { icon: <FaMapMarkedAlt size={20} />, label: "Destination Guide", aria: "Destination Guide" },
-  ];
+  { icon: <FaHotel size={20} />, label: "Hotel Booking", id: "hotel-booking" },
+  { icon: <FaShoppingBag size={20} />, label: "Shop Gear", id: "gear-shop" },
+  { icon: <FaRoute size={20} />, label: "Plan Trip", id: "top-destination" },
+  { icon: <FaMapMarkedAlt size={20} />, label: "Destination Guide", id: "guide-slider" },
+  { icon: <FaBusAlt size={20} />, label: "Transport Booking", id: "transport-booking" },
+];
 
   return (
     <section className="relative w-full">
-      {/* Hero container */}
+      {/* Hero Section */}
       <div className="relative w-full h-[420px] md:h-[560px] lg:h-[620px] overflow-hidden shadow-lg">
-        {/* Slide image */}
         <img
           src={slides[current]}
           alt={`Slide ${current + 1}`}
           className="w-full h-full object-cover transition-transform duration-[1100ms] ease-in-out"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
-
-        {/* Cinematic text */}
+        {/* Animated Text */}
         <motion.div
           className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
           initial="hidden"
@@ -82,7 +96,7 @@ const Navber = () => {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
           >
             Discover new adventures, plan your journey, and explore the world with us.
           </motion.p>
@@ -107,21 +121,31 @@ const Navber = () => {
         </div>
       </div>
 
-      {/* Action buttons */}
+      {/* Action Buttons */}
       <div className="w-full flex justify-center">
-        <div className="mt-6 md:mt-0 md:-translate-y-16 lg:-translate-y-20 z-50 w-full max-w-5xl px-4">
-          <div className="mx-auto flex flex-col md:flex-row items-center md:justify-center gap-4 md:gap-6">
+        <div className="mt-6 md:mt-0 md:-translate-y-16 lg:-translate-y-20 z-50 w-full max-w-6xl px-4">
+          <div className="mx-auto flex flex-wrap justify-center md:flex-nowrap items-center gap-3 overflow-x-auto scrollbar-hide">
             {actions.map((a, idx) => (
               <motion.button
                 key={idx}
-                aria-label={a.aria}
-                className="w-full md:w-auto flex items-center justify-center gap-3 bg-gradient-to-r from-[#157ECE] to-[#0F3554] text-white font-semibold rounded-xl px-5 py-3 shadow-2xl focus:outline-none focus:ring-4 focus:ring-[#157ECE]/40"
-                whileHover={{ scale: 1.05 }}
+                onClick={() => scrollToSection(a.id)} // 👈 smooth scroll
+                className="relative group flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/30
+                  text-white font-medium rounded-full px-5 py-2.5 md:px-6 md:py-3
+                  hover:bg-gradient-to-r hover:from-[#38bdf8] hover:to-[#157ECE]
+                  hover:border-[#38bdf8] hover:shadow-lg hover:shadow-[#38bdf8]/30
+                  transition-all duration-500"
+                whileHover={{ scale: 1.07 }}
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 300 }}
               >
                 <span className="text-lg">{a.icon}</span>
-                <span className="text-sm sm:text-base">{a.label}</span>
+                <span className="text-sm md:text-base whitespace-nowrap">{a.label}</span>
+
+                {/* Glow line bottom */}
+                <motion.div
+                  className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#38bdf8]"
+                  whileHover={{ width: "100%" }}
+                  transition={{ duration: 0.4 }}
+                />
               </motion.button>
             ))}
           </div>

@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { MapPin, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 
 const TopDestination = () => {
   const [destinations, setDestinations] = useState([]);
   const [visibleCount, setVisibleCount] = useState(6);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState(""); // search query
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/Top Destination/data.json")
+    fetch("/TopDestination/data.json")
       .then((res) => res.json())
       .then((data) => {
         setDestinations(data);
@@ -23,6 +25,13 @@ const TopDestination = () => {
 
   const handleSeeMore = () => setVisibleCount(destinations.length);
 
+  // Filter destinations based on search query
+  const filteredDestinations = destinations.filter(
+    (item) =>
+      item.destination.toLowerCase().includes(query.toLowerCase()) ||
+      item.location.toLowerCase().includes(query.toLowerCase())
+  );
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -32,9 +41,9 @@ const TopDestination = () => {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+    <section className="">
       {/* Header */}
-      <div className="text-center max-w-4xl mx-auto px-6 mb-10">
+      <div className="text-center max-w-4xl mx-auto mb-10 px-4">
         <p className="text-blue-600 font-medium text-lg md:text-xl tracking-wide uppercase">
           Travel Experience
         </p>
@@ -44,11 +53,31 @@ const TopDestination = () => {
         <p className="text-gray-600 mt-4 text-base md:text-lg">
           Discover breathtaking landscapes, vibrant cultures, and unforgettable travel adventures.
         </p>
+
+        {/* Search Bar */}
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="mt-8 flex max-w-xl mx-auto bg-white rounded-full shadow-md overflow-hidden border border-gray-200"
+        >
+          <input
+            type="text"
+            placeholder="Search your location..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-grow px-5 py-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-l-full"
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-5 py-3 rounded-r-full hover:bg-blue-700 transition flex items-center gap-2"
+          >
+            <FaSearch /> Search
+          </button>
+        </form>
       </div>
 
       {/* Destinations Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6 md:px-10 lg:px-20">
-        {destinations.slice(0, visibleCount).map((item) => (
+        {filteredDestinations.slice(0, visibleCount).map((item) => (
           <div
             key={item.id}
             className="card bg-white/90 backdrop-blur-md shadow-md hover:shadow-2xl transition duration-300 rounded-2xl overflow-hidden border border-gray-100"
@@ -67,21 +96,15 @@ const TopDestination = () => {
 
             {/* Content */}
             <div className="bg-[#0f304a] text-white p-5 rounded-b-2xl">
-              {/* Destination Title */}
               <h2 className="text-xl font-bold">{item.destination}</h2>
-
-              {/* Location & Price Row */}
               <div className="flex justify-between items-center mt-2 text-sm text-gray-300">
                 <p className="flex items-center gap-2">
                   <MapPin size={16} /> {item.location}
                 </p>
                 <p className="text-right text-red-400 font-semibold">
-                  From {item.price}
-                  <span className="text-red-500"> {item.currency}</span>
+                  From {item.price} <span className="text-red-500">{item.currency}</span>
                 </p>
               </div>
-
-              {/* Buttons Row */}
               <div className="mt-5 flex justify-between items-center gap-3">
                 <button
                   onClick={() => navigate(`/destination/${item.id}`)}
@@ -89,10 +112,7 @@ const TopDestination = () => {
                 >
                   View Details
                 </button>
-
-                <button
-                  className="btn btn-sm bg-green-600 hover:bg-green-700 border-none text-white font-semibold px-4 py-2 rounded-lg transition"
-                >
+                <button className="btn btn-sm bg-green-600 hover:bg-green-700 border-none text-white font-semibold px-4 py-2 rounded-lg transition">
                   Book Now
                 </button>
               </div>
@@ -102,7 +122,7 @@ const TopDestination = () => {
       </div>
 
       {/* See More Button */}
-      {visibleCount < destinations.length && (
+      {visibleCount < filteredDestinations.length && (
         <div className="text-center mt-10">
           <button
             onClick={handleSeeMore}
