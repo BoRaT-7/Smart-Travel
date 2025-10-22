@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../provider/Authprovider";
-import { FaUserCircle } from "react-icons/fa"; // default icon
-import { motion } from "framer-motion";
+import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const getFirstName = () => {
     if (!user) return "";
@@ -14,96 +15,162 @@ const Header = () => {
     return "User";
   };
 
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/shop" },
+    { name: "Packages", path: "/packages" },
+  ];
+
   return (
-    <motion.div
-      initial={{ y: -100, opacity: 0 }}
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="bg-[#157ECE] fixed top-0 left-0 right-0 z-50 shadow-md"
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="fixed top-0 left-0 right-0 z-50 shadow-sm bg-gradient-to-r from-[#0A6CFF] via-[#157ECE] to-[#0AC8FF] backdrop-blur-md"
     >
-      <div className="flex justify-between items-center lg:px-16 px-4 py-2 text-white">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 lg:px-10 py-3 text-white">
         
-        {/* Logo animation */}
-        <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
-          <Link to="/" className="text-2xl font-bold flex items-center gap-1">
-            <motion.span className="text-red-500 text-3xl animate-bounce">S</motion.span>
-            mart Travel
+        {/* Logo */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          <Link
+            to="/"
+            className="text-2xl lg:text-3xl font-extrabold flex items-center gap-1 tracking-wide"
+          >
+            <motion.span
+              className="text-yellow-400 text-4xl font-black"
+              animate={{ y: [0, -5, 0] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+            >
+              S
+            </motion.span>
+            mart <span className="text-gray-100">Travel</span>
           </Link>
         </motion.div>
 
-        {/* Navigation */}
-        <ul className="hidden lg:flex gap-6 font-semibold">
-          {["Home", "Shop", "Packages"].map((item) => (
+        {/* Desktop Navigation */}
+        <ul className="hidden lg:flex gap-8 font-medium tracking-wide">
+          {navItems.map(({ name, path }) => (
             <motion.li
-              key={item}
+              key={name}
               whileHover={{ scale: 1.1, y: -2 }}
               transition={{ type: "spring", stiffness: 300 }}
-              className="cursor-pointer"
+              className="cursor-pointer hover:text-yellow-300"
             >
-              <Link to={item === "Home" ? "/" : `/${item.toLowerCase()}`}>{item}</Link>
+              <Link to={path}>{name}</Link>
             </motion.li>
           ))}
         </ul>
 
-        {/* User/Profile Section */}
-        <div className="flex gap-3 items-center">
+        {/* User Section */}
+        <div className="hidden lg:flex gap-3 items-center">
           {user ? (
             <>
               {user.photoURL ? (
                 <motion.img
                   src={user.photoURL}
                   alt="profile"
-                  className="w-8 h-8 rounded-full border-2 border-white cursor-pointer"
-                  whileHover={{ scale: 1.2, rotate: 10 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  className="w-9 h-9 rounded-full border border-white shadow-md cursor-pointer"
+                  whileHover={{ scale: 1.15 }}
                 />
               ) : (
-                <motion.div
-                  whileHover={{ scale: 1.2, rotate: 10 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <FaUserCircle size={28} />
-                </motion.div>
+                <FaUserCircle size={30} className="text-gray-100" />
               )}
               <motion.span
-                className="font-semibold cursor-default"
+                className="font-semibold text-sm"
                 whileHover={{ scale: 1.05, color: "#FFD700" }}
-                transition={{ type: "spring", stiffness: 300 }}
               >
                 {getFirstName()}
               </motion.span>
               <motion.button
                 onClick={logout}
-                className="btn btn-sm bg-white px-2 text-[#157ECE] hover:bg-blue-400 hover:text-white border-none"
-                whileHover={{ scale: 1.05, y: -2 }}
+                className="bg-white text-[#157ECE] font-medium px-3 py-1.5 rounded-full hover:bg-yellow-400 hover:text-white transition"
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 300 }}
               >
                 Logout
               </motion.button>
             </>
           ) : (
-            <>
-              {["Login", "Register"].map((btn) => (
-                <motion.div
-                  key={btn}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+            ["Login", "Register"].map((btn) => (
+              <motion.div
+                key={btn}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to={`/auth/${btn.toLowerCase()}`}
+                  className="bg-white text-[#157ECE] font-medium px-3 py-1.5 rounded-full hover:bg-yellow-400 hover:text-white transition"
                 >
+                  {btn}
+                </Link>
+              </motion.div>
+            ))
+          )}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden">
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-2xl text-white"
+          >
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.3 }}
+            className="lg:hidden bg-[#157ECE] bg-opacity-95 backdrop-blur-md text-white flex flex-col items-center py-5 space-y-4 shadow-lg"
+          >
+            {navItems.map(({ name, path }) => (
+              <Link
+                key={name}
+                to={path}
+                onClick={() => setMenuOpen(false)}
+                className="text-lg font-medium hover:text-yellow-300 transition"
+              >
+                {name}
+              </Link>
+            ))}
+            <div className="flex flex-col gap-3 pt-3 border-t border-white/20 w-full text-center">
+              {user ? (
+                <>
+                  <span className="font-semibold">{getFirstName()}</span>
+                  <button
+                    onClick={logout}
+                    className="bg-white text-[#157ECE] px-4 py-2 rounded-full font-medium hover:bg-yellow-400 hover:text-white transition"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                ["Login", "Register"].map((btn) => (
                   <Link
+                    key={btn}
                     to={`/auth/${btn.toLowerCase()}`}
-                    className="btn btn-sm bg-white text-[#157ECE] hover:bg-blue-400 hover:text-white border-none"
+                    onClick={() => setMenuOpen(false)}
+                    className="bg-white text-[#157ECE] px-4 py-2 rounded-full font-medium hover:bg-yellow-400 hover:text-white transition"
                   >
                     {btn}
                   </Link>
-                </motion.div>
-              ))}
-            </>
-          )}
-        </div>
-      </div>
-    </motion.div>
+                ))
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };
 
