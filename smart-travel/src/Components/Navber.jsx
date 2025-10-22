@@ -118,8 +118,8 @@ const Navber = () => {
                 onClick={() => scrollToSection(a.id)}
                 className="group flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/20
                   text-white font-medium rounded-full px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 
-                  hover:bg-gradient-to-r hover:from-[#38bdf8] hover:to-[#157ECE]
-                  hover:border-[#38bdf8] hover:shadow-lg hover:shadow-[#38bdf8]/30 
+                  hover:bg-gradient-to-r  hover:bg-yellow-400
+                   hover:shadow-lg hover:shadow-[#38bdf8]/30 
                   transition-all duration-500 ease-out"
                 whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.95 }}

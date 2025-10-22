@@ -12,7 +12,7 @@ const TopDestination = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch destinations from JSON
+  // Fetch destinations
   useEffect(() => {
     fetch("/TopDestination/data.json")
       .then((res) => res.json())
@@ -20,20 +20,18 @@ const TopDestination = () => {
         setDestinations(data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setError("Failed to load destinations.");
         setLoading(false);
       });
   }, []);
 
-  // Reset visibleCount on query change
   useEffect(() => {
     setVisibleCount(6);
   }, [query]);
 
   const handleSeeMore = () => setVisibleCount(destinations.length);
 
-  // Filter destinations by search query
   const filteredDestinations = useMemo(
     () =>
       destinations.filter(
@@ -57,38 +55,35 @@ const TopDestination = () => {
     );
 
   return (
-    <section className="bg-gradient-to-b from-gray-50 to-white py-12 -mt-12">
+    <section className="bg-gradient-to-b from-sky-50 via-white to-blue-50 py-16">
       {/* Header */}
-      <div className="text-center max-w-4xl mx-auto mb-10 px-4">
-        <p className="text-blue-600 font-medium text-lg md:text-xl tracking-wide uppercase">
-          Travel Experience
+      <div className="text-center max-w-4xl mx-auto mb-12 px-4">
+        <p className="text-sky-600 font-semibold text-lg md:text-xl uppercase tracking-wider">
+          Unforgettable Journeys
         </p>
-        <h1 className="text-[#143E5F] font-extrabold text-3xl sm:text-4xl md:text-5xl mt-3 leading-tight">
+        <h1 className="text-[#0B2E59] font-extrabold text-3xl sm:text-4xl md:text-5xl mt-3 leading-tight">
           Explore Top Destinations
         </h1>
         <p className="text-gray-600 mt-4 text-base md:text-lg">
-          Discover breathtaking landscapes, vibrant cultures, and unforgettable travel adventures.
+          Where every destination becomes a beautiful story to remember.
         </p>
 
         {/* Search Bar */}
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="mt-8 flex max-w-xl mx-auto bg-white rounded-full shadow-md overflow-hidden border border-gray-200"
-        >
+        <div className="mt-8 flex max-w-xl mx-auto bg-white rounded-full shadow-md border border-gray-200 focus-within:ring-2 focus-within:ring-sky-400 transition">
           <input
             type="text"
-            placeholder="Search your location..."
+            placeholder="Search your destination..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-grow px-5 py-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-l-full"
+            className="flex-grow px-5 py-3 text-gray-700 placeholder-gray-400 focus:outline-none rounded-l-full"
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white px-5 py-3 rounded-r-full hover:bg-blue-700 transition flex items-center gap-2"
+            className="bg-gradient-to-r from-sky-500 to-blue-600 text-white px-5 py-3 rounded-r-full hover:brightness-105 transition flex items-center gap-2"
           >
             <FaSearch /> Search
           </button>
-        </form>
+        </div>
 
         {filteredDestinations.length === 0 && (
           <p className="text-center text-gray-500 mt-6">
@@ -97,49 +92,57 @@ const TopDestination = () => {
         )}
       </div>
 
-      {/* Destinations Grid */}
+      {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6 md:px-10 lg:px-20">
         {filteredDestinations.slice(0, visibleCount).map((item) => (
           <motion.div
             key={item.id}
-            className="card bg-white/90 backdrop-blur-md shadow-md hover:shadow-2xl transition duration-300 rounded-2xl overflow-hidden border border-gray-100"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            whileHover={{ scale: 1.02 }}
+            className="relative rounded-3xl overflow-hidden shadow-2xl bg-white/10 backdrop-blur-lg border border-white/20 transition-all duration-500"
           >
             {/* Image */}
-            <figure className="relative">
+            <div className="relative h-72 overflow-hidden rounded-t-3xl">
               <img
                 src={item.image}
                 alt={item.destination}
-                className="w-full h-56 object-cover hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute top-4 left-4 bg-blue-600 text-white text-xs md:text-sm px-3 py-1 rounded-full flex items-center gap-1 shadow">
+
+              {/* Duration tag */}
+              <div className="absolute top-4 left-4 bg-blue-600/80 text-white text-xs sm:text-sm px-3 py-1 rounded-full flex items-center gap-1 shadow-md font-medium">
                 <Clock size={14} /> {item.duration}
               </div>
-            </figure>
+            </div>
 
-            {/* Content */}
-            <div className="bg-[#0f304a] text-white p-5 rounded-b-2xl">
-              <h2 className="text-xl font-bold">{item.destination}</h2>
-              <div className="flex justify-between items-center mt-2 text-sm text-gray-300">
-                <p className="flex items-center gap-2">
-                  <MapPin size={16} /> {item.location}
+            {/* Info & Buttons */}
+            <div className="p-5 bg-[#0B2E59] rounded-b-3xl text-white flex flex-col justify-between h-52">
+              <h2 className="text-2xl font-bold mb-2">{item.destination}</h2>
+
+              {/* Price + Location Row */}
+              <div className="flex justify-between items-center mt-1 text-sm">
+                <p className="text-amber-300 font-semibold">
+                  From <span className="text-white">{item.price}</span>{" "}
+                  <span className="text-amber-400">{item.currency}</span>{" "}
+                  <span className="text-gray-200 text-xs">(per person)</span>
                 </p>
-                <p className="text-right text-red-400 font-semibold">
-                  From {item.price} <span className="text-red-500">{item.currency}</span>
+                <p className="flex items-center gap-1 text-gray-200 font-medium">
+                  <MapPin size={14} /> {item.location}
                 </p>
               </div>
-              <div className="mt-5 flex flex-col sm:flex-row justify-between items-center gap-3">
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 mt-4">
                 <button
                   onClick={() => navigate(`/destination/${item.id}`)}
-                  className="btn btn-sm bg-blue-600 hover:bg-blue-700 border-none text-white font-semibold px-4 py-2 rounded-lg transition w-full sm:w-auto"
+                  className="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-4 py-2 rounded-lg transition"
                 >
-                  View Details
+                  View
                 </button>
                 <button
-                  onClick={() => alert(`Booking for ${item.destination} coming soon!`)}
-                  className="btn btn-sm bg-green-600 hover:bg-green-700 border-none text-white font-semibold px-4 py-2 rounded-lg transition w-full sm:w-auto"
+                  onClick={() =>
+                    alert(`Booking for ${item.destination} coming soon!`)
+                  }
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg transition"
                 >
                   Book Now
                 </button>
@@ -149,20 +152,22 @@ const TopDestination = () => {
         ))}
       </div>
 
-      {/* See More Button */}
- 
-{visibleCount < filteredDestinations.length && (
-  <div className="text-center mt-4 px-4 sm:px-20">
-    <motion.button
-      onClick={handleSeeMore}
-      whileHover={{ scale: 1.03, boxShadow: "0px 8px 25px rgba(56,189,248,0.4)" }}
-      whileTap={{ scale: 0.97 }}
-      className="w-full px-6 py-3 font-medium text-black transition-all duration-300 rounded-full bg-gradient-to-r from-[#38bdf8] via-[#0ea5e9] to-[#157ECE] shadow-md hover:from-[#0ea5e9] hover:to-[#38bdf8]"
-    >
-      <span className="text-xl font-bold tracking-wide">See More</span>
-    </motion.button>
-  </div>
-)}
+      {/* See All Button */}
+      {visibleCount < filteredDestinations.length && (
+        <div className="text-center mt-12">
+          <motion.button
+            onClick={handleSeeMore}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0 8px 30px rgba(56,189,248,0.4)",
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="px-10 py-3 font-semibold text-white text-lg rounded-full bg-gradient-to-r from-blue-600 via-sky-500 to-blue-600 shadow-lg hover:brightness-110 transition-all duration-300"
+          >
+            See All Destinations →
+          </motion.button>
+        </div>
+      )}
     </section>
   );
 };
