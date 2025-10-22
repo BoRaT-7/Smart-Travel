@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FaShoppingBag, FaMapMarkedAlt, FaRoute, FaHotel, FaBusAlt } from "react-icons/fa";
+import {
+  FaShoppingBag,
+  FaMapMarkedAlt,
+  FaRoute,
+  FaHotel,
+  FaBusAlt,
+} from "react-icons/fa";
 import { motion } from "framer-motion";
 
 import slide1 from "../assets/navberImages/slide1.jpg";
@@ -19,10 +25,11 @@ const Navber = () => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
+  const prevSlide = () =>
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+  const nextSlide = () =>
+    setCurrent((prev) => (prev + 1) % slides.length);
 
-  // Smooth scroll
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
     if (section) {
@@ -39,19 +46,27 @@ const Navber = () => {
   ];
 
   return (
-    <section className="relative w-full">
+    <section className="relative w-full font-sans">
       {/* Hero Section */}
-      <div className="relative w-full h-[420px] md:h-[560px] lg:h-[620px] overflow-hidden shadow-lg">
-        <img
+      <div className="relative w-full h-[520px] sm:h-[560px] md:h-[600px] lg:h-[640px] overflow-hidden shadow-lg">
+        {/* Background Image */}
+        <motion.img
+          key={current}
           src={slides[current]}
           alt={`Slide ${current + 1}`}
-          className="w-full h-full object-cover transition-transform duration-[1100ms] ease-in-out"
+          className="absolute inset-0 w-full h-full object-cover"
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-        {/* Animated Text */}
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-transparent backdrop-blur-[2px]" />
+
+        {/* Text Section */}
         <motion.div
-          className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+          className="absolute inset-0 flex flex-col items-center justify-center text-center px-5"
           initial="hidden"
           animate="visible"
           variants={{
@@ -60,18 +75,18 @@ const Navber = () => {
           }}
         >
           <motion.h1
-            className="text-white font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-lg tracking-tight"
+            className="text-white font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-xl leading-snug"
             variants={{
-              hidden: { opacity: 0, x: -50, skewY: 5 },
-              visible: { opacity: 1, x: 0, skewY: 0 },
+              hidden: { opacity: 0, y: 40 },
+              visible: { opacity: 1, y: 0 },
             }}
-            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+            transition={{ type: "spring", stiffness: 120, damping: 14 }}
           >
-            Find Your{" "}
+            Discover Your Next{" "}
             <motion.span
               className="text-[#38bdf8] underline decoration-4"
               animate={{
-                scale: [1, 1.05, 1],
+                scale: [1, 1.1, 1],
                 textShadow: [
                   "0px 0px 0px #38bdf8",
                   "0px 0px 8px #38bdf8",
@@ -80,20 +95,40 @@ const Navber = () => {
               }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
-              Destination
+              Adventure
             </motion.span>
           </motion.h1>
 
           <motion.p
-            className="mt-3 text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl"
+            className="mt-3 text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed"
             variants={{
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
-            Discover new adventures, plan your journey, and explore the world with us.
+            Explore beautiful destinations, plan unforgettable trips, and start your journey with confidence.
           </motion.p>
+
+          {/* Action Buttons inside hero section */}
+          <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-3 px-4 w-full max-w-3xl">
+            {actions.map((a, idx) => (
+              <motion.button
+                key={idx}
+                onClick={() => scrollToSection(a.id)}
+                className="group flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/20
+                  text-white font-medium rounded-full px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 
+                  hover:bg-gradient-to-r hover:from-[#38bdf8] hover:to-[#157ECE]
+                  hover:border-[#38bdf8] hover:shadow-lg hover:shadow-[#38bdf8]/30 
+                  transition-all duration-500 ease-out"
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="text-lg">{a.icon}</span>
+                <span className="text-xs sm:text-sm md:text-base whitespace-nowrap">{a.label}</span>
+              </motion.button>
+            ))}
+          </div>
         </motion.div>
 
         {/* Arrows */}
@@ -101,48 +136,19 @@ const Navber = () => {
           <button
             onClick={prevSlide}
             aria-label="Previous slide"
-            className="pointer-events-auto btn btn-circle bg-black/40 border-none text-white hover:bg-black/70 transition focus:outline-none focus:ring-2 focus:ring-white"
+            className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 flex items-center justify-center 
+                       bg-black/40 rounded-full text-white hover:bg-black/70 transition duration-300 focus:outline-none"
           >
             ❮
           </button>
           <button
             onClick={nextSlide}
             aria-label="Next slide"
-            className="pointer-events-auto btn btn-circle bg-black/40 border-none text-white hover:bg-black/70 transition focus:outline-none focus:ring-2 focus:ring-white"
+            className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 flex items-center justify-center 
+                       bg-black/40 rounded-full text-white hover:bg-black/70 transition duration-300 focus:outline-none"
           >
             ❯
           </button>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="w-full flex justify-center">
-        <div className="z-50 w-full max-w-6xl px-4 -translate-y-12 md:-translate-y-16 lg:-translate-y-20 mt-0 md:mt-0">
-          <div className="mx-auto flex flex-wrap justify-center md:flex-nowrap items-center gap-3 overflow-x-auto scrollbar-hide">
-            {actions.map((a, idx) => (
-              <motion.button
-                key={idx}
-                onClick={() => scrollToSection(a.id)}
-                className="relative group flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/30
-                  text-white font-medium rounded-full px-5 py-2.5 md:px-6 md:py-3
-                  hover:bg-gradient-to-r hover:from-[#38bdf8] hover:to-[#157ECE]
-                  hover:border-[#38bdf8] hover:shadow-lg hover:shadow-[#38bdf8]/30
-                  transition-all duration-500"
-                whileHover={{ scale: 1.07 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="text-lg">{a.icon}</span>
-                <span className="text-sm md:text-base whitespace-nowrap">{a.label}</span>
-
-                {/* Glow line bottom */}
-                <motion.div
-                  className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#38bdf8]"
-                  whileHover={{ width: "100%" }}
-                  transition={{ duration: 0.4 }}
-                />
-              </motion.button>
-            ))}
-          </div>
         </div>
       </div>
     </section>
