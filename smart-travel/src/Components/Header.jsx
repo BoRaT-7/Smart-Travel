@@ -25,11 +25,10 @@ const Header = () => {
     <motion.header
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 shadow-sm bg-gradient-to-r from-[#0A6CFF] via-[#157ECE] to-[#0AC8FF] backdrop-blur-md"
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#fefcf4]/90 via-[#f9f7ef]/90 to-[#fefcf4]/90 backdrop-blur-md border-b border-emerald-200/40 shadow-md"
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 lg:px-10 py-3 text-white">
-        
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 lg:px-10 py-3 text-emerald-900">
         {/* Logo */}
         <motion.div
           whileHover={{ scale: 1.05 }}
@@ -40,26 +39,29 @@ const Header = () => {
             className="text-2xl lg:text-3xl font-extrabold flex items-center gap-1 tracking-wide"
           >
             <motion.span
-              className="text-yellow-400 text-4xl font-black"
-              animate={{ y: [0, -5, 0] }}
-              transition={{ repeat: Infinity, duration: 2 }}
+              className="text-emerald-600 text-4xl font-black"
+              animate={{ y: [0, -4, 0] }}
+              transition={{ repeat: Infinity, duration: 2.5 }}
             >
               S
             </motion.span>
-            mart <span className="text-gray-100">Travel</span>
+            mart<span className="text-lime-600 ml-1">Travel</span>
           </Link>
         </motion.div>
 
         {/* Desktop Navigation */}
-        <ul className="hidden lg:flex gap-8 font-medium tracking-wide">
+        <ul className="hidden lg:flex gap-10 font-medium tracking-wide">
           {navItems.map(({ name, path }) => (
             <motion.li
               key={name}
               whileHover={{ scale: 1.1, y: -2 }}
               transition={{ type: "spring", stiffness: 300 }}
-              className="cursor-pointer hover:text-yellow-300"
+              className="cursor-pointer relative group"
             >
-              <Link to={path}>{name}</Link>
+              <Link to={path} className="hover:text-emerald-600 transition">
+                {name}
+              </Link>
+              <span className="absolute left-0 bottom-[-4px] w-0 h-[2px] bg-emerald-500 transition-all duration-300 group-hover:w-full"></span>
             </motion.li>
           ))}
         </ul>
@@ -72,21 +74,21 @@ const Header = () => {
                 <motion.img
                   src={user.photoURL}
                   alt="profile"
-                  className="w-9 h-9 rounded-full border border-white shadow-md cursor-pointer"
+                  className="w-9 h-9 rounded-full border border-emerald-400 shadow-md cursor-pointer"
                   whileHover={{ scale: 1.15 }}
                 />
               ) : (
-                <FaUserCircle size={30} className="text-gray-100" />
+                <FaUserCircle size={30} className="text-emerald-500" />
               )}
               <motion.span
-                className="font-semibold text-sm"
-                whileHover={{ scale: 1.05, color: "#FFD700" }}
+                className="font-semibold text-sm text-emerald-800"
+                whileHover={{ scale: 1.05, color: "#059669" }}
               >
                 {getFirstName()}
               </motion.span>
               <motion.button
                 onClick={logout}
-                className="bg-white text-[#157ECE] font-medium px-3 py-1.5 rounded-full hover:bg-yellow-400 hover:text-white transition"
+                className="bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-medium px-4 py-1.5 rounded-full hover:brightness-110 shadow-md transition"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -102,7 +104,7 @@ const Header = () => {
               >
                 <Link
                   to={`/auth/${btn.toLowerCase()}`}
-                  className="bg-white text-[#157ECE] font-medium px-3 py-1.5 rounded-full hover:bg-yellow-400 hover:text-white transition"
+                  className="bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-medium px-4 py-1.5 rounded-full hover:brightness-110 shadow-md transition"
                 >
                   {btn}
                 </Link>
@@ -116,7 +118,7 @@ const Header = () => {
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => setMenuOpen(!menuOpen)}
-            className="text-2xl text-white"
+            className="text-2xl text-emerald-700"
           >
             {menuOpen ? <FaTimes /> : <FaBars />}
           </motion.button>
@@ -127,29 +129,30 @@ const Header = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -30 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
+            exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-[#157ECE] bg-opacity-95 backdrop-blur-md text-white flex flex-col items-center py-5 space-y-4 shadow-lg"
+            className="lg:hidden bg-white/90 backdrop-blur-xl text-emerald-900 flex flex-col items-center py-5 space-y-4 shadow-lg border-t border-emerald-100"
           >
             {navItems.map(({ name, path }) => (
               <Link
                 key={name}
                 to={path}
                 onClick={() => setMenuOpen(false)}
-                className="text-lg font-medium hover:text-yellow-300 transition"
+                className="text-lg font-medium hover:text-emerald-600 transition"
               >
                 {name}
               </Link>
             ))}
-            <div className="flex flex-col gap-3 pt-3 border-t border-white/20 w-full text-center">
+
+            <div className="flex flex-col gap-3 pt-3 border-t border-emerald-200 w-full text-center">
               {user ? (
                 <>
                   <span className="font-semibold">{getFirstName()}</span>
                   <button
                     onClick={logout}
-                    className="bg-white text-[#157ECE] px-4 py-2 rounded-full font-medium hover:bg-yellow-400 hover:text-white transition"
+                    className="bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-5 py-2 rounded-full font-medium hover:brightness-110 transition"
                   >
                     Logout
                   </button>
@@ -160,7 +163,7 @@ const Header = () => {
                     key={btn}
                     to={`/auth/${btn.toLowerCase()}`}
                     onClick={() => setMenuOpen(false)}
-                    className="bg-white text-[#157ECE] px-4 py-2 rounded-full font-medium hover:bg-yellow-400 hover:text-white transition"
+                    className="bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-5 py-2 rounded-full font-medium hover:brightness-110 transition"
                   >
                     {btn}
                   </Link>

@@ -40,7 +40,7 @@ const GearShop = () => {
   if (loading)
     return (
       <div className="flex justify-center items-center py-20">
-        <span className="loading loading-spinner loading-lg text-blue-600"></span>
+        <span className="loading loading-spinner loading-lg text-green-600"></span>
       </div>
     );
 
@@ -50,28 +50,40 @@ const GearShop = () => {
     );
 
   return (
-    <div className="min-h-screen -mt-10">
-      {/* Header */}
-      <div className="text-center bg-gray-100 py-6 px-4 md:px-8 lg:px-20">
-        
-        <h1 className="text-[#143E5F] font-bold mt-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight">
-          Shop Gear
-        </h1>
-        <p className="text-gray-600 mt-6 text-base sm:text-lg md:text-xl lg:text-lg max-w-4xl mx-auto">
-          Discover breathtaking landscapes, rich cultures, and unforgettable travel moments. Find the perfect gear for your adventures with ease.
-        </p>
+    <div className="min-h-screen bg-gradient-to-b from-[#f8fff9] to-[#eaf9ef]">
+      {/* 🌿 Header Section */}
+      <div className="text-center bg-gradient-to-r from-[#0B8146] via-[#13A05F] to-[#17B169] text-white py-10 rounded-b-3xl shadow-lg">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="font-bold text-3xl sm:text-4xl md:text-5xl"
+        >
+          Premium Travel Gear
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-green-50 mt-3 text-base sm:text-lg max-w-2xl mx-auto"
+        >
+          Explore quality gear designed for explorers — durable, stylish, and made for adventures.
+        </motion.p>
 
-        {/* Search Bar */}
-        <form
+        {/* 🔍 Search Bar */}
+        <motion.form
           onSubmit={(e) => e.preventDefault()}
-          className="mt-8 flex max-w-xl mx-auto bg-white rounded-full shadow-md overflow-hidden border border-gray-200 relative"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9 }}
+          className="mt-6 flex max-w-xl mx-auto bg-white rounded-full shadow-lg overflow-hidden border border-green-100 relative"
         >
           <input
             type="text"
-            placeholder="Search your product..."
+            placeholder="Search your gear..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-grow px-5 py-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-l-full"
+            className="flex-grow px-5 py-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 rounded-l-full"
           />
           {query && (
             <button
@@ -84,62 +96,59 @@ const GearShop = () => {
           )}
           <button
             type="submit"
-            className="bg-blue-600 text-white px-5 py-3 rounded-r-full hover:bg-blue-700 transition flex items-center gap-2"
+            className="bg-green-600 text-white px-5 py-3 rounded-r-full hover:bg-green-700 transition flex items-center gap-2"
           >
             <FaSearch /> Search
           </button>
-        </form>
+        </motion.form>
 
         {filteredProducts.length === 0 && (
-          <div className="text-center mt-6 text-gray-500 flex flex-col items-center gap-3">
-            <p>No products match your search.</p>
-            <div className="text-3xl animate-pulse">🛒</div>
+          <div className="text-center mt-6 text-green-100 flex flex-col items-center gap-3">
+            <p>No matching gear found.</p>
+            <div className="text-3xl animate-pulse">🎒</div>
           </div>
         )}
       </div>
 
-      {/* Products Grid */}
-      <div className="grid gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-10">
+      {/* 🛒 Products Grid */}
+      <div className="grid gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-12">
         {filteredProducts.slice(0, visible).map((item, index) => (
           <motion.div
             key={index}
-            className="card bg-white shadow-lg rounded-2xl overflow-hidden cursor-pointer"
+            className="bg-white shadow-md hover:shadow-xl rounded-2xl overflow-hidden transition-all duration-500"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.05 }}
-            whileHover={{ scale: 1.05, boxShadow: "0px 15px 30px rgba(0,0,0,0.2)" }}
+            transition={{ duration: 0.5, delay: index * 0.05 }}
           >
             <figure className="overflow-hidden">
               <img
                 src={item.image_url}
                 alt={item.name}
-                className="w-full h-52 object-cover transition-transform duration-500 hover:scale-110"
+                className="w-full h-52 object-cover transition-transform duration-700 hover:scale-105"
               />
             </figure>
-            <div className="card-body text-center p-5">
+            <div className="p-5 text-center">
               <h2 className="text-lg font-bold text-gray-800">{item.name}</h2>
               <p className="text-sm text-gray-500 mt-1">{item.description}</p>
 
-              {/* Price and Rating on same line */}
-         {/* Price on left, Rating on right */}
-<div className="flex justify-between items-center mt-3 px-4">
-  <p className="text-lg font-semibold text-blue-700">
-    Price: {item.price} {item.currency}
-  </p>
-  <div className="flex items-center">
-    {Array.from({ length: item.rating }).map((_, i) => (
-      <span key={i} className="text-yellow-400 text-lg">
-        ★
-      </span>
-    ))}
-  </div>
-</div>
+              {/* 💰 Price & Rating */}
+              <div className="flex justify-between items-center mt-3 px-2">
+                <p className="text-lg font-semibold text-green-700">
+                  {item.price} {item.currency}
+                </p>
+                <div className="flex items-center">
+                  {Array.from({ length: item.rating }).map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-lg">
+                      ★
+                    </span>
+                  ))}
+                </div>
+              </div>
 
-
-              {/* Add to Cart / Book Now Button */}
+              {/* 🛍 Button */}
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="w-full py-2 mt-4 rounded-lg font-semibold text-white bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:to-green-500 transition"
+                className="w-full py-2 mt-4 rounded-lg font-semibold text-white bg-gradient-to-r from-[#0B8146] via-[#13A05F] to-[#17B169] hover:from-[#13A05F] hover:to-[#0B8146] transition"
               >
                 {item.button_text || "Book Now"}
               </motion.button>
@@ -148,23 +157,25 @@ const GearShop = () => {
         ))}
       </div>
 
-      {/* See More Button */}
+      {/* 🌿 See More Button */}
       {visible < filteredProducts.length && (
-        <div className="text-center mt-10 px-4 sm:px-20">
+        <div className="text-center mt-12 px-6">
           <motion.button
             onClick={handleSeeMore}
             whileHover={{
               scale: 1.03,
-              boxShadow: "0px 10px 30px rgba(56,189,248,0.4)",
+              boxShadow: "0px 10px 30px rgba(16,185,129,0.3)",
             }}
             whileTap={{ scale: 0.97 }}
-            className="w-full px-6 py-3 font-medium text-white transition-all duration-300 rounded-full bg-gradient-to-r from-[#38bdf8] via-[#0ea5e9] to-[#157ECE] shadow-md hover:from-[#0ea5e9] hover:to-[#38bdf8]"
+            className="w-full max-w-md px-6 py-3 font-medium text-white rounded-full bg-gradient-to-r from-[#13A05F] via-[#0B8146] to-[#17B169] shadow-lg hover:from-[#17B169] hover:to-[#0B8146] transition-all"
           >
-            <span className="text-lg font-semibold tracking-wide">See More</span>
+            <span className="text-lg font-semibold tracking-wide">
+              See More
+            </span>
           </motion.button>
         </div>
       )}
-    </div>
+    </div> 
   );
 };
 
