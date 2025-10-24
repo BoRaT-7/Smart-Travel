@@ -59,7 +59,7 @@ const GearShop = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="min-h-screen bg-[#F8F8F5] text-gray-800" // off-white background
+      className="min-h-screen bg-[#F8F8F5] text-gray-800"
     >
       {/* Header */}
       <motion.div
@@ -185,7 +185,9 @@ const GearShop = () => {
                   </div>
                 </div>
 
+                {/* ✅ Order Now button fixed */}
                 <motion.button
+                  onClick={() => navigate("/shoporder", { state: { product: item } })} // ✅ এই লাইনটাই মূল পরিবর্তন
                   whileHover={{
                     background: "linear-gradient(to right, #059669, #A3E635)",
                     color: "#fff",
@@ -197,6 +199,7 @@ const GearShop = () => {
                 >
                   {item.button_text || "Order Now"}
                 </motion.button>
+
               </div>
             </motion.div>
           ))}

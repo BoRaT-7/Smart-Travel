@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import Header from "../../Components/Header";
 import Footer from "../../Components/Footer";
 
@@ -11,6 +12,9 @@ const GearShopall = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate();
+
+  // Fetch products
   useEffect(() => {
     fetch("/Gear Shop/data.json")
       .then((res) => res.json())
@@ -30,7 +34,7 @@ const GearShopall = () => {
     return ["All", ...new Set(cats)];
   }, [products]);
 
-  // Filter logic
+  // Filtered products
   const filteredProducts = useMemo(() => {
     return products.filter((item) => {
       const matchesQuery =
@@ -41,25 +45,27 @@ const GearShopall = () => {
     });
   }, [products, query, category]);
 
+  // Loading or error states
   if (loading)
     return (
-      <div className="flex justify-center items-center py-20">Loading...</div>
+      <div className="flex justify-center items-center py-20 text-emerald-400">
+        Loading...
+      </div>
     );
+
   if (error)
     return (
-      <div className="text-center py-20 text-red-400 font-semibold">{error}</div>
+      <div className="text-center py-20 text-red-400 font-semibold">
+        {error}
+      </div>
     );
 
   return (
     <div>
-      {/* Header */}
-      <section>
-        <Header />
-      </section>
+      <Header />
 
-      {/* Shop Section */}
       <section className="mt-10">
-        <motion.div className="min-h-screen text-gray-100 px-6 py-12">
+        <motion.div className="min-h-screen text-gray-100 px-6 py-12 bg-[#0a0a0a]">
           <h1 className="text-4xl font-extrabold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-lime-400">
             All Travel Gear
           </h1>
@@ -84,7 +90,7 @@ const GearShopall = () => {
             <FaSearch className="absolute right-12 top-1/2 -translate-y-1/2 text-emerald-400" />
           </div>
 
-          {/* Category Filter */}
+          {/* Category Buttons */}
           <div className="flex flex-wrap justify-center gap-3 mb-10">
             {categories.map((cat) => (
               <motion.button
@@ -133,16 +139,18 @@ const GearShopall = () => {
                       </p>
                       <div className="flex items-center">
                         {Array.from({ length: item.rating }).map((_, i) => (
-                          <span
-                            key={i}
-                            className="text-yellow-400 text-lg"
-                          >
+                          <span key={i} className="text-yellow-400 text-lg">
                             ★
                           </span>
                         ))}
                       </div>
                     </div>
+
+                    {/* ✅ Fixed Order Now Button */}
                     <motion.button
+                      onClick={() =>
+                        navigate("/shoporder", { state: { product: item } })
+                      }
                       whileHover={{
                         background:
                           "linear-gradient(to right, #059669, #A3E635)",
@@ -169,10 +177,7 @@ const GearShopall = () => {
         </motion.div>
       </section>
 
-      {/* Footer */}
-      <section>
-        <Footer />
-      </section>
+      <Footer />
     </div>
   );
 };

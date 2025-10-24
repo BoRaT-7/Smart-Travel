@@ -10,7 +10,7 @@ const TopDestination = () => {
   const [query, setQuery] = useState("");
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(6);
-  const [isHovered, setIsHovered] = useState(false); // new state
+  const [isHovered, setIsHovered] = useState(false); 
   const navigate = useNavigate();
   const containerRef = useRef(null);
 
@@ -37,7 +37,6 @@ const TopDestination = () => {
     [destinations, query]
   );
 
-  // Auto-scroll
   useEffect(() => {
     if (!containerRef.current || filteredDestinations.length === 0) return;
 
@@ -60,10 +59,8 @@ const TopDestination = () => {
   }, [filteredDestinations, isHovered]);
 
   const handleSeeMore = () => {
-    setVisibleCount(filteredDestinations.length);
-    if (containerRef.current) {
-      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
-    }
+    // ✅ সরাসরি /packages পেজে নেভিগেট
+    navigate("/packages");
   };
 
   if (loading)
@@ -80,10 +77,6 @@ const TopDestination = () => {
 
   return (
     <section className="relative bg-gradient-to-b from-[#fffef7] to-[#f5f2e8] py-20 overflow-hidden">
-      {/* Background leaf pattern */}
-      
-
-      {/* Smart Header */}
       <div className="text-center max-w-3xl mx-auto mb-8 px-4 relative z-10">
         <p className="text-emerald-700 font-semibold text-xs md:text-sm uppercase tracking-widest">
           Discover Nature
@@ -95,7 +88,6 @@ const TopDestination = () => {
           Experience serenity and elegance in breathtaking destinations.
         </p>
 
-        {/* Sleek Search Bar */}
         <div className="mt-5 flex max-w-md mx-auto bg-white/90 backdrop-blur-md rounded-full border border-emerald-300 shadow-sm focus-within:ring-1 focus-within:ring-emerald-500 transition">
           <input
             type="text"
@@ -113,12 +105,11 @@ const TopDestination = () => {
         </div>
       </div>
 
-      {/* Horizontal Scroll Cards */}
       <div
         ref={containerRef}
         className="relative z-10 flex gap-6 overflow-x-auto px-6 md:px-10 lg:px-20 scrollbar-hide scroll-smooth"
-        onMouseEnter={() => setIsHovered(true)} // stop scroll on hover
-        onMouseLeave={() => setIsHovered(false)} // resume scroll on leave
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {filteredDestinations.slice(0, visibleCount).map((item) => (
           <motion.div
@@ -187,17 +178,16 @@ const TopDestination = () => {
       {visibleCount < filteredDestinations.length && (
         <div className="text-center mt-12 relative z-10">
           <motion.button
-  onClick={handleSeeMore}
-  whileHover={{
-    scale: 1.05,
-    boxShadow: "0 0 25px rgba(16,185,129,0.4)",
-  }}
-  whileTap={{ scale: 0.95 }}
-  className="px-10 py-3 font-semibold text-green-700 border-2 border-green-600 text-lg rounded-full bg-transparent shadow-md hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
->
-  Show More →
-</motion.button>
-
+            onClick={handleSeeMore} // ✅ এখন এটি /packages নেভিগেট করবে
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0 0 25px rgba(16,185,129,0.4)",
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="px-10 py-3 font-semibold text-green-700 border-2 border-green-600 text-lg rounded-full bg-transparent shadow-md hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
+          >
+            Show More →
+          </motion.button>
         </div>
       )}
     </section>
