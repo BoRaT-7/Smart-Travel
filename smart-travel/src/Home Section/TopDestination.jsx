@@ -81,7 +81,7 @@ const TopDestination = () => {
   return (
     <section className="relative bg-gradient-to-b from-[#fffef7] to-[#f5f2e8] py-20 overflow-hidden">
       {/* Background leaf pattern */}
-      <div className="absolute inset-0 opacity-10 bg-[url('https://i.ibb.co/5RXvksv/leaves-bg.png')] bg-cover bg-center"></div>
+      
 
       {/* Smart Header */}
       <div className="text-center max-w-3xl mx-auto mb-8 px-4 relative z-10">
@@ -187,16 +187,17 @@ const TopDestination = () => {
       {visibleCount < filteredDestinations.length && (
         <div className="text-center mt-12 relative z-10">
           <motion.button
-            onClick={handleSeeMore}
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0 0 25px rgba(16,185,129,0.4)",
-            }}
-            whileTap={{ scale: 0.95 }}
-            className="px-10 py-3 font-semibold text-white text-lg rounded-full bg-gradient-to-r from-emerald-600 to-lime-500 shadow-lg hover:brightness-110 transition-all duration-300"
-          >
-            Show More →
-          </motion.button>
+  onClick={handleSeeMore}
+  whileHover={{
+    scale: 1.05,
+    boxShadow: "0 0 25px rgba(16,185,129,0.4)",
+  }}
+  whileTap={{ scale: 0.95 }}
+  className="px-10 py-3 font-semibold text-green-700 border-2 border-green-600 text-lg rounded-full bg-transparent shadow-md hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
+>
+  Show More →
+</motion.button>
+
         </div>
       )}
     </section>
