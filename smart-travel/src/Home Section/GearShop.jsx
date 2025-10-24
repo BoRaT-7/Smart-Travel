@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const GearShop = () => {
   const [products, setProducts] = useState([]);
@@ -9,7 +10,9 @@ const GearShop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 🔹 Fetch Data
+  const navigate = useNavigate();
+
+  // Fetch product data
   useEffect(() => {
     fetch("/Gear Shop/data.json")
       .then((res) => res.json())
@@ -25,9 +28,10 @@ const GearShop = () => {
 
   useEffect(() => setVisible(8), [query]);
 
-  const handleSeeMore = () => setVisible(products.length);
+  const handleSeeMore = () => {
+    navigate("/shop"); // Go to GearShopall page
+  };
 
-  // 🔹 Filter Logic
   const filteredProducts = useMemo(
     () =>
       products.filter(
@@ -38,7 +42,6 @@ const GearShop = () => {
     [products, query]
   );
 
-  // 🔹 Loading & Error UI
   if (loading)
     return (
       <div className="flex justify-center items-center py-20">
@@ -56,9 +59,9 @@ const GearShop = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="min-h-screen bg-gradient-to-br from-[#061E15] via-[#0B3B24] to-[#0D4428] text-gray-100"
+      className="min-h-screen bg-[#F8F8F5] text-gray-800" // off-white background
     >
-      {/* 🌿 Header Section */}
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -25 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,7 +72,7 @@ const GearShop = () => {
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.7 }}
-          className="font-extrabold text-4xl sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-lime-400"
+          className="font-extrabold text-4xl sm:text-5xl text-emerald-600"
         >
           Premium Travel Gear
         </motion.h1>
@@ -78,31 +81,31 @@ const GearShop = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-gray-300 mt-4 text-base sm:text-lg max-w-2xl mx-auto"
+          className="text-gray-600 mt-4 text-base sm:text-lg max-w-2xl mx-auto"
         >
           Discover durable, stylish, and high-quality travel gear made for explorers.
         </motion.p>
 
-        {/* 🔍 Search Bar */}
+        {/* Search Bar */}
         <motion.form
           onSubmit={(e) => e.preventDefault()}
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-6 flex max-w-xl mx-auto bg-white/10 backdrop-blur-md rounded-full shadow-lg overflow-hidden border border-emerald-600/40 relative"
+          className="mt-6 flex max-w-xl mx-auto bg-white rounded-full shadow-md overflow-hidden border border-emerald-300 relative"
         >
           <input
             type="text"
             placeholder="Search your gear..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-grow px-5 py-3 text-gray-200 placeholder-gray-400 bg-transparent focus:outline-none"
+            className="flex-grow px-5 py-3 text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 transition"
+              className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
             >
               <FaTimes />
             </button>
@@ -125,7 +128,7 @@ const GearShop = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center mt-6 text-gray-300 flex flex-col items-center gap-3"
+            className="text-center mt-6 text-gray-600 flex flex-col items-center gap-3"
           >
             <p>No matching gear found.</p>
             <div className="text-3xl animate-pulse">🎒</div>
@@ -133,16 +136,14 @@ const GearShop = () => {
         )}
       </motion.div>
 
-      {/* 🛒 Product Grid */}
+      {/* Product Grid */}
       <motion.div
         className="grid gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-14"
         initial="hidden"
         animate="visible"
         variants={{
           hidden: {},
-          visible: {
-            transition: { staggerChildren: 0.08 },
-          },
+          visible: { transition: { staggerChildren: 0.08 } },
         }}
       >
         <AnimatePresence>
@@ -158,9 +159,9 @@ const GearShop = () => {
               whileHover={{
                 scale: 1.03,
                 rotateY: 2,
-                boxShadow: "0px 10px 25px rgba(16,185,129,0.4)",
+                boxShadow: "0px 10px 25px rgba(16,185,129,0.2)",
               }}
-              className="bg-white/10 backdrop-blur-md shadow-lg hover:shadow-2xl border border-emerald-800/40 rounded-2xl overflow-hidden transition-all duration-500"
+              className="bg-white shadow-md hover:shadow-lg border border-emerald-200 rounded-2xl overflow-hidden transition-all duration-500"
             >
               <motion.figure whileHover={{ scale: 1.05 }}>
                 <img
@@ -170,26 +171,20 @@ const GearShop = () => {
                 />
               </motion.figure>
               <div className="p-5 text-center">
-                <h2 className="text-lg font-semibold text-emerald-300">
-                  {item.name}
-                </h2>
-                <p className="text-sm text-gray-400 mt-1">{item.description}</p>
+                <h2 className="text-lg font-semibold text-emerald-600">{item.name}</h2>
+                <p className="text-sm text-gray-600 mt-1">{item.description}</p>
 
-                {/* Price + Rating */}
                 <div className="flex justify-between items-center mt-3 px-2">
-                  <p className="text-lg font-semibold text-lime-400">
+                  <p className="text-lg font-semibold text-lime-600">
                     {item.price} {item.currency}
                   </p>
                   <div className="flex items-center">
                     {Array.from({ length: item.rating }).map((_, i) => (
-                      <span key={i} className="text-yellow-400 text-lg">
-                        ★
-                      </span>
+                      <span key={i} className="text-yellow-400 text-lg">★</span>
                     ))}
                   </div>
                 </div>
 
-                {/* Button */}
                 <motion.button
                   whileHover={{
                     background: "linear-gradient(to right, #059669, #A3E635)",
@@ -198,7 +193,7 @@ const GearShop = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 300 }}
-                  className="w-full py-2.5 mt-5 rounded-lg font-semibold text-emerald-400 border-2 border-emerald-500 bg-transparent transition-all duration-300"
+                  className="w-full py-2.5 mt-5 rounded-lg font-semibold text-emerald-600 border-2 border-emerald-300 bg-transparent transition-all duration-300"
                 >
                   {item.button_text || "Order Now"}
                 </motion.button>
@@ -208,22 +203,20 @@ const GearShop = () => {
         </AnimatePresence>
       </motion.div>
 
-      {/* 🌿 See More Button */}
+      {/* See More Button */}
       {visible < filteredProducts.length && (
         <div className="text-center mt-16 px-6 pb-16">
           <motion.button
             onClick={handleSeeMore}
             whileHover={{
               scale: 1.03,
-              boxShadow: "0px 10px 25px rgba(16,185,129,0.3)",
+              boxShadow: "0px 10px 25px rgba(16,185,129,0.2)",
             }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 250 }}
-            className="w-full max-w-md px-8 py-3 font-semibold text-emerald-400 border-2 border-emerald-500 rounded-full bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
+            className="w-full max-w-md px-8 py-3 font-semibold text-emerald-600 border-2 border-emerald-300 rounded-full bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
           >
-            <span className="text-lg font-semibold tracking-wide">
-              Show More →
-            </span>
+            <span className="text-lg font-semibold tracking-wide">Show More →</span>
           </motion.button>
         </div>
       )}

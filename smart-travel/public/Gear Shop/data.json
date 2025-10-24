@@ -5,6 +5,7 @@
       "price": "80$",
       "description": "Bright pink umbrella for rain or shine — stylish and durable.",
       "rating": 5,
+      "category": "Accessories",
       "image_url": "https://i.ibb.co.com/cXLC1BZm/1000-F-295954712-T9xmyres-Rnm-Zm3-Is-Ag4c-PHJLi-Ar-ITFcn.jpg"
     },
     {
@@ -12,6 +13,7 @@
       "price": "60$",
       "description": "Lightweight and durable backpack — perfect for travel lovers.",
       "rating": 4,
+      "category": "Bags",
       "image_url": "https://i.ibb.co.com/SwRDvKSS/backpacking-discover-the-best-way-to-travel-on-a-budget.jpg"
     },
     {
@@ -19,6 +21,7 @@
       "price": "75$",
       "description": "Strong and stylish backpack designed for outdoor trips.",
       "rating": 5,
+      "category": "Bags",
       "image_url": "https://i.ibb.co.com/zW0zxKGF/ghk-0923-travelbackpacks-143-web-1-6515dd398e088.jpg"
     },
     {
@@ -26,6 +29,7 @@
       "price": "45$",
       "description": "Perfect for daily use — simple, light, and convenient.",
       "rating": 4,
+      "category": "Bags",
       "image_url": "https://i.ibb.co.com/tTJN3L9P/gitanjali-parida-ZAHCf-Gj-DDa4-unsplash.jpg"
     },
     {
@@ -33,6 +37,7 @@
       "price": "120$",
       "description": "Experience high-quality sound with premium wireless headphones.",
       "rating": 5,
+      "category": "Electronics",
       "image_url": "https://i.ibb.co.com/xqnLy5qY/headphone.jpg"
     },
     {
@@ -40,6 +45,7 @@
       "price": "95$",
       "description": "Voice-controlled smart speaker for your home and office.",
       "rating": 4,
+      "category": "Electronics",
       "image_url": "https://i.ibb.co.com/wF7V427t/hq720.jpg"
     },
     {
@@ -47,6 +53,7 @@
       "price": "150$",
       "description": "Capture your memories in HD with this compact travel camera.",
       "rating": 5,
+      "category": "Electronics",
       "image_url": "https://i.ibb.co.com/jZvXtMxH/images.jpg"
     },
     {
@@ -54,6 +61,7 @@
       "price": "70$",
       "description": "Compact, high-quality sound earbuds with long battery life.",
       "rating": 4,
+      "category": "Electronics",
       "image_url": "https://i.ibb.co.com/RTtKGj1b/OIP.webp"
     },
     {
@@ -61,6 +69,7 @@
       "price": "85$",
       "description": "Comfortable sneakers with modern design and durability.",
       "rating": 5,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/1YC28CmM/s1.jpg"
     },
     {
@@ -68,6 +77,7 @@
       "price": "89$",
       "description": "Trendy sneakers built for both comfort and performance.",
       "rating": 4,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/dsnHDyPp/s2.jpg"
     },
     {
@@ -75,6 +85,7 @@
       "price": "79$",
       "description": "Sporty and stylish footwear for everyday wear.",
       "rating": 5,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/cXSBNxf4/s3.jpg"
     },
     {
@@ -82,6 +93,7 @@
       "price": "82$",
       "description": "Designed for comfort and energy return with each step.",
       "rating": 4,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/nMqmX6Z4/s4.jpg"
     },
     {
@@ -89,6 +101,7 @@
       "price": "95$",
       "description": "Breathable and flexible sneakers for all-day wear.",
       "rating": 5,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/qFNNHcWD/s5.jpg"
     },
     {
@@ -96,6 +109,7 @@
       "price": "90$",
       "description": "High-quality running shoes with lightweight support.",
       "rating": 5,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/ZRLvvnHt/s6.jpg"
     },
     {
@@ -103,6 +117,7 @@
       "price": "88$",
       "description": "Comfort meets performance in this modern sneaker.",
       "rating": 4,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/JW7kqm52/s7.jpg"
     },
     {
@@ -110,6 +125,7 @@
       "price": "92$",
       "description": "Premium design sneakers for daily comfort and fashion.",
       "rating": 5,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/QvGkf0vn/s8.jpg"
     },
     {
@@ -117,6 +133,7 @@
       "price": "80$",
       "description": "Affordable stylish sneakers with great grip and fit.",
       "rating": 4,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/WNJG1GsL/s9.jpg"
     },
     {
@@ -124,6 +141,7 @@
       "price": "78$",
       "description": "Sport-inspired everyday sneakers for men and women.",
       "rating": 4,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/KxVMsWDt/s10.jpg"
     },
     {
@@ -131,6 +149,7 @@
       "price": "85$",
       "description": "Durable and flexible sneakers with cushioned sole.",
       "rating": 5,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/ZpdCn75G/s11.jpg"
     },
     {
@@ -138,6 +157,7 @@
       "price": "83$",
       "description": "Lightweight, trendy sneakers for casual use.",
       "rating": 4,
+      "category": "Footwear",
       "image_url": "https://i.ibb.co.com/Q3sTVDpg/s12.jpg"
     },
     {
@@ -145,6 +165,7 @@
       "price": "110$",
       "description": "Modern lamp that adds style and comfort to your home.",
       "rating": 5,
+      "category": "Home & Decor",
       "image_url": "https://i.ibb.co.com/DDT4wXm1/shop-home.png"
     },
     {
@@ -152,6 +173,7 @@
       "price": "30$",
       "description": "Soft and comfortable sleep mask for a better night’s rest.",
       "rating": 5,
+      "category": "Accessories",
       "image_url": "https://i.ibb.co.com/Kp8k7mZt/sleepmasks-2048px-8562.webp"
     },
     {
@@ -159,6 +181,7 @@
       "price": "25$",
       "description": "Beautiful wall art poster — perfect for your room or office.",
       "rating": 4,
+      "category": "Home & Decor",
       "image_url": "https://i.ibb.co.com/ZpwNxYNV/Untitled-design-2.png"
     }
   ]
