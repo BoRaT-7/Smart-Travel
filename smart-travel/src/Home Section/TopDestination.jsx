@@ -158,15 +158,15 @@ const TopDestination = () => {
                   >
                     View
                   </motion.button>
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() =>
-                      alert(`Booking for ${item.destination} coming soon!`)
-                    }
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-medium hover:brightness-110 transition"
-                  >
-                    Book
-                  </motion.button>
+               <motion.button
+  whileTap={{ scale: 0.95 }}
+  onClick={() => navigate("/destination/book", { state: { destination: item } })}
+  className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-medium hover:brightness-110 transition"
+>
+  Book
+</motion.button>
+
+
                 </div>
               </div>
             </div>

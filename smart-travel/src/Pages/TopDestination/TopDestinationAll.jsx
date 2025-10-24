@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../Components/Header";
 import Footer from "../../Components/Footer";
 
+
 const TopDestinationAll = () => {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -109,15 +110,13 @@ const TopDestinationAll = () => {
                     Details
                   </motion.button>
                   <motion.button
-                    onClick={() =>
-                      alert(`Booking for ${item.destination} coming soon!`)
-                    }
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-semibold hover:brightness-110 transition"
-                  >
-                    Book Now
-                  </motion.button>
+  onClick={() => navigate("/destination/book", { state: { destination: item } })}
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-semibold hover:brightness-110 transition"
+>
+  Book Now
+</motion.button>
                 </div>
               </div>
             </motion.div>
