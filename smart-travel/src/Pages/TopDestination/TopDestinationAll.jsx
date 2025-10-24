@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Components/Header";
 import Footer from "../../Components/Footer";
-
+import { FaSearch } from "react-icons/fa";
 
 const TopDestinationAll = () => {
   const [destinations, setDestinations] = useState([]);
@@ -21,6 +21,10 @@ const TopDestinationAll = () => {
       })
       .catch(() => setLoading(false));
   }, []);
+
+  const handleSearchChange = (e) => {
+    setQuery(e.target.value);
+  };
 
   const filteredDestinations = useMemo(
     () =>
@@ -55,13 +59,17 @@ const TopDestinationAll = () => {
 
         {/* Search Bar */}
         <div className="flex justify-center mb-10">
-          <input
-            type="text"
-            placeholder="Search destinations..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full max-w-md px-4 py-3 rounded-full border border-emerald-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-700 placeholder-gray-400 transition"
-          />
+          <div className="relative w-full max-w-md">
+            <input
+              type="text"
+              name="search"
+              placeholder="Search destinations..."
+              value={query}
+              onChange={handleSearchChange}
+              className="w-full pr-10 pl-4 py-3 rounded-full border border-emerald-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-700 placeholder-gray-400 transition duration-200 bg-white"
+            />
+            <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-emerald-500 text-lg" />
+          </div>
         </div>
 
         {/* Destination Grid */}
@@ -110,13 +118,15 @@ const TopDestinationAll = () => {
                     Details
                   </motion.button>
                   <motion.button
-  onClick={() => navigate("/destination/book", { state: { destination: item } })}
-  whileHover={{ scale: 1.05 }}
-  whileTap={{ scale: 0.95 }}
-  className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-semibold hover:brightness-110 transition"
->
-  Book Now
-</motion.button>
+                    onClick={() =>
+                      navigate("/destination/book", { state: { destination: item } })
+                    }
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-semibold hover:brightness-110 transition"
+                  >
+                    Book Now
+                  </motion.button>
                 </div>
               </div>
             </motion.div>

@@ -18,7 +18,7 @@ const GuideSlider = () => {
   useEffect(() => {
     if (!containerRef.current || guides.length === 0) return;
 
-    const scrollAmount = containerRef.current.offsetWidth / 4; // scroll by one card
+    const scrollAmount = containerRef.current.offsetWidth / 4;
     const interval = setInterval(() => {
       if (containerRef.current) {
         if (containerRef.current.scrollLeft + containerRef.current.offsetWidth >= containerRef.current.scrollWidth) {
@@ -44,8 +44,8 @@ const GuideSlider = () => {
   );
 
   return (
-    <div className="w-full bg-gray-100 py-12">
-      <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+    <div className="w-full bg-[#F8F8F5] py-12">
+      <h2 className="text-3xl font-bold text-center mb-6 text-emerald-600">
         Meet Our Tour Guides
       </h2>
 
@@ -57,17 +57,17 @@ const GuideSlider = () => {
             placeholder="Search guides by name or location..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full px-5 py-3 pr-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 text-gray-700"
+            className="w-full px-5 py-3 pr-12 rounded-full border border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 placeholder-gray-400 bg-white transition"
           />
           {query && (
             <button
               onClick={() => setQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+              className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
             >
               <FaTimes />
             </button>
           )}
-          <FaSearch className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400" />
+          <FaSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-600 text-lg" />
         </div>
       </div>
 
@@ -82,7 +82,7 @@ const GuideSlider = () => {
           {filteredGuides.map((guide) => (
             <div
               key={guide.id}
-              className="flex-shrink-0 w-64 bg-white rounded-2xl shadow-lg overflow-hidden border hover:shadow-2xl transition-all"
+              className="flex-shrink-0 w-64 bg-white rounded-2xl shadow-md overflow-hidden border border-emerald-200 hover:shadow-lg transition-all"
             >
               <div className="relative">
                 <img
@@ -92,7 +92,7 @@ const GuideSlider = () => {
                 />
                 <div className="absolute top-2 right-2 flex flex-col space-y-2">
                   <a href={guide.social?.whatsapp || "#"} target="_blank" rel="noreferrer">
-                    <FaWhatsapp className="text-green-500 bg-white p-1 rounded-full w-7 h-7" />
+                    <FaWhatsapp className="text-emerald-600 bg-white p-1 rounded-full w-7 h-7" />
                   </a>
                   <a href={guide.social?.instagram || "#"} target="_blank" rel="noreferrer">
                     <FaInstagram className="text-pink-500 bg-white p-1 rounded-full w-7 h-7" />
@@ -103,9 +103,11 @@ const GuideSlider = () => {
                 </div>
               </div>
               <div className="p-4">
-                <button className="bg-blue-600 text-white px-4 py-1 rounded-md text-sm mb-2 hover:bg-blue-700 transition">
-                  Contact
-                </button>
+                <button
+  className="w-full border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition"
+>
+  Contact
+</button>
                 <h3 className="text-lg font-semibold text-gray-800">{guide.name}</h3>
                 <p className="flex items-center text-gray-600 text-sm">
                   <FaMapMarkerAlt className="mr-1 text-red-500" /> {guide.location}
@@ -123,9 +125,11 @@ const GuideSlider = () => {
       )}
 
       <div className="text-center mt-8">
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-semibold">
-          See All
-        </button>
+        <button
+  className="border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition"
+>
+  See More 
+</button>
       </div>
     </div>
   );

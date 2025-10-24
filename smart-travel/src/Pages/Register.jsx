@@ -45,18 +45,18 @@ const Register = () => {
 
     try {
       await createNewUser(form.email, form.password, form.firstName);
-      navigate("/"); // Auto redirect to home
+      navigate("/");
     } catch (err) {
       alert("Registration Error: " + err.message);
     }
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#0F3554] to-[#1B4965] flex flex-col min-h-screen">
+    <div className="bg-gradient-to-b from-emerald-700 via-emerald-600 to-lime-600 flex flex-col min-h-screen">
       <Header />
       <main className="flex-1 flex items-center justify-center p-6 mt-20">
         <div className="w-full max-w-md bg-white/95 rounded-2xl shadow-2xl p-8 backdrop-blur-sm">
-          <h2 className="text-3xl font-bold text-center text-[#157ECE] mb-6">
+          <h2 className="text-3xl font-bold text-center text-emerald-700 mb-6">
             Create Account
           </h2>
 
@@ -69,7 +69,9 @@ const Register = () => {
                 value={form.firstName}
                 onChange={handleChange}
                 placeholder="John"
-                className={`w-full px-4 py-2 rounded-md border ${errors.firstName ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-[#157ECE]`}
+                className={`w-full px-4 py-2 rounded-md border ${
+                  errors.firstName ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-emerald-600`}
               />
               {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
             </div>
@@ -82,7 +84,9 @@ const Register = () => {
                 value={form.lastName}
                 onChange={handleChange}
                 placeholder="Doe"
-                className={`w-full px-4 py-2 rounded-md border ${errors.lastName ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-[#157ECE]`}
+                className={`w-full px-4 py-2 rounded-md border ${
+                  errors.lastName ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-emerald-600`}
               />
               {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
             </div>
@@ -95,7 +99,9 @@ const Register = () => {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className={`w-full px-4 py-2 rounded-md border ${errors.email ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-[#157ECE]`}
+                className={`w-full px-4 py-2 rounded-md border ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-emerald-600`}
               />
               {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
             </div>
@@ -109,7 +115,9 @@ const Register = () => {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Enter password"
-                  className={`w-full px-4 py-2 rounded-md border ${errors.password ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-[#157ECE] pr-10`}
+                  className={`w-full px-4 py-2 rounded-md border ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-emerald-600 pr-10`}
                 />
                 <button
                   type="button"
@@ -130,18 +138,27 @@ const Register = () => {
                 value={form.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm password"
-                className={`w-full px-4 py-2 rounded-md border ${errors.confirmPassword ? "border-red-500" : "border-gray-300"} focus:outline-none focus:ring-2 focus:ring-[#157ECE]`}
+                className={`w-full px-4 py-2 rounded-md border ${
+                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-emerald-600`}
               />
-              {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+              )}
             </div>
 
-            <button className="w-full bg-[#157ECE] text-white py-2 rounded-md font-semibold hover:bg-[#0F3554] transition">
+            {/* 🔘 Button */}
+            <button
+              className="w-full border-2 border-emerald-700 text-emerald-800 py-2 rounded-md font-semibold
+                         hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500
+                         transition-all duration-300"
+            >
               Register
             </button>
 
             <p className="text-center text-sm text-gray-600 mt-4">
               Already have an account?{" "}
-              <Link to="/auth/login" className="text-[#157ECE] font-medium hover:underline">
+              <Link to="/auth/login" className="text-emerald-700 font-medium hover:underline">
                 Log in
               </Link>
             </p>

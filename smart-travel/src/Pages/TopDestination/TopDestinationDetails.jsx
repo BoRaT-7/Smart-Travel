@@ -30,7 +30,7 @@ const TopDestinationDetails = () => {
       <Header />
       <main>
         <div className="min-h-screen bg-gradient-to-b from-gray-100 mt-5 to-white p-6 md:p-12">
-          <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-2xl overflow-hidden">
+          <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-2xl mt-5 overflow-hidden">
             {/* Image */}
             <div className="relative">
               <img
