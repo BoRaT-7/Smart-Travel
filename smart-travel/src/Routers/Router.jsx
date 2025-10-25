@@ -7,6 +7,7 @@ import GearShopall from "../Pages/Shop/GearShopall";
 import ShopOrder from "../Pages/Shop/ShopOrder"; 
 import TopDestinationAll from "../Pages/TopDestination/TopDestinationAll";
 import DestinationBook from "../Pages/TopDestination/DestinationBook";
+import HotelAll from "../Pages/HotelBooking/HotelAll";
 
 const Router = createBrowserRouter([
   { path: "/", element: <Homelayout /> },
@@ -32,6 +33,10 @@ const Router = createBrowserRouter([
   {
     path: "/destination/book",
     element: <DestinationBook /> // ✅ Added / Updated to handle Book button
+  },
+  {
+    path:"/hotel",
+    element:<HotelAll></HotelAll>
   },
 
   // Catch all 404

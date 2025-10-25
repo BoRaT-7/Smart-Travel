@@ -53,40 +53,64 @@ const HotelBooking = () => {
 
   return (
     <div className="min-h-screen bg-gray-300 py-12 px-6 transition-colors duration-700">
-      <h2 className="font-extrabold text-4xl sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-lime-400">
+      <h2 className="font-extrabold text-4xl sm:text-5xl text-center  pb-5 text-emerald-600">
         Find Your Perfect Hotel
       </h2>
 
       {/* Search Bar */}
-      <div className="flex justify-center mb-10">
-        <div className="relative w-full max-w-xl">
-          <input
-            type="text"
-            placeholder="Search hotels by name or location..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full px-5 py-3 rounded-full border border-green-400 focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-800 placeholder-gray-300 transition"
-          />
-          {query && (
-            <button
-              onClick={() => setQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-200 hover:text-white transition"
-            >
-              <FaTimes />
-            </button>
-          )}
-          <FaSearch className="absolute right-10 top-1/2 -translate-y-1/2 text-white" />
-        </div>
-      </div>
+     <motion.form
+  onSubmit={(e) => e.preventDefault()}
+  initial={{ opacity: 0, y: 25 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.4, duration: 0.8 }}
+  className="mt-6 flex max-w-xl mx-auto bg-white rounded-full shadow-md overflow-hidden border border-emerald-300 relative"
+>
+  <input
+    type="text"
+    placeholder="Search hotels by name or location..."
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+    className="flex-grow px-5 py-3 text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none"
+  />
 
-      {filteredHotels.length === 0 && (
-        <div className="text-center text-gray-200 py-10">
-          No hotels match your search. 😔
-        </div>
-      )}
+  {query && (
+    <button
+      type="button"
+      onClick={() => setQuery("")}
+      className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+    >
+      <FaTimes />
+    </button>
+  )}
+
+  <motion.button
+    type="submit"
+    whileHover={{
+      scale: 1.05,
+      background: "linear-gradient(to right, #059669, #A3E635)",
+    }}
+    whileTap={{ scale: 0.95 }}
+    transition={{ type: "spring", stiffness: 300 }}
+    className="bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-6 py-3 rounded-r-full flex items-center gap-2 font-semibold"
+  >
+    <FaSearch /> Search
+  </motion.button>
+</motion.form>
+
+{filteredHotels.length === 0 && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="text-center mt-6 text-gray-600 flex flex-col items-center gap-3"
+  >
+    <p>No hotels match your search.</p>
+    <div className="text-3xl animate-pulse">🏨</div>
+  </motion.div>
+)}
+
 
       {/* Hotels Grid */}
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+      <div className="grid gap-8  mt-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         {filteredHotels.slice(0, visible).map((hotel, index) => (
           <motion.div
             key={hotel.id}
