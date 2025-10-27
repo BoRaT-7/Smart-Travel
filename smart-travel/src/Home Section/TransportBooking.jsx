@@ -10,6 +10,7 @@ import {
   FaCalendarAlt,
   FaClock,
   FaMobileAlt,
+  FaExchangeAlt,
 } from "react-icons/fa";
 
 const TransportBooking = () => {
@@ -18,9 +19,11 @@ const TransportBooking = () => {
   const [dropoff, setDropoff] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [arrivalTime, setArrivalTime] = useState("");
   const [passengers, setPassengers] = useState(1);
   const [estimatedTime, setEstimatedTime] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentNumber, setPaymentNumber] = useState("");
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -45,29 +48,36 @@ const TransportBooking = () => {
     Rangpur: { Dhaka: 7, Chittagong: 11, Sylhet: 9, Rajshahi: 5, Khulna: 9, Barishal: 10 },
   };
 
-  // 💰 Price Calculation
+  // 🧮 Price Calculation
   const calculatePrice = () => {
     const base =
       transportType === "Car" ? 50 : transportType === "Bus" ? 100 : 20;
     return base * passengers;
   };
 
-  // 🕒 Auto time update
+  // 🕐 Auto Time + Arrival Update
   useEffect(() => {
     if (pickup && dropoff && pickup !== dropoff) {
       const hours = travelTimes[pickup]?.[dropoff];
       if (hours) {
         setEstimatedTime(`${hours} hours`);
         const now = new Date();
-        now.setHours(now.getHours() + hours);
-        const formattedTime = now.toTimeString().slice(0, 5);
-        setTime(formattedTime);
+        const arrival = new Date(now.getTime() + hours * 60 * 60 * 1000);
+        setTime(now.toTimeString().slice(0, 5));
+        setArrivalTime(arrival.toTimeString().slice(0, 5));
       }
     } else {
       setEstimatedTime("");
       setTime("");
+      setArrivalTime("");
     }
   }, [pickup, dropoff]);
+
+  // 🗓️ Auto-set today’s date
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    setDate(today);
+  }, []);
 
   // ✅ Submit
   const handleBooking = (e) => {
@@ -76,12 +86,18 @@ const TransportBooking = () => {
       alert("⚠️ Please fill all required fields and select payment method!");
       return;
     }
+    if (!paymentNumber) {
+      alert(`⚠️ Please enter your ${paymentMethod} number!`);
+      return;
+    }
+
+    if (!window.confirm(`Confirm payment via ${paymentMethod}?`)) return;
 
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setBookingConfirmed(true);
-    }, 1200);
+    }, 1500);
   };
 
   // 🔁 Reset
@@ -90,10 +106,21 @@ const TransportBooking = () => {
     setDropoff("");
     setDate("");
     setTime("");
+    setArrivalTime("");
     setPassengers(1);
     setEstimatedTime("");
     setPaymentMethod("");
+    setPaymentNumber("");
     setBookingConfirmed(false);
+  };
+
+  // 🔄 Swap Pickup/Drop
+  const swapLocations = () => {
+    if (pickup && dropoff) {
+      const temp = pickup;
+      setPickup(dropoff);
+      setDropoff(temp);
+    }
   };
 
   return (
@@ -146,7 +173,7 @@ const TransportBooking = () => {
               </div>
 
               {/* 📍 Pickup & Dropoff */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="relative">
                   <FaMapMarkerAlt className="absolute top-3 left-3 text-emerald-500" />
                   <select
@@ -163,6 +190,7 @@ const TransportBooking = () => {
                     ))}
                   </select>
                 </div>
+
                 <div className="relative">
                   <FaMapMarkerAlt className="absolute top-3 left-3 text-red-500" />
                   <select
@@ -181,20 +209,30 @@ const TransportBooking = () => {
                       ))}
                   </select>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={swapLocations}
+                  title="Swap pickup & drop"
+                  className="absolute -right-5 top-8 bg-emerald-500 text-white p-2 rounded-full shadow hover:bg-emerald-600 transition"
+                >
+                  <FaExchangeAlt />
+                </button>
               </div>
 
               {/* ⏱️ Estimated Time */}
               {estimatedTime && (
-                <motion.p
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center text-emerald-600 font-semibold"
+                  className="text-center text-emerald-700 font-semibold"
                 >
-                  Estimated Travel Time: {estimatedTime}
-                </motion.p>
+                  <p>Estimated Travel Time: {estimatedTime}</p>
+                  <p>Arrival Time: {arrivalTime}</p>
+                </motion.div>
               )}
 
-              {/* 📅 Date & Auto Time */}
+              {/* 📅 Date & Time */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
                   <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
@@ -237,7 +275,7 @@ const TransportBooking = () => {
                 <span className="text-emerald-600">${calculatePrice()}</span>
               </div>
 
-              {/* 💳 Payment Methods */}
+              {/* 💳 Payment */}
               <div>
                 <label className="font-semibold text-gray-700 mb-2 block">
                   Select Payment Method
@@ -265,6 +303,20 @@ const TransportBooking = () => {
                     </motion.button>
                   ))}
                 </div>
+
+                {paymentMethod && (
+                  <div className="relative mt-3">
+                    <FaMobileAlt className="absolute top-3 left-3 text-gray-400" />
+                    <input
+                      type="text"
+                      value={paymentNumber}
+                      onChange={(e) => setPaymentNumber(e.target.value)}
+                      placeholder={`${paymentMethod} Number`}
+                      className="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-emerald-500"
+                      required
+                    />
+                  </div>
+                )}
               </div>
 
               {/* ✅ Submit */}
@@ -278,7 +330,14 @@ const TransportBooking = () => {
                     : "bg-gradient-to-r from-emerald-600 to-lime-500 hover:from-lime-600 hover:to-emerald-500"
                 }`}
               >
-                {loading ? "Processing..." : "Confirm Booking"}
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Processing...
+                  </div>
+                ) : (
+                  "Confirm Booking"
+                )}
               </motion.button>
             </motion.form>
           ) : (
@@ -299,6 +358,9 @@ const TransportBooking = () => {
               <p className="font-semibold text-gray-700 mb-1">
                 Estimated Time:{" "}
                 <span className="text-emerald-600">{estimatedTime}</span>
+              </p>
+              <p className="font-semibold text-gray-700 mb-1">
+                Arrival Time: <span className="text-emerald-600">{arrivalTime}</span>
               </p>
               <p className="font-semibold text-gray-700 mb-1">
                 Payment Method:{" "}
