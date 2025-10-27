@@ -27,7 +27,6 @@ const TransportBooking = () => {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // 🗺️ Predefined locations
   const locations = [
     "Dhaka",
     "Chittagong",
@@ -48,14 +47,12 @@ const TransportBooking = () => {
     Rangpur: { Dhaka: 7, Chittagong: 11, Sylhet: 9, Rajshahi: 5, Khulna: 9, Barishal: 10 },
   };
 
-  // 🧮 Price Calculation
   const calculatePrice = () => {
     const base =
       transportType === "Car" ? 50 : transportType === "Bus" ? 100 : 20;
     return base * passengers;
   };
 
-  // 🕐 Auto Time + Arrival Update
   useEffect(() => {
     if (pickup && dropoff && pickup !== dropoff) {
       const hours = travelTimes[pickup]?.[dropoff];
@@ -73,25 +70,21 @@ const TransportBooking = () => {
     }
   }, [pickup, dropoff]);
 
-  // 🗓️ Auto-set today’s date
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setDate(today);
   }, []);
 
-  // ✅ Submit
   const handleBooking = (e) => {
     e.preventDefault();
     if (!pickup || !dropoff || !date || !time || !paymentMethod) {
-      alert("⚠️ Please fill all required fields and select payment method!");
+      alert("⚠️ Please fill all required fields!");
       return;
     }
     if (!paymentNumber) {
-      alert(`⚠️ Please enter your ${paymentMethod} number!`);
+      alert(`⚠️ Enter your ${paymentMethod} number!`);
       return;
     }
-
-    if (!window.confirm(`Confirm payment via ${paymentMethod}?`)) return;
 
     setLoading(true);
     setTimeout(() => {
@@ -100,7 +93,6 @@ const TransportBooking = () => {
     }, 1500);
   };
 
-  // 🔁 Reset
   const handleReset = () => {
     setPickup("");
     setDropoff("");
@@ -114,7 +106,6 @@ const TransportBooking = () => {
     setBookingConfirmed(false);
   };
 
-  // 🔄 Swap Pickup/Drop
   const swapLocations = () => {
     if (pickup && dropoff) {
       const temp = pickup;
@@ -124,65 +115,62 @@ const TransportBooking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-lime-100 flex justify-center items-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-lime-100 flex justify-center items-center p-4">
       <motion.section
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-xl bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-emerald-100"
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 border border-emerald-100"
       >
-        <h2 className="text-4xl font-extrabold text-center bg-gradient-to-r from-emerald-700 to-lime-600 bg-clip-text text-transparent mb-6">
-          Smart Transport Booking
+        <h2 className="text-2xl font-extrabold text-center bg-gradient-to-r from-emerald-700 to-lime-600 bg-clip-text text-transparent mb-4">
+          Transport Booking
         </h2>
 
         <AnimatePresence>
           {!bookingConfirmed ? (
             <motion.form
               onSubmit={handleBooking}
-              className="grid gap-6"
+              className="space-y-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {/* 🚘 Transport Type */}
+              {/* Transport Type */}
               <div>
-                <label className="font-semibold text-gray-700 mb-2 block">
+                <label className="font-semibold text-gray-700 mb-1 block text-sm">
                   Vehicle Type
                 </label>
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   {["Car", "Bus", "Bike"].map((type) => (
-                    <motion.button
+                    <button
                       key={type}
                       type="button"
                       onClick={() => setTransportType(type)}
-                      whileTap={{ scale: 0.95 }}
-                      whileHover={{ scale: 1.05 }}
-                      className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold border transition-all duration-300 ${
+                      className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-sm font-medium border transition-all ${
                         transportType === type
-                          ? "bg-gradient-to-r from-emerald-600 to-lime-500 text-white shadow-lg border-transparent"
-                          : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-emerald-50 hover:text-emerald-700"
+                          ? "bg-emerald-600 text-white border-transparent"
+                          : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-emerald-50"
                       }`}
                     >
                       {type === "Car" && <FaCar />}
                       {type === "Bus" && <FaBus />}
                       {type === "Bike" && <FaMotorcycle />}
                       {type}
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
               </div>
 
-              {/* 📍 Pickup & Dropoff */}
-              <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Pickup & Drop */}
+              <div className="grid grid-cols-2 gap-3 relative">
                 <div className="relative">
-                  <FaMapMarkerAlt className="absolute top-3 left-3 text-emerald-500" />
+                  <FaMapMarkerAlt className="absolute top-2.5 left-2 text-emerald-500 text-sm" />
                   <select
                     value={pickup}
                     onChange={(e) => setPickup(e.target.value)}
-                    className="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-emerald-500"
-                    required
+                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 text-sm"
                   >
-                    <option value="">Select Pickup</option>
+                    <option value="">Pickup</option>
                     {locations.map((loc) => (
                       <option key={loc} value={loc}>
                         {loc}
@@ -192,14 +180,13 @@ const TransportBooking = () => {
                 </div>
 
                 <div className="relative">
-                  <FaMapMarkerAlt className="absolute top-3 left-3 text-red-500" />
+                  <FaMapMarkerAlt className="absolute top-2.5 left-2 text-red-500 text-sm" />
                   <select
                     value={dropoff}
                     onChange={(e) => setDropoff(e.target.value)}
-                    className="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-red-500"
-                    required
+                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-sm"
                   >
-                    <option value="">Select Drop-off</option>
+                    <option value="">Drop-off</option>
                     {locations
                       .filter((loc) => loc !== pickup)
                       .map((loc) => (
@@ -213,170 +200,145 @@ const TransportBooking = () => {
                 <button
                   type="button"
                   onClick={swapLocations}
-                  title="Swap pickup & drop"
-                  className="absolute -right-5 top-8 bg-emerald-500 text-white p-2 rounded-full shadow hover:bg-emerald-600 transition"
+                  title="Swap"
+                  className="absolute -right-4 top-6 bg-emerald-500 text-white p-1 rounded-full shadow hover:bg-emerald-600 transition"
                 >
-                  <FaExchangeAlt />
+                  <FaExchangeAlt size={12} />
                 </button>
               </div>
 
-              {/* ⏱️ Estimated Time */}
+              {/* Estimated Time */}
               {estimatedTime && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center text-emerald-700 font-semibold"
-                >
-                  <p>Estimated Travel Time: {estimatedTime}</p>
-                  <p>Arrival Time: {arrivalTime}</p>
-                </motion.div>
+                <p className="text-center text-sm text-emerald-700 font-medium">
+                  Time: {estimatedTime} • Arrival: {arrivalTime}
+                </p>
               )}
 
-              {/* 📅 Date & Time */}
-              <div className="grid grid-cols-2 gap-4">
+              {/* Date & Time */}
+              <div className="grid grid-cols-2 gap-3">
                 <div className="relative">
-                  <FaCalendarAlt className="absolute top-3 left-3 text-gray-400" />
+                  <FaCalendarAlt className="absolute top-2.5 left-2 text-gray-400 text-sm" />
                   <input
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-emerald-500"
-                    required
+                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-500"
                   />
                 </div>
                 <div className="relative">
-                  <FaClock className="absolute top-3 left-3 text-gray-400" />
+                  <FaClock className="absolute top-2.5 left-2 text-gray-400 text-sm" />
                   <input
                     type="time"
                     value={time}
                     readOnly
-                    className="w-full pl-10 p-3 border border-gray-300 rounded-xl bg-gray-50 text-gray-700 cursor-not-allowed"
+                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
                   />
                 </div>
               </div>
 
-              {/* 👥 Passengers */}
+              {/* Passengers */}
               <div className="relative">
-                <FaUser className="absolute top-3 left-3 text-gray-400" />
+                <FaUser className="absolute top-2.5 left-2 text-gray-400 text-sm" />
                 <input
                   type="number"
                   min="1"
                   value={passengers}
                   onChange={(e) => setPassengers(Number(e.target.value))}
-                  placeholder="Number of Passengers"
-                  className="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-emerald-500"
-                  required
+                  className="w-full pl-7 p-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-500"
+                  placeholder="Passengers"
                 />
               </div>
 
-              {/* 💰 Price */}
-              <div className="text-xl font-semibold text-gray-800 text-right">
-                Total Price:{" "}
-                <span className="text-emerald-600">${calculatePrice()}</span>
+              {/* Price */}
+              <div className="text-right text-gray-700 text-sm font-medium">
+                Total:{" "}
+                <span className="text-emerald-600 font-semibold">
+                  ${calculatePrice()}
+                </span>
               </div>
 
-              {/* 💳 Payment */}
+              {/* Payment */}
               <div>
-                <label className="font-semibold text-gray-700 mb-2 block">
-                  Select Payment Method
+                <label className="font-semibold text-gray-700 mb-1 block text-sm">
+                  Payment
                 </label>
-                <div className="flex flex-wrap gap-3">
-                  {[
-                    { name: "bKash", color: "from-pink-600 to-pink-500" },
-                    { name: "Nagad", color: "from-orange-500 to-orange-400" },
-                    { name: "Rocket", color: "from-purple-600 to-purple-500" },
-                  ].map((method) => (
-                    <motion.button
-                      key={method.name}
+                <div className="flex gap-2">
+                  {["bKash", "Nagad", "Rocket"].map((method) => (
+                    <button
+                      key={method}
                       type="button"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setPaymentMethod(method.name)}
-                      className={`flex-1 py-3 rounded-xl font-semibold text-white shadow-md transition-all duration-300 bg-gradient-to-r ${
-                        paymentMethod === method.name
-                          ? `${method.color} ring-4 ring-emerald-200`
-                          : `${method.color} opacity-70 hover:opacity-100`
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex-1 py-2 rounded-lg text-sm font-medium text-white transition ${
+                        method === "bKash"
+                          ? "bg-pink-600"
+                          : method === "Nagad"
+                          ? "bg-orange-500"
+                          : "bg-purple-600"
+                      } ${
+                        paymentMethod === method
+                          ? "ring-2 ring-emerald-400"
+                          : "opacity-80 hover:opacity-100"
                       }`}
                     >
-                      <FaMobileAlt className="inline mr-2" />
-                      {method.name}
-                    </motion.button>
+                      <FaMobileAlt className="inline mr-1" />
+                      {method}
+                    </button>
                   ))}
                 </div>
 
                 {paymentMethod && (
-                  <div className="relative mt-3">
-                    <FaMobileAlt className="absolute top-3 left-3 text-gray-400" />
+                  <div className="relative mt-2">
+                    <FaMobileAlt className="absolute top-2.5 left-2 text-gray-400 text-sm" />
                     <input
                       type="text"
                       value={paymentNumber}
                       onChange={(e) => setPaymentNumber(e.target.value)}
                       placeholder={`${paymentMethod} Number`}
-                      className="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:outline-none focus:border-emerald-500"
-                      required
+                      className="w-full pl-7 p-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-500"
                     />
                   </div>
                 )}
               </div>
 
-              {/* ✅ Submit */}
+              {/* Confirm Button */}
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileTap={{ scale: 0.97 }}
                 disabled={loading}
-                className={`w-full py-3 text-white font-bold rounded-xl shadow-lg transition-all duration-300 ${
+                className={`w-full py-2.5 text-sm font-semibold text-white rounded-lg transition ${
                   loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-emerald-600 to-lime-500 hover:from-lime-600 hover:to-emerald-500"
+                    ? "bg-gray-400"
+                    : "bg-emerald-600 hover:bg-emerald-700"
                 }`}
               >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Processing...
-                  </div>
-                ) : (
-                  "Confirm Booking"
-                )}
+                {loading ? "Processing..." : "Confirm Booking"}
               </motion.button>
             </motion.form>
           ) : (
-            // ✅ Confirmation
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="text-center"
+              className="text-center space-y-2"
             >
-              <FaCheckCircle className="text-6xl text-emerald-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+              <FaCheckCircle className="text-5xl text-emerald-600 mx-auto" />
+              <h3 className="text-lg font-bold text-gray-800">
                 Booking Confirmed!
               </h3>
-              <p className="text-gray-600 mb-3">
-                Your {transportType} ride from <b>{pickup}</b> to{" "}
-                <b>{dropoff}</b> is booked for <b>{date}</b>.
+              <p className="text-sm text-gray-600">
+                {transportType} from <b>{pickup}</b> to <b>{dropoff}</b> on{" "}
+                {date}
               </p>
-              <p className="font-semibold text-gray-700 mb-1">
-                Estimated Time:{" "}
-                <span className="text-emerald-600">{estimatedTime}</span>
+              <p className="text-sm text-gray-600">
+                Arrival: {arrivalTime} • Payment: {paymentMethod}
               </p>
-              <p className="font-semibold text-gray-700 mb-1">
-                Arrival Time: <span className="text-emerald-600">{arrivalTime}</span>
+              <p className="font-semibold text-emerald-600 text-sm">
+                Total: ${calculatePrice()}
               </p>
-              <p className="font-semibold text-gray-700 mb-1">
-                Payment Method:{" "}
-                <span className="text-emerald-600">{paymentMethod}</span>
-              </p>
-              <p className="font-semibold text-gray-700 mb-4">
-                Total:{" "}
-                <span className="text-emerald-600">${calculatePrice()}</span>
-              </p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
+              <button
                 onClick={handleReset}
-                className="bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-6 py-2 rounded-xl font-semibold shadow-md hover:from-lime-600 hover:to-emerald-500"
+                className="mt-3 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-sm font-semibold"
               >
-                Book Another Ride
-              </motion.button>
+                Book Another
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
