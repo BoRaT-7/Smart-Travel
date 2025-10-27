@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "Grand Palace Hotel",
+    "location": "Dhaka, Bangladesh",
+    "price": 120,
+    "rating": 5,
+    "image": "https://i.ibb.co.com/1Y2LJCyn/vojtech-bruzek-Yrxr3bs-Pd-S0-unsplash.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Ocean View Resort",
+    "location": "Cox's Bazar, Bangladesh",
+    "price": 200,
+    "rating": 4,
+    "image": "https://i.ibb.co.com/CphP7ysM/valeriia-bugaiova-p-PHge-Hz1uk-unsplash.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Mountain Retreat",
+    "location": "Sajek, Bangladesh",
+    "price": 150,
+    "rating": 5,
+    "image": "https://i.ibb.co.com/9kP7jkrr/sara-dubler-Koei-7y-Yt-Io-unsplash.jpg"
+  },
+  {
+    "id": 4,
+    "name": "City Inn",
+    "location": "Chittagong, Bangladesh",
+    "price": 80,
+    "rating": 4,
+    "image": "https://i.ibb.co.com/rL0BPgH/fernando-alvarez-rodriguez-M7-Gdd-Pq-Jowg-unsplash.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Seaside Hotel",
+    "location": "Kuakata, Bangladesh",
+    "price": 180,
+    "rating": 5,
+    "image": "https://i.ibb.co.com/cKLnhpQj/visualsofdana-T5p-L6ci-En-I-unsplash.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Luxury Stay",
+    "location": "Sylhet, Bangladesh",
+    "price": 220,
+    "rating": 5,
+    "image": "https://i.ibb.co.com/qYzKjpgW/will-funfun-b-AK9w-Qghn-HI-unsplash.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Forest Lodge",
+    "location": "Bandarban, Bangladesh",
+    "price": 140,
+    "rating": 4,
+    "image": "https://i.ibb.co.com/h1dLB35Z/yash-sanghani-Wcm-Nl27-Vl-XY-unsplash.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Downtown Suites",
+    "location": "Khulna, Bangladesh",
+    "price": 100,
+    "rating": 4,
+    "image": "https://i.ibb.co.com/Ldc0xBQf/noam-cohen-STi-Lt-EKYKd-Y-unsplash.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Hillside Resort",
+    "location": "Rangamati, Bangladesh",
+    "price": 160,
+    "rating": 5,
+    "image": "https://i.ibb.co.com/Q7x2zZw6/dmitry-chernyshov-TUUpl08u-SMM-unsplash.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Lakeside Inn",
+    "location": "Paharpur, Bangladesh",
+    "price": 130,
+    "rating": 4,
+    "image": "https://i.ibb.co.com/t0MfQzk/ricardo-gomez-angel-m2-M1-N-h-AZAU-unsplash.jpg"
+  }
+]
