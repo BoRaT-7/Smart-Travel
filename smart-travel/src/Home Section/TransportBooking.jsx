@@ -11,6 +11,8 @@ import {
   FaClock,
   FaMobileAlt,
   FaExchangeAlt,
+  FaSpinner,
+  FaTicketAlt,
 } from "react-icons/fa";
 
 const TransportBooking = () => {
@@ -26,6 +28,7 @@ const TransportBooking = () => {
   const [paymentNumber, setPaymentNumber] = useState("");
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const locations = [
     "Dhaka",
@@ -48,9 +51,12 @@ const TransportBooking = () => {
   };
 
   const calculatePrice = () => {
-    const base =
-      transportType === "Car" ? 50 : transportType === "Bus" ? 100 : 20;
-    return base * passengers;
+    if (!pickup || !dropoff || pickup === dropoff) return 0;
+    const hours = travelTimes[pickup]?.[dropoff] || 1;
+    const baseRate =
+      transportType === "Car" ? 80 : transportType === "Bus" ? 50 : 30;
+    const total = baseRate * hours * passengers;
+    return total;
   };
 
   useEffect(() => {
@@ -77,63 +83,59 @@ const TransportBooking = () => {
 
   const handleBooking = (e) => {
     e.preventDefault();
-    if (!pickup || !dropoff || !date || !time || !paymentMethod) {
-      alert("⚠️ Please fill all required fields!");
-      return;
-    }
-    if (!paymentNumber) {
-      alert(`⚠️ Enter your ${paymentMethod} number!`);
-      return;
-    }
+    setError("");
+
+    if (!pickup || !dropoff) return setError("Please select pickup and drop-off points!");
+    if (pickup === dropoff) return setError("Pickup and drop-off cannot be the same!");
+    if (!paymentMethod) return setError("Select a payment method!");
+    if (!paymentNumber) return setError(`Enter your ${paymentMethod} number!`);
 
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setBookingConfirmed(true);
-    }, 1500);
+    }, 1800);
   };
 
   const handleReset = () => {
     setPickup("");
     setDropoff("");
-    setDate("");
-    setTime("");
-    setArrivalTime("");
     setPassengers(1);
-    setEstimatedTime("");
     setPaymentMethod("");
     setPaymentNumber("");
     setBookingConfirmed(false);
+    setError("");
   };
 
   const swapLocations = () => {
     if (pickup && dropoff) {
-      const temp = pickup;
       setPickup(dropoff);
-      setDropoff(temp);
+      setDropoff(pickup);
     }
   };
+
+  const bookingId = `TR-${Math.floor(100000 + Math.random() * 900000)}`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-lime-100 flex justify-center items-center p-4">
       <motion.section
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 border border-emerald-100"
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-md backdrop-blur-xl bg-white/80 border border-emerald-100 shadow-2xl rounded-3xl p-6"
       >
-        <h2 className="text-2xl font-extrabold text-center bg-gradient-to-r from-emerald-700 to-lime-600 bg-clip-text text-transparent mb-4">
-          Transport Booking
+        <h2 className="text-3xl font-extrabold text-center bg-gradient-to-r from-emerald-700 to-lime-600 bg-clip-text text-transparent mb-4">
+          Smart Transport Booking
         </h2>
 
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {!bookingConfirmed ? (
             <motion.form
               onSubmit={handleBooking}
-              className="space-y-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              className="space-y-4"
             >
               {/* Transport Type */}
               <div>
@@ -142,33 +144,34 @@ const TransportBooking = () => {
                 </label>
                 <div className="flex gap-2">
                   {["Car", "Bus", "Bike"].map((type) => (
-                    <button
+                    <motion.button
                       key={type}
+                      whileTap={{ scale: 0.95 }}
                       type="button"
                       onClick={() => setTransportType(type)}
                       className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-sm font-medium border transition-all ${
                         transportType === type
-                          ? "bg-emerald-600 text-white border-transparent"
-                          : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-emerald-50"
+                          ? "bg-emerald-600 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-emerald-50"
                       }`}
                     >
                       {type === "Car" && <FaCar />}
                       {type === "Bus" && <FaBus />}
                       {type === "Bike" && <FaMotorcycle />}
                       {type}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
               </div>
 
-              {/* Pickup & Drop */}
+              {/* Pickup / Drop */}
               <div className="grid grid-cols-2 gap-3 relative">
                 <div className="relative">
                   <FaMapMarkerAlt className="absolute top-2.5 left-2 text-emerald-500 text-sm" />
                   <select
                     value={pickup}
                     onChange={(e) => setPickup(e.target.value)}
-                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 text-sm"
+                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg focus:border-emerald-500 text-sm"
                   >
                     <option value="">Pickup</option>
                     {locations.map((loc) => (
@@ -184,7 +187,7 @@ const TransportBooking = () => {
                   <select
                     value={dropoff}
                     onChange={(e) => setDropoff(e.target.value)}
-                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 text-sm"
+                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg focus:border-red-500 text-sm"
                   >
                     <option value="">Drop-off</option>
                     {locations
@@ -207,14 +210,13 @@ const TransportBooking = () => {
                 </button>
               </div>
 
-              {/* Estimated Time */}
               {estimatedTime && (
                 <p className="text-center text-sm text-emerald-700 font-medium">
-                  Time: {estimatedTime} • Arrival: {arrivalTime}
+                  ⏱ {estimatedTime} • Arrival: {arrivalTime}
                 </p>
               )}
 
-              {/* Date & Time */}
+              {/* Date / Time */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="relative">
                   <FaCalendarAlt className="absolute top-2.5 left-2 text-gray-400 text-sm" />
@@ -231,7 +233,7 @@ const TransportBooking = () => {
                     type="time"
                     value={time}
                     readOnly
-                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm"
                   />
                 </div>
               </div>
@@ -300,29 +302,47 @@ const TransportBooking = () => {
                 )}
               </div>
 
+              {/* Error */}
+              {error && (
+                <p className="text-red-500 text-xs font-semibold text-center">
+                  ⚠️ {error}
+                </p>
+              )}
+
               {/* Confirm Button */}
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 disabled={loading}
-                className={`w-full py-2.5 text-sm font-semibold text-white rounded-lg transition ${
+                className={`w-full py-2.5 text-sm font-semibold text-white rounded-lg transition flex items-center justify-center ${
                   loading
                     ? "bg-gray-400"
                     : "bg-emerald-600 hover:bg-emerald-700"
                 }`}
               >
-                {loading ? "Processing..." : "Confirm Booking"}
+                {loading ? (
+                  <>
+                    <FaSpinner className="animate-spin mr-2" /> Processing...
+                  </>
+                ) : (
+                  "Confirm Booking"
+                )}
               </motion.button>
             </motion.form>
           ) : (
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               className="text-center space-y-2"
             >
               <FaCheckCircle className="text-5xl text-emerald-600 mx-auto" />
               <h3 className="text-lg font-bold text-gray-800">
                 Booking Confirmed!
               </h3>
+              <div className="flex justify-center items-center gap-2 text-sm text-gray-600">
+                <FaTicketAlt className="text-emerald-500" />
+                Booking ID: <b>{bookingId}</b>
+              </div>
               <p className="text-sm text-gray-600">
                 {transportType} from <b>{pickup}</b> to <b>{dropoff}</b> on{" "}
                 {date}
@@ -333,12 +353,13 @@ const TransportBooking = () => {
               <p className="font-semibold text-emerald-600 text-sm">
                 Total: ${calculatePrice()}
               </p>
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={handleReset}
                 className="mt-3 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-sm font-semibold"
               >
                 Book Another
-              </button>
+              </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
