@@ -1,12 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { AuthContext } from "../provider/Authprovider";
 
 const Register = () => {
-  const { createNewUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -18,6 +16,7 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [serverMessage, setServerMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,17 +38,38 @@ const Register = () => {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!validate()) return;
 
-    try {
-      await createNewUser(form.email, form.password, form.firstName);
-      navigate("/");
-    } catch (err) {
-      alert("Registration Error: " + err.message);
-    }
+  const newUser = {
+    name: `${form.firstName} ${form.lastName}`,
+    email: form.email,
+    password: form.password,
   };
+
+  try {
+    const res = await fetch("http://localhost:5000/register", {  // <-- add /register here
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newUser),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      setServerMessage("Registration Successful!");
+      navigate("/auth/login");
+    } else {
+      setServerMessage(data.message || "Registration failed");
+    }
+  } catch (err) {
+    console.error(err);
+    setServerMessage("Server error. Please try again later.");
+  }
+};
+
+
 
   return (
     <div className="bg-gradient-to-b from-emerald-700 via-emerald-600 to-lime-600 flex flex-col min-h-screen">
@@ -61,6 +81,7 @@ const Register = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* First Name */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">First Name</label>
               <input
@@ -76,6 +97,7 @@ const Register = () => {
               {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
             </div>
 
+            {/* Last Name */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">Last Name</label>
               <input
@@ -91,6 +113,7 @@ const Register = () => {
               {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
             </div>
 
+            {/* Email */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">Email</label>
               <input
@@ -106,6 +129,7 @@ const Register = () => {
               {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
             </div>
 
+            {/* Password */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">Password</label>
               <div className="relative">
@@ -130,6 +154,7 @@ const Register = () => {
               {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>
 
+            {/* Confirm Password */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">Confirm Password</label>
               <input
@@ -147,7 +172,12 @@ const Register = () => {
               )}
             </div>
 
-            {/* 🔘 Button */}
+            {/* Server Message */}
+            {serverMessage && (
+              <p className="text-center text-red-500 font-medium mt-1">{serverMessage}</p>
+            )}
+
+            {/* Register Button */}
             <button
               className="w-full border-2 border-emerald-700 text-emerald-800 py-2 rounded-md font-semibold
                          hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500
