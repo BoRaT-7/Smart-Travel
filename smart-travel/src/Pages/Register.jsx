@@ -14,71 +14,79 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [serverMessage, setServerMessage] = useState("");
 
+  // FORM CHANGE HANDLER
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // VALIDATION
   const validate = () => {
     const e = {};
     if (!form.email) e.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Invalid email";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      e.email = "Invalid email";
+
     if (!form.firstName) e.firstName = "First name is required";
     if (!form.lastName) e.lastName = "Last name is required";
+
     if (!form.password) e.password = "Password is required";
-    else if (form.password.length < 6) e.password = "Password must be at least 6 characters";
-    if (!form.confirmPassword) e.confirmPassword = "Confirm your password";
-    else if (form.password !== form.confirmPassword) e.confirmPassword = "Passwords do not match";
+    else if (form.password.length < 6)
+      e.password = "Password must be at least 6 characters";
+
+    if (!form.confirmPassword)
+      e.confirmPassword = "Confirm your password";
+    else if (form.password !== form.confirmPassword)
+      e.confirmPassword = "Passwords do not match";
 
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validate()) return;
+  // SUBMIT HANDLER
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const newUser = {
-    name: `${form.firstName} ${form.lastName}`,
-    email: form.email,
-    password: form.password,
-  };
+    if (!validate()) return;
 
-  try {
-    const res = await fetch("http://localhost:5000/register", {  // <-- add /register here
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newUser),
-    });
+    const { firstName, lastName, email, password } = form;
+    const name = `${firstName} ${lastName}`;
 
-    const data = await res.json();
+    const newUser = { name, email, password };
 
-    if (data.success) {
-      setServerMessage("Registration Successful!");
-      navigate("/auth/login");
-    } else {
-      setServerMessage(data.message || "Registration failed");
+    try {
+      const res = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+
+      const data = await res.json();
+      console.log("SERVER RESPONSE:", data);
+
+      if (data.success) {
+        setServerMessage("Registration successful!");
+        navigate("/auth/login");
+      } else {
+        setServerMessage(data.message || "Registration failed");
+      }
+    } catch (error) {
+      console.error("ERROR:", error);
+      setServerMessage("Server error. Try again later.");
     }
-  } catch (err) {
-    console.error(err);
-    setServerMessage("Server error. Please try again later.");
-  }
-};
-
-
+  };
 
   return (
     <div className="bg-gradient-to-b from-emerald-700 via-emerald-600 to-lime-600 flex flex-col min-h-screen">
       <Header />
       <main className="flex-1 flex items-center justify-center p-6 mt-20">
         <div className="w-full max-w-md bg-white/95 rounded-2xl shadow-2xl p-8 backdrop-blur-sm">
-          <h2 className="text-3xl font-bold text-center text-emerald-700 mb-6">
-            Create Account
-          </h2>
+          <h2 className="text-3xl font-bold text-center text-emerald-700 mb-6">Create Account</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* First Name */}
@@ -177,11 +185,8 @@ const Register = () => {
               <p className="text-center text-red-500 font-medium mt-1">{serverMessage}</p>
             )}
 
-            {/* Register Button */}
             <button
-              className="w-full border-2 border-emerald-700 text-emerald-800 py-2 rounded-md font-semibold
-                         hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500
-                         transition-all duration-300"
+              className="w-full border-2 border-emerald-700 text-emerald-800 py-2 rounded-md font-semibold hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
             >
               Register
             </button>
