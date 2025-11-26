@@ -1,17 +1,16 @@
-// server/index.js
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection URI
-const uri = "mongodb+srv://borat156006_db_user:6eusUTrhp3CjMnLH@cluster0.i8wpz9p.mongodb.net/?retryWrites=true&w=majority";
+// 🔥 Your MongoDB connection string
+const uri =
+  "mongodb+srv://borat156006_db_user:xaFAoIy8Irz6WhDY@cluster0.i8wpz9p.mongodb.net/?retryWrites=true&w=majority&tls=true";
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -23,57 +22,104 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect MongoDB
     await client.connect();
-    console.log("MongoDB Connected Successfully");
+    console.log("MongoDB Connected ✔");
 
-    const db = client.db("smartTravelDB");
-    const usersCollection = db.collection("users");
+    const userCollection = client.db('smartTravelDB').collection('users');
 
-    // POST /register
-    app.post("/register", async (req, res) => {
-      console.log("POST /register hit", req.body);
-      try {
-        const { name, email, password } = req.body;
+    // ------------------------------
+    // REGISTER (POST)
+    // ------------------------------
+    app.post('/register', async (req, res) => {
+      const { name, email, password } = req.body;
 
-        // Validation
-        if (!name || !email || !password) {
-          return res.status(400).send({ message: "Name, Email, and Password are required" });
-        }
-
-        // Check if user exists
-        const exist = await usersCollection.findOne({ email });
-        if (exist) {
-          return res.status(400).send({ message: "User already exists" });
-        }
-
-        const newUser = { name, email, password };
-        const result = await usersCollection.insertOne(newUser);
-
-        res.send({
-          success: true,
-          message: "Registration Successful",
-          userId: result.insertedId
+      if (!name || !email || !password) {
+        return res.send({
+          success: false,
+          message: "All fields are required"
         });
-      } catch (err) {
-        console.error(err);
-        res.status(500).send({ message: "Registration Failed" });
       }
+
+      // 📌 Check if user already exists
+      const existingUser = await userCollection.findOne({ email });
+
+      if (existingUser) {
+        return res.send({
+          success: false,
+          message: "User already exists"
+        });
+      }
+
+      // 📌 Insert new user
+      const newUser = { name, email, password };
+      const result = await userCollection.insertOne(newUser);
+
+      return res.send({
+        success: true,
+        message: "Registration successful",
+        insertedId: result.insertedId,
+      });
     });
 
-    // GET / test route
-    app.get("/", (req, res) => {
-      res.send("Smart Travel Server is Running");
+    // ------------------------------
+    // GET ALL USERS
+    // ------------------------------
+    app.get('/users', async (req, res) => {
+      const users = await userCollection.find().toArray();
+      res.send(users);
     });
 
-    // Start server
-    app.listen(port, () => {
-      console.log(`Server running on port: ${port}`);
+    // ------------------------------
+    // GET SINGLE USER
+    // ------------------------------
+    app.get('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const user = await userCollection.findOne(query);
+      res.send(user);
+    });
+
+    // ------------------------------
+    // UPDATE USER
+    // ------------------------------
+    app.put('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedUser = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+
+      const updateDoc = {
+        $set: {
+          name: updatedUser.name,
+          email: updatedUser.email,
+        },
+      };
+
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
+
+    // ------------------------------
+    // DELETE USER
+    // ------------------------------
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
     });
 
   } catch (err) {
-    console.error("MongoDB Connect Error:", err);
+    console.error("MONGO ERROR:", err);
   }
 }
 
 run().catch(console.dir);
+
+app.get('/', (req, res) => {
+  res.send('Smart Travel Server is running');
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port: ${port}`);
+});
