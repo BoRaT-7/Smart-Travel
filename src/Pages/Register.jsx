@@ -1,12 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { AuthContext } from "../provider/Authprovider";
 
 const Register = () => {
-  const { createNewUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -16,38 +14,70 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [serverMessage, setServerMessage] = useState("");
 
+  // FORM CHANGE HANDLER
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // VALIDATION
   const validate = () => {
     const e = {};
     if (!form.email) e.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Invalid email";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      e.email = "Invalid email";
+
     if (!form.firstName) e.firstName = "First name is required";
     if (!form.lastName) e.lastName = "Last name is required";
+
     if (!form.password) e.password = "Password is required";
-    else if (form.password.length < 6) e.password = "Password must be at least 6 characters";
-    if (!form.confirmPassword) e.confirmPassword = "Confirm your password";
-    else if (form.password !== form.confirmPassword) e.confirmPassword = "Passwords do not match";
+    else if (form.password.length < 6)
+      e.password = "Password must be at least 6 characters";
+
+    if (!form.confirmPassword)
+      e.confirmPassword = "Confirm your password";
+    else if (form.password !== form.confirmPassword)
+      e.confirmPassword = "Passwords do not match";
 
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
+  // SUBMIT HANDLER
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validate()) return;
 
+    const { firstName, lastName, email, password } = form;
+    const name = `${firstName} ${lastName}`;
+
+    const newUser = { name, email, password };
+
     try {
-      await createNewUser(form.email, form.password, form.firstName);
-      navigate("/");
-    } catch (err) {
-      alert("Registration Error: " + err.message);
+      const res = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+
+      const data = await res.json();
+      console.log("SERVER RESPONSE:", data);
+
+      if (data.success) {
+        setServerMessage("Registration successful!");
+        navigate("/auth/login");
+      } else {
+        setServerMessage(data.message || "Registration failed");
+      }
+    } catch (error) {
+      console.error("ERROR:", error);
+      setServerMessage("Server error. Try again later.");
     }
   };
 
@@ -56,11 +86,10 @@ const Register = () => {
       <Header />
       <main className="flex-1 flex items-center justify-center p-6 mt-20">
         <div className="w-full max-w-md bg-white/95 rounded-2xl shadow-2xl p-8 backdrop-blur-sm">
-          <h2 className="text-3xl font-bold text-center text-emerald-700 mb-6">
-            Create Account
-          </h2>
+          <h2 className="text-3xl font-bold text-center text-emerald-700 mb-6">Create Account</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* First Name */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">First Name</label>
               <input
@@ -76,6 +105,7 @@ const Register = () => {
               {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
             </div>
 
+            {/* Last Name */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">Last Name</label>
               <input
@@ -91,6 +121,7 @@ const Register = () => {
               {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
             </div>
 
+            {/* Email */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">Email</label>
               <input
@@ -106,6 +137,7 @@ const Register = () => {
               {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
             </div>
 
+            {/* Password */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">Password</label>
               <div className="relative">
@@ -130,6 +162,7 @@ const Register = () => {
               {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>
 
+            {/* Confirm Password */}
             <div>
               <label className="block text-gray-700 font-medium mb-1">Confirm Password</label>
               <input
@@ -147,11 +180,13 @@ const Register = () => {
               )}
             </div>
 
-            {/* 🔘 Button */}
+            {/* Server Message */}
+            {serverMessage && (
+              <p className="text-center text-red-500 font-medium mt-1">{serverMessage}</p>
+            )}
+
             <button
-              className="w-full border-2 border-emerald-700 text-emerald-800 py-2 rounded-md font-semibold
-                         hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500
-                         transition-all duration-300"
+              className="w-full border-2 border-emerald-700 text-emerald-800 py-2 rounded-md font-semibold hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
             >
               Register
             </button>
