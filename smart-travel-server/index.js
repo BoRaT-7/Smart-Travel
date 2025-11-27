@@ -109,6 +109,35 @@ async function run() {
       res.send(result);
     });
 
+
+    // LOGIN (POST)
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send({ success: false, message: "Email and password required" });
+  }
+
+  try {
+    const user = await userCollection.findOne({ email });
+    if (!user) return res.status(401).send({ success: false, message: "User not found" });
+
+    if (user.password !== password) {
+      return res.status(401).send({ success: false, message: "Incorrect password" });
+    }
+
+    res.send({
+      success: true,
+      message: "Login successful",
+      user: { id: user._id, name: user.name, email: user.email }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ success: false, message: "Server error" });
+  }
+});
+
+
   } catch (err) {
     console.error("MONGO ERROR:", err);
   }
