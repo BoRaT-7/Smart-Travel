@@ -90,7 +90,7 @@ const Header = () => {
               </motion.span>
               <motion.button
                 onClick={logout}
-                className="bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-medium px-4 py-1.5 rounded-full hover:brightness-110 shadow-md transition"
+                className=" bg-white border border-emerald-600 text-emerald-600 font-medium px-2 py-0.80 rounded-full hover:bg-emerald-50 shadow-md transitionbackgr"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
