@@ -4,6 +4,7 @@ import { AuthContext } from "../provider/Authprovider";
 import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
+
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);

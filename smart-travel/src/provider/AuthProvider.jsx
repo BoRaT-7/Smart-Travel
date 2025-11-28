@@ -1,15 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  updateProfile,
-  sendEmailVerification,
-  signOut,
-  onAuthStateChanged
-} from "firebase/auth";
-import { auth, googleProvider, db } from "../firebase/firebase.config";
-import { doc, setDoc } from "firebase/firestore";
 
 export const AuthContext = createContext();
 
@@ -17,59 +6,86 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Persistent login
+  // Check persistent login
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    const savedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("authToken");
+
+    if (savedUser && token) {
+      setUser(JSON.parse(savedUser));
+    }
+
+    setLoading(false);
   }, []);
 
-  // Registration
-  const createNewUser = async (email, password, firstName) => {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(res.user, { displayName: firstName });
-    await sendEmailVerification(res.user); // Email verification
-    setUser({ ...res.user, photoURL: null });
-    // Save user in Firestore
-    await setDoc(doc(db, "users", res.user.uid), {
-      uid: res.user.uid,
-      email: res.user.email,
-      displayName: firstName,
-      photoURL: null,
-      createdAt: new Date()
+  // --------------------------
+  // REGISTER NEW USER (Backend)
+  // --------------------------
+  const createNewUser = async (name, email, password) => {
+    const res = await fetch("http://localhost:5000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
     });
-    return res.user;
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.message || "Registration failed");
+    }
+
+    return data;
   };
 
-  // Login with Email/Password
+  // -----------------------
+  // LOGIN USER (Backend)
+  // -----------------------
   const loginUser = async (email, password) => {
-    const res = await signInWithEmailAndPassword(auth, email, password);
-    setUser({ ...res.user, photoURL: null });
-    return res.user;
+    const res = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.message || "Login failed");
+    }
+
+    // Save user & token
+    localStorage.setItem("authToken", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    setUser(data.user);
+
+    return data.user;
   };
 
-  // Login with Google
-  const loginWithGoogle = async () => {
-    const res = await signInWithPopup(auth, googleProvider);
-    setUser(res.user);
-    // Save/update user in Firestore
-    await setDoc(doc(db, "users", res.user.uid), {
-      uid: res.user.uid,
-      email: res.user.email,
-      displayName: res.user.displayName,
-      photoURL: res.user.photoURL,
-      lastLogin: new Date()
-    }, { merge: true });
-    return res.user;
+  // Google Login Remove (because you don’t use Firebase)
+  const loginWithGoogle = () => {
+    alert("Google login disabled because Firebase removed.");
   };
 
-  // Logout
-  const logout = () => signOut(auth).then(() => setUser(null));
+  // LOGOUT
+  const logout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+    setUser(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, createNewUser, loginUser, loginWithGoogle, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        loading,
+        createNewUser,
+        loginUser,
+        loginWithGoogle,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
