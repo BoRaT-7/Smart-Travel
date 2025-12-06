@@ -185,7 +185,7 @@ const Register = () => {
               <p className="text-center text-red-500 font-medium mt-1">{serverMessage}</p>
             )}
 
-            <button
+            <button type="submit"
               className="w-full border-2 border-emerald-700 text-emerald-800 py-2 rounded-md font-semibold hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
             >
               Register
