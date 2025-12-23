@@ -1,3 +1,4 @@
+// src/firebase/firebase.config.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -9,10 +10,9 @@ const firebaseConfig = {
   storageBucket: "smart-travel-95898.firebasestorage.app",
   messagingSenderId: "130483884307",
   appId: "1:130483884307:web:c0b770e0913b6f97a28ae6",
-  measurementId: "G-WPW75BKFD3"
+  measurementId: "G-WPW75BKFD3",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();

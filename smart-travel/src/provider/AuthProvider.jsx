@@ -1,4 +1,7 @@
+// src/provider/AuthProvider.jsx
 import React, { createContext, useState, useEffect } from "react";
+import { auth, googleProvider } from "../firebase/firebase.config";
+import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 
 export const AuthContext = createContext();
 
@@ -6,21 +9,33 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Check persistent login
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("authToken");
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        const mappedUser = {
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName,
+          email: firebaseUser.email,
+          photoURL: firebaseUser.photoURL,
+          provider: "google",
+        };
+        setUser(mappedUser);
+        localStorage.setItem("user", JSON.stringify(mappedUser));
+      } else {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+          setUser(JSON.parse(savedUser));
+        } else {
+          setUser(null);
+        }
+      }
+      setLoading(false);
+    });
 
-    if (savedUser && token) {
-      setUser(JSON.parse(savedUser));
-    }
-
-    setLoading(false);
+    return () => unsubscribe();
   }, []);
 
-  // --------------------------
-  // REGISTER NEW USER (Backend)
-  // --------------------------
+  // Backend registration
   const createNewUser = async (name, email, password) => {
     const res = await fetch("http://localhost:5000/register", {
       method: "POST",
@@ -34,12 +49,19 @@ const AuthProvider = ({ children }) => {
       throw new Error(data.message || "Registration failed");
     }
 
+    const backendUser = {
+      id: data.user?.id,
+      name: data.user?.name || name,
+      email: data.user?.email || email,
+      provider: "backend",
+    };
+    localStorage.setItem("user", JSON.stringify(backendUser));
+    setUser(backendUser);
+
     return data;
   };
 
-  // -----------------------
-  // LOGIN USER (Backend)
-  // -----------------------
+  // Backend email/password login
   const loginUser = async (email, password) => {
     const res = await fetch("http://localhost:5000/login", {
       method: "POST",
@@ -53,22 +75,49 @@ const AuthProvider = ({ children }) => {
       throw new Error(data.message || "Login failed");
     }
 
-    // Save user & token
-    localStorage.setItem("authToken", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-
-    setUser(data.user);
+    if (data.token) {
+      localStorage.setItem("authToken", data.token);
+    }
+    if (data.user) {
+      const backendUser = {
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        provider: "backend",
+      };
+      localStorage.setItem("user", JSON.stringify(backendUser));
+      setUser(backendUser);
+    }
 
     return data.user;
   };
 
-  // Google Login Remove (because you don’t use Firebase)
-  const loginWithGoogle = () => {
-    alert("Google login disabled because Firebase removed.");
+  // Google login (Firebase)
+  const loginWithGoogle = async () => {
+    const result = await signInWithPopup(auth, googleProvider);
+    const firebaseUser = result.user;
+
+    const mappedUser = {
+      uid: firebaseUser.uid,
+      name: firebaseUser.displayName,
+      email: firebaseUser.email,
+      photoURL: firebaseUser.photoURL,
+      provider: "google",
+    };
+
+    localStorage.setItem("user", JSON.stringify(mappedUser));
+    setUser(mappedUser);
+
+       return mappedUser;
   };
 
-  // LOGOUT
-  const logout = () => {
+  // LOGOUT (Firebase + local)
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      // ignore if the user was only backend-authenticated
+    }
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
     setUser(null);
@@ -92,3 +141,4 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
+

@@ -1,7 +1,7 @@
 // server.js
-const express = require('express');
-const cors = require('cors');
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const express = require("express");
+const cors = require("cors");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -9,7 +9,6 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Atlas connection string
 const uri =
   "mongodb+srv://borat156006_db_user:xaFAoIy8Irz6WhDY@cluster0.i8wpz9p.mongodb.net/?retryWrites=true&w=majority&tls=true";
 
@@ -30,14 +29,14 @@ async function run() {
     const userCollection = db.collection("users");
     const reviewCollection = db.collection("reviews");
 
-    // ========== USERS ==========
+    // ========== AUTH ==========
 
     // REGISTER
     app.post("/register", async (req, res) => {
       const { name, email, password } = req.body;
 
       if (!name || !email || !password) {
-        return res.send({
+        return res.status(400).send({
           success: false,
           message: "All fields are required",
         });
@@ -45,7 +44,7 @@ async function run() {
 
       const existingUser = await userCollection.findOne({ email });
       if (existingUser) {
-        return res.send({
+        return res.status(409).send({
           success: false,
           message: "User already exists",
         });
@@ -57,24 +56,61 @@ async function run() {
       return res.send({
         success: true,
         message: "Registration successful",
-        insertedId: result.insertedId,
+        user: {
+          id: result.insertedId,
+          name,
+          email,
+        },
       });
     });
 
-    // GET ALL USERS
+    // LOGIN
+    app.post("/login", async (req, res) => {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).send({
+          success: false,
+          message: "Email and password are required",
+        });
+      }
+
+      const user = await userCollection.findOne({ email });
+
+      if (!user || user.password !== password) {
+        return res.status(401).send({
+          success: false,
+          message: "Invalid email or password",
+        });
+      }
+
+      const token = "demo-token-" + user._id.toString(); // simple fake token
+
+      return res.send({
+        success: true,
+        message: "Login successful",
+        token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+        },
+      });
+    });
+
+    // ========== USERS CRUD ==========
+
     app.get("/users", async (req, res) => {
       const users = await userCollection.find().toArray();
       res.send(users);
     });
 
-    // GET SINGLE USER
     app.get("/users/:id", async (req, res) => {
       const id = req.params.id;
       const user = await userCollection.findOne({ _id: new ObjectId(id) });
       res.send(user);
     });
 
-    // UPDATE USER
     app.put("/users/:id", async (req, res) => {
       const id = req.params.id;
       const updatedUser = req.body;
@@ -93,7 +129,6 @@ async function run() {
       res.send(result);
     });
 
-    // DELETE USER
     app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
       const result = await userCollection.deleteOne({ _id: new ObjectId(id) });
@@ -102,12 +137,11 @@ async function run() {
 
     // ========== REVIEWS CRUD ==========
 
-    // CREATE Review
     app.post("/reviews", async (req, res) => {
       const { userId, name, comment, rating, avatar } = req.body;
 
       if (!userId || !name || !comment || !rating) {
-        return res.send({
+        return res.status(400).send({
           success: false,
           message: "userId, name, comment and rating are required",
         });
@@ -131,7 +165,6 @@ async function run() {
       });
     });
 
-    // READ all reviews
     app.get("/reviews", async (req, res) => {
       const reviews = await reviewCollection
         .find({})
@@ -140,14 +173,12 @@ async function run() {
       res.send(reviews);
     });
 
-    // READ single review
     app.get("/reviews/:id", async (req, res) => {
       const id = req.params.id;
       const review = await reviewCollection.findOne({ _id: new ObjectId(id) });
       res.send(review);
     });
 
-    // UPDATE Review
     app.put("/reviews/:id", async (req, res) => {
       const id = req.params.id;
       const { name, comment, rating, reply } = req.body;
@@ -168,7 +199,6 @@ async function run() {
       res.send(result);
     });
 
-    // DELETE Review
     app.delete("/reviews/:id", async (req, res) => {
       const id = req.params.id;
       const result = await reviewCollection.deleteOne({
@@ -176,7 +206,6 @@ async function run() {
       });
       res.send(result);
     });
-
   } catch (err) {
     console.error("MONGO ERROR:", err);
   }
