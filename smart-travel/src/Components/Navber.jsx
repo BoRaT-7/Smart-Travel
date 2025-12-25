@@ -46,7 +46,7 @@ const Navber = () => {
     <section className="relative w-full font-sans">
       {/* Hero Section */}
       <div className="relative w-full h-[520px] sm:h-[560px] md:h-[600px] lg:h-[640px] overflow-hidden rounded-b-3xl shadow-2xl">
-        {/* Background Slide */}
+        {/* Background Slide (unchanged) */}
         <motion.img
           key={current}
           src={slides[current]}
@@ -58,8 +58,8 @@ const Navber = () => {
           transition={{ duration: 1.5, ease: "easeInOut" }}
         />
 
-        {/* Luxury Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B3D1D]/70 via-[#3E5C2D]/50 to-[#C6A664]/20 backdrop-blur-sm rounded-b-3xl" />
+        {/* Overlay — theme updated */}
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-950/80 via-blue-900/70 to-cyan-800/50 backdrop-blur-xl rounded-b-3xl" />
 
         {/* Text & Actions */}
         <motion.div
@@ -75,13 +75,13 @@ const Navber = () => {
           >
             Discover Your Next{" "}
             <motion.span
-              className="text-amber-400 underline decoration-amber-300 decoration-4"
+              className="text-cyan-300 underline decoration-cyan-300 decoration-4"
               animate={{
                 scale: [1, 1.08, 1],
                 textShadow: [
-                  "0px 0px 0px #FFB800",
-                  "0px 0px 8px #FFB800",
-                  "0px 0px 0px #FFB800",
+                  "0px 0px 0px #22D3EE",
+                  "0px 0px 10px #22D3EE",
+                  "0px 0px 0px #22D3EE",
                 ],
               }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -91,49 +91,73 @@ const Navber = () => {
           </motion.h1>
 
           <motion.p
-            className="mt-3 text-gray-100 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed"
+            className="mt-3 text-sky-100 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed"
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
             Explore beautiful destinations, plan unforgettable trips, and start your journey with confidence.
           </motion.p>
 
-          {/* Action Buttons */}
+          {/* Action Buttons — theme updated */}
           <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-3 px-4 w-full max-w-3xl">
             {actions.map((a, idx) => (
               <motion.button
                 key={idx}
                 onClick={() => scrollToSection(a.id)}
-                className="group flex items-center gap-2 bg-emerald-700/25 backdrop-blur-md border border-emerald-500/40
-                  text-white font-medium rounded-full px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3
-                  hover:bg-gradient-to-r hover:from-emerald-600 hover:to-amber-400
-                  hover:text-[#0B3D1D] hover:shadow-lg hover:shadow-amber-400/40
-                  transition-all duration-500 ease-out"
-                whileHover={{ scale: 1.06 }}
+                className="
+                  group flex items-center gap-2
+                  bg-sky-900/40 backdrop-blur-lg
+                  border border-cyan-300/60
+                  text-sky-50 font-medium
+                  rounded-full px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3
+                  hover:bg-gradient-to-r hover:from-cyan-300 hover:to-sky-400
+                  hover:text-sky-950
+                  hover:shadow-lg hover:shadow-cyan-300/40
+                  transition-all duration-500 ease-out
+                "
+                whileHover={{ scale: 1.06, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="text-lg">{a.icon}</span>
-                <span className="text-xs sm:text-sm md:text-base whitespace-nowrap">{a.label}</span>
+                <span className="text-lg text-cyan-300 group-hover:text-sky-900">
+                  {a.icon}
+                </span>
+                <span className="text-xs sm:text-sm md:text-base whitespace-nowrap">
+                  {a.label}
+                </span>
               </motion.button>
             ))}
           </div>
         </motion.div>
 
-        {/* Navigation Arrows */}
+        {/* Navigation Arrows — theme updated */}
         <div className="absolute inset-0 flex items-center justify-between px-3 md:px-8 pointer-events-none">
           <button
             onClick={prevSlide}
             aria-label="Previous slide"
-            className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 flex items-center justify-center 
-                       bg-white/20 rounded-full text-white hover:bg-amber-400 transition duration-300 focus:outline-none"
+            className="
+              pointer-events-auto w-9 h-9 md:w-11 md:h-11
+              flex items-center justify-center 
+              bg-sky-950/60 border border-cyan-300/70
+              rounded-full text-cyan-200
+              hover:bg-cyan-300 hover:text-sky-900
+              shadow-lg shadow-black/40
+              transition duration-300 focus:outline-none
+            "
           >
             ❮
           </button>
           <button
             onClick={nextSlide}
             aria-label="Next slide"
-            className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 flex items-center justify-center 
-                       bg-white/20 rounded-full text-white hover:bg-amber-400 transition duration-300 focus:outline-none"
+            className="
+              pointer-events-auto w-9 h-9 md:w-11 md:h-11
+              flex items-center justify-center 
+              bg-sky-950/60 border border-cyan-300/70
+              rounded-full text-cyan-200
+              hover:bg-cyan-300 hover:text-sky-900
+              shadow-lg shadow-black/40
+              transition duration-300 focus:outline-none
+            "
           >
             ❯
           </button>
