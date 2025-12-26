@@ -23,6 +23,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+
     try {
       await loginUser(form.email, form.password);
       navigate("/");
