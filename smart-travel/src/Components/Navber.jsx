@@ -38,15 +38,23 @@ const Navber = () => {
     { icon: <FaHotel size={20} />, label: "Hotel Booking", id: "hotel-booking" },
     { icon: <FaShoppingBag size={20} />, label: "Shop Gear", id: "gear-shop" },
     { icon: <FaRoute size={20} />, label: "Plan Trip", id: "top-destination" },
-    { icon: <FaMapMarkedAlt size={20} />, label: "Destination Guide", id: "guide-slider" },
-    { icon: <FaBusAlt size={20} />, label: "Transport Booking", id: "transport-booking" },
+    {
+      icon: <FaMapMarkedAlt size={20} />,
+      label: "Destination Guide",
+      id: "guide-slider",
+    },
+    {
+      icon: <FaBusAlt size={20} />,
+      label: "Transport Booking",
+      id: "transport-booking",
+    },
   ];
 
   return (
     <section className="relative w-full font-sans">
       {/* Hero Section */}
       <div className="relative w-full h-[520px] sm:h-[560px] md:h-[600px] lg:h-[640px] overflow-hidden rounded-b-3xl shadow-2xl">
-        {/* Background Slide (unchanged) */}
+        {/* Background Slide */}
         <motion.img
           key={current}
           src={slides[current]}
@@ -58,30 +66,56 @@ const Navber = () => {
           transition={{ duration: 1.5, ease: "easeInOut" }}
         />
 
-        {/* Overlay — theme updated */}
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-950/80 via-blue-900/70 to-cyan-800/50 backdrop-blur-xl rounded-b-3xl" />
+        {/* SmartTravel Overlay */}
+        <div
+          className="absolute inset-0 bg-gradient-to-b 
+          from-sky-900/75 via-blue-900/55 to-cyan-900/30 
+          backdrop-blur-sm rounded-b-3xl"
+        />
 
         {/* Text & Actions */}
         <motion.div
           className="absolute inset-0 flex flex-col items-center justify-center text-center px-5"
           initial="hidden"
           animate="visible"
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.25 } } }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.25 } },
+          }}
         >
+          {/* Headline */}
+          <motion.span
+            className="mb-3 text-xs sm:text-sm md:text-base 
+              uppercase tracking-widest font-semibold 
+              text-cyan-300 bg-cyan-400/10 
+              px-4 py-1.5 rounded-full 
+              border border-cyan-300/30"
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            Your Smart Journey Starts Here
+          </motion.span>
+
           <motion.h1
-            className="text-white font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-2xl leading-snug"
-            variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0 } }}
+            className="text-white font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-2xl"
+            variants={{
+              hidden: { opacity: 0, y: 40 },
+              visible: { opacity: 1, y: 0 },
+            }}
             transition={{ type: "spring", stiffness: 120, damping: 14 }}
           >
             Discover Your Next{" "}
             <motion.span
-              className="text-cyan-300 underline decoration-cyan-300 decoration-4"
+              className="text-cyan-300 underline decoration-sky-300 decoration-4"
               animate={{
                 scale: [1, 1.08, 1],
                 textShadow: [
-                  "0px 0px 0px #22D3EE",
-                  "0px 0px 10px #22D3EE",
-                  "0px 0px 0px #22D3EE",
+                  "0px 0px 0px #22d3ee",
+                  "0px 0px 10px #22d3ee",
+                  "0px 0px 0px #22d3ee",
                 ],
               }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -92,30 +126,33 @@ const Navber = () => {
 
           <motion.p
             className="mt-3 text-sky-100 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed"
-            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 },
+            }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
-            Explore beautiful destinations, plan unforgettable trips, and start your journey with confidence.
+            Explore beautiful destinations, plan unforgettable trips, and start
+            your journey with confidence.
           </motion.p>
 
-          {/* Action Buttons — theme updated */}
+          {/* Action Buttons */}
           <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-3 px-4 w-full max-w-3xl">
             {actions.map((a, idx) => (
               <motion.button
                 key={idx}
                 onClick={() => scrollToSection(a.id)}
-                className="
-                  group flex items-center gap-2
-                  bg-sky-900/40 backdrop-blur-lg
-                  border border-cyan-300/60
-                  text-sky-50 font-medium
-                  rounded-full px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3
-                  hover:bg-gradient-to-r hover:from-cyan-300 hover:to-sky-400
-                  hover:text-sky-950
-                  hover:shadow-lg hover:shadow-cyan-300/40
-                  transition-all duration-500 ease-out
-                "
-                whileHover={{ scale: 1.06, y: -2 }}
+                className="group flex items-center gap-2 
+                  bg-white/15 backdrop-blur-md 
+                  border border-cyan-300/30
+                  text-white font-medium rounded-full
+                  px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3
+                  hover:bg-gradient-to-r 
+                  hover:from-cyan-400 hover:to-sky-500
+                  hover:text-sky-900 
+                  hover:shadow-lg hover:shadow-cyan-400/40
+                  transition-all duration-500 ease-out"
+                whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <span className="text-lg text-cyan-300 group-hover:text-sky-900">
@@ -129,35 +166,25 @@ const Navber = () => {
           </div>
         </motion.div>
 
-        {/* Navigation Arrows — theme updated */}
+        {/* Navigation Arrows */}
         <div className="absolute inset-0 flex items-center justify-between px-3 md:px-8 pointer-events-none">
           <button
             onClick={prevSlide}
             aria-label="Previous slide"
-            className="
-              pointer-events-auto w-9 h-9 md:w-11 md:h-11
+            className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 
               flex items-center justify-center 
-              bg-sky-950/60 border border-cyan-300/70
-              rounded-full text-cyan-200
-              hover:bg-cyan-300 hover:text-sky-900
-              shadow-lg shadow-black/40
-              transition duration-300 focus:outline-none
-            "
+              bg-white/20 rounded-full text-white 
+              hover:bg-cyan-400 hover:text-sky-900 transition"
           >
             ❮
           </button>
           <button
             onClick={nextSlide}
             aria-label="Next slide"
-            className="
-              pointer-events-auto w-9 h-9 md:w-11 md:h-11
+            className="pointer-events-auto w-9 h-9 md:w-11 md:h-11 
               flex items-center justify-center 
-              bg-sky-950/60 border border-cyan-300/70
-              rounded-full text-cyan-200
-              hover:bg-cyan-300 hover:text-sky-900
-              shadow-lg shadow-black/40
-              transition duration-300 focus:outline-none
-            "
+              bg-white/20 rounded-full text-white 
+              hover:bg-cyan-400 hover:text-sky-900 transition"
           >
             ❯
           </button>

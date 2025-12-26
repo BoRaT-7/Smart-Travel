@@ -4,13 +4,15 @@ const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// ================= MONGODB CONFIG =================
 const uri =
-  "mongodb+srv://borat156006_db_user:xaFAoIy8Irz6WhDY@cluster0.i8wpz9p.mongodb.net/?retryWrites=true&w=majority&tls=true";
+  "mongodb+srv://borat156006_db_user:RvDTMdHgAfWCcM4Y@cluster0.i8wpz9p.mongodb.net/smartTravelDB?retryWrites=true&w=majority";
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -20,16 +22,17 @@ const client = new MongoClient(uri, {
   },
 });
 
+// ================= RUN SERVER =================
 async function run() {
   try {
     await client.connect();
-    console.log("MongoDB Connected ✔");
+    console.log("✅ MongoDB Connected Successfully");
 
     const db = client.db("smartTravelDB");
-    const userCollection = db.collection("users");
-    const reviewCollection = db.collection("reviews");
+    const usersCollection = db.collection("users");
+    const reviewsCollection = db.collection("reviews");
 
-    // ========== AUTH ==========
+    // ================= AUTH =================
 
     // REGISTER
     app.post("/register", async (req, res) => {
@@ -42,7 +45,7 @@ async function run() {
         });
       }
 
-      const existingUser = await userCollection.findOne({ email });
+      const existingUser = await usersCollection.findOne({ email });
       if (existingUser) {
         return res.status(409).send({
           success: false,
@@ -50,10 +53,14 @@ async function run() {
         });
       }
 
-      const newUser = { name, email, password };
-      const result = await userCollection.insertOne(newUser);
+      const result = await usersCollection.insertOne({
+        name,
+        email,
+        password,
+        createdAt: new Date(),
+      });
 
-      return res.send({
+      res.send({
         success: true,
         message: "Registration successful",
         user: {
@@ -68,14 +75,7 @@ async function run() {
     app.post("/login", async (req, res) => {
       const { email, password } = req.body;
 
-      if (!email || !password) {
-        return res.status(400).send({
-          success: false,
-          message: "Email and password are required",
-        });
-      }
-
-      const user = await userCollection.findOne({ email });
+      const user = await usersCollection.findOne({ email });
 
       if (!user || user.password !== password) {
         return res.status(401).send({
@@ -84,12 +84,9 @@ async function run() {
         });
       }
 
-      const token = "demo-token-" + user._id.toString(); // simple fake token
-
-      return res.send({
+      res.send({
         success: true,
         message: "Login successful",
-        token,
         user: {
           id: user._id,
           name: user.name,
@@ -98,125 +95,113 @@ async function run() {
       });
     });
 
-    // ========== USERS CRUD ==========
+    // ================= USERS =================
 
     app.get("/users", async (req, res) => {
-      const users = await userCollection.find().toArray();
+      const users = await usersCollection.find().toArray();
       res.send(users);
     });
 
-    app.get("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const user = await userCollection.findOne({ _id: new ObjectId(id) });
-      res.send(user);
-    });
+    // ================= REVIEWS =================
 
-    app.put("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const updatedUser = req.body;
-
-      const result = await userCollection.updateOne(
-        { _id: new ObjectId(id) },
-        {
-          $set: {
-            name: updatedUser.name,
-            email: updatedUser.email,
-          },
-        },
-        { upsert: false }
-      );
-
-      res.send(result);
-    });
-
-    app.delete("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const result = await userCollection.deleteOne({ _id: new ObjectId(id) });
-      res.send(result);
-    });
-
-    // ========== REVIEWS CRUD ==========
-
+    // ADD REVIEW
     app.post("/reviews", async (req, res) => {
-      const { userId, name, comment, rating, avatar } = req.body;
+      const { name, comment, rating } = req.body;
 
-      if (!userId || !name || !comment || !rating) {
+      if (!name || !comment || !rating) {
         return res.status(400).send({
           success: false,
-          message: "userId, name, comment and rating are required",
+          message: "Name, comment and rating required",
         });
       }
 
-      const newReview = {
-        userId,
+      const result = await reviewsCollection.insertOne({
         name,
         comment,
-        rating: Number(rating),
-        avatar: avatar || null,
-        date: new Date().toISOString().split("T")[0],
-      };
-
-      const result = await reviewCollection.insertOne(newReview);
+        rating,
+        date: new Date(),
+      });
 
       res.send({
         success: true,
-        message: "Review added",
-        reviewId: result.insertedId,
+        message: "Review added successfully",
+        id: result.insertedId,
       });
     });
 
+    // GET ALL REVIEWS
     app.get("/reviews", async (req, res) => {
-      const reviews = await reviewCollection
-        .find({})
+      const reviews = await reviewsCollection
+        .find()
         .sort({ _id: -1 })
         .toArray();
       res.send(reviews);
     });
 
+    // GET SINGLE REVIEW
     app.get("/reviews/:id", async (req, res) => {
       const id = req.params.id;
-      const review = await reviewCollection.findOne({ _id: new ObjectId(id) });
+
+      const review = await reviewsCollection.findOne({
+        _id: new ObjectId(id),
+      });
+
       res.send(review);
     });
 
+    // UPDATE REVIEW
     app.put("/reviews/:id", async (req, res) => {
       const id = req.params.id;
-      const { name, comment, rating, reply } = req.body;
+      const { name, comment, rating } = req.body;
 
-      const updateDoc = { $set: {} };
+      const updateDoc = {
+        $set: {
+          name,
+          comment,
+          rating,
+          updatedAt: new Date(),
+        },
+      };
 
-      if (name !== undefined) updateDoc.$set.name = name;
-      if (comment !== undefined) updateDoc.$set.comment = comment;
-      if (rating !== undefined) updateDoc.$set.rating = Number(rating);
-      if (reply !== undefined) updateDoc.$set.reply = reply;
-
-      const result = await reviewCollection.updateOne(
+      const result = await reviewsCollection.updateOne(
         { _id: new ObjectId(id) },
-        updateDoc,
-        { upsert: false }
+        updateDoc
       );
 
-      res.send(result);
+      res.send({
+        success: true,
+        message: "Review updated successfully",
+        modifiedCount: result.modifiedCount,
+      });
     });
 
+    // DELETE REVIEW
     app.delete("/reviews/:id", async (req, res) => {
       const id = req.params.id;
-      const result = await reviewCollection.deleteOne({
+
+      const result = await reviewsCollection.deleteOne({
         _id: new ObjectId(id),
       });
-      res.send(result);
+
+      res.send({
+        success: true,
+        message: "Review deleted successfully",
+        deletedCount: result.deletedCount,
+      });
     });
-  } catch (err) {
-    console.error("MONGO ERROR:", err);
+  } catch (error) {
+    console.error("❌ MongoDB ERROR:", error);
   }
 }
 
-run().catch(console.dir);
+run();
 
+// ================= ROOT =================
 app.get("/", (req, res) => {
-  res.send("Smart Travel Server is running");
+  res.send("🚀 Smart Travel Server is running");
 });
 
+// ================= LISTEN =================
 app.listen(port, () => {
-  console.log(`Server running on port: ${port}`);
+  console.log(`✅ Server running on port: ${port}`);
 });
