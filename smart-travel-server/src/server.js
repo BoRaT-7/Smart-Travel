@@ -8,6 +8,8 @@ const reviewController = require("./controllers/review.controller");
 const bookingController = require("./controllers/booking.controller");
 const orderController = require("./controllers/order.controller");
 const hotelBookingController = require("./controllers/hotelBooking.controller");
+const contactController = require("./controllers/contact.controller"); // নতুন লাইন
+
 const port = process.env.PORT || 5000;
 
 async function start() {
@@ -19,7 +21,9 @@ async function start() {
     reviewController.init(db);
     bookingController.init(db);
     orderController.init(db);
-    hotelBookingController.init(db)
+    hotelBookingController.init(db);
+    contactController.init(db); // নতুন লাইন
+
     app.listen(port, () => {
       console.log(`✅ Server running on port: ${port}`);
     });

@@ -62,7 +62,7 @@ const GearShopall = () => {
 
   return (
     <div>
-      <Header />
+      
 
       <section className="mt-10">
         <motion.div className="min-h-screen text-gray-100 px-6 py-12 bg-[#0a0a0a]">
@@ -177,7 +177,7 @@ const GearShopall = () => {
         </motion.div>
       </section>
 
-      <Footer />
+
     </div>
   );
 };
