@@ -1,5 +1,7 @@
+// Router.jsx
 import { createBrowserRouter } from "react-router-dom";
 import Homelayout from "../Layout/Homelayout";
+import Home from "../Pages/Home";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import TopDestinationDetails from "../Pages/TopDestination/TopDestinationDetails";
@@ -11,25 +13,28 @@ import HotelAll from "../Pages/HotelBooking/HotelAll";
 import HotelDetails from "../Pages/HotelBooking/HotelDetails";
 import HotelBook from "../Pages/HotelBooking/HotelBook";
 import HotelBookingConform from "../Pages/HotelBooking/HotelBookingConform";
+import Contact from "../Pages/Contact";
 
 const Router = createBrowserRouter([
-  { path: "/", element: <Homelayout /> },
-
-  { path: "/destination/:id", element: <TopDestinationDetails /> },
-  { path: "/auth/login", element: <Login /> },
-  { path: "/auth/register", element: <Register /> },
-
-  { path: "/shop", element: <GearShopall /> },
-  { path: "/shoporder", element: <ShopOrder /> },
-
-  { path: "/packages", element: <TopDestinationAll /> },
-  { path: "/destination/book", element: <DestinationBook /> },
-
-  { path: "/hotel", element: <HotelAll /> },
-  { path: "/hotel/:id", element: <HotelDetails /> },
-  { path: "/hotel/book/:id", element: <HotelBook /> },
-  { path: "/hotel/confirm", element: <HotelBookingConform /> },
-
+  {
+    path: "/",
+    element: <Homelayout />,
+    children: [
+      { index: true, element: <Home /> },          // "/"
+      { path: "contact", element: <Contact /> },   // "/contact"
+      { path: "destination/:id", element: <TopDestinationDetails /> },
+      { path: "auth/login", element: <Login /> },
+      { path: "auth/register", element: <Register /> },
+      { path: "shop", element: <GearShopall /> },
+      { path: "shoporder", element: <ShopOrder /> },
+      { path: "packages", element: <TopDestinationAll /> },
+      { path: "destination/book", element: <DestinationBook /> },
+      { path: "hotel", element: <HotelAll /> },
+      { path: "hotel/:id", element: <HotelDetails /> },
+      { path: "hotel/book/:id", element: <HotelBook /> },
+      { path: "hotel/confirm", element: <HotelBookingConform /> },
+    ],
+  },
   { path: "*", element: <h1>404 Error</h1> },
 ]);
 

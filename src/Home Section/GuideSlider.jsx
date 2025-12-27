@@ -1,12 +1,22 @@
+// GuideSlider.jsx
 import React, { useEffect, useState, useRef, useMemo } from "react";
-import { FaStar, FaMapMarkerAlt, FaWhatsapp, FaInstagram, FaFacebook, FaSearch, FaTimes } from "react-icons/fa";
+import {
+  FaStar,
+  FaMapMarkerAlt,
+  FaWhatsapp,
+  FaInstagram,
+  FaFacebook,
+  FaSearch,
+  FaTimes,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const GuideSlider = () => {
   const [guides, setGuides] = useState([]);
   const [query, setQuery] = useState("");
   const containerRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Load JSON data
   useEffect(() => {
     fetch("/Guide/data.json")
       .then((res) => res.json())
@@ -14,14 +24,17 @@ const GuideSlider = () => {
       .catch((err) => console.error("Failed to load data:", err));
   }, []);
 
-  // Auto-scroll slider
   useEffect(() => {
     if (!containerRef.current || guides.length === 0) return;
 
     const scrollAmount = containerRef.current.offsetWidth / 4;
     const interval = setInterval(() => {
       if (containerRef.current) {
-        if (containerRef.current.scrollLeft + containerRef.current.offsetWidth >= containerRef.current.scrollWidth) {
+        if (
+          containerRef.current.scrollLeft +
+            containerRef.current.offsetWidth >=
+          containerRef.current.scrollWidth
+        ) {
           containerRef.current.scrollLeft = 0;
         } else {
           containerRef.current.scrollLeft += scrollAmount;
@@ -32,7 +45,6 @@ const GuideSlider = () => {
     return () => clearInterval(interval);
   }, [guides]);
 
-  // Filtered guides based on search query
   const filteredGuides = useMemo(
     () =>
       guides.filter(
@@ -42,6 +54,12 @@ const GuideSlider = () => {
       ),
     [guides, query]
   );
+
+  const handleContactClick = (guide) => {
+    // if you later want to pass guide info:
+    // navigate(`/contact?guide=${guide.id}`);
+    navigate("/contact");
+  };
 
   return (
     <div className="w-full bg-[#F8F8F5] py-12">
@@ -91,32 +109,50 @@ const GuideSlider = () => {
                   className="h-48 w-full object-cover"
                 />
                 <div className="absolute top-2 right-2 flex flex-col space-y-2">
-                  <a href={guide.social?.whatsapp || "#"} target="_blank" rel="noreferrer">
+                  <a
+                    href={guide.social?.whatsapp || "#"}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <FaWhatsapp className="text-emerald-600 bg-white p-1 rounded-full w-7 h-7" />
                   </a>
-                  <a href={guide.social?.instagram || "#"} target="_blank" rel="noreferrer">
+                  <a
+                    href={guide.social?.instagram || "#"}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <FaInstagram className="text-pink-500 bg-white p-1 rounded-full w-7 h-7" />
                   </a>
-                  <a href={guide.social?.facebook || "#"} target="_blank" rel="noreferrer">
+                  <a
+                    href={guide.social?.facebook || "#"}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <FaFacebook className="text-blue-600 bg-white p-1 rounded-full w-7 h-7" />
                   </a>
                 </div>
               </div>
               <div className="p-4">
                 <button
-  className="w-full border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition"
->
-  Contact
-</button>
-                <h3 className="text-lg font-semibold text-gray-800">{guide.name}</h3>
+                  onClick={() => handleContactClick(guide)}
+                  className="w-full border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition"
+                >
+                  Contact
+                </button>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {guide.name}
+                </h3>
                 <p className="flex items-center text-gray-600 text-sm">
-                  <FaMapMarkerAlt className="mr-1 text-red-500" /> {guide.location}
+                  <FaMapMarkerAlt className="mr-1 text-red-500" />{" "}
+                  {guide.location}
                 </p>
                 <p className="text-gray-500 text-sm">{guide.role}</p>
                 <div className="flex mt-2">
-                  {Array.from({ length: Math.floor(guide.rating) }).map((_, i) => (
-                    <FaStar key={i} className="text-yellow-400" />
-                  ))}
+                  {Array.from({ length: Math.floor(guide.rating) }).map(
+                    (_, i) => (
+                      <FaStar key={i} className="text-yellow-400" />
+                    )
+                  )}
                 </div>
               </div>
             </div>
@@ -125,11 +161,9 @@ const GuideSlider = () => {
       )}
 
       <div className="text-center mt-8">
-        <button
-  className="border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition"
->
-  See More 
-</button>
+        <button className="border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition">
+          See More
+        </button>
       </div>
     </div>
   );

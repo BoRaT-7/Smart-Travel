@@ -45,7 +45,7 @@ const TopDestinationAll = () => {
 
   return (
     <>
-      <Header />
+     
       <section className="min-h-screen py-24 px-6 bg-gradient-to-b from-[#f7faf6] to-[#e5e7eb]">
         {/* Page Title */}
         <div className="text-center mb-12">
@@ -133,7 +133,7 @@ const TopDestinationAll = () => {
           ))}
         </div>
       </section>
-      <Footer />
+     
     </>
   );
 };

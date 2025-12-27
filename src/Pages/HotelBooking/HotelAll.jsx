@@ -49,7 +49,7 @@ const HotelAll = () => {
 
   return (
     <div className="min-h-screen bg-gray-300 mt-10">
-      <Header />
+  
 
       <section className="py-12 px-6">
         <h2 className="font-extrabold text-4xl text-center pb-5 text-emerald-600">
@@ -147,7 +147,7 @@ const HotelAll = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };
