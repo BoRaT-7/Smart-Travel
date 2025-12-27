@@ -32,11 +32,50 @@ const ShopOrder = () => {
     return (price * form.quantity).toFixed(2);
   }, [form.quantity, product.price]);
 
-  const handleOrder = (e) => {
-    e.preventDefault();
+  // ✅ Send order to backend
+  const handleOrder = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch("http://localhost:5000/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        address: form.address,
+        quantity: Number(form.quantity),
+        productId: product.id || product._id || product.name,
+        productName: product.name,
+        productPrice: product.price,
+        productImage: product.image_url,
+        productDescription: product.description,
+      }),
+    });
+
+    const text = await res.text(); // <- raw response
+    console.log("Status:", res.status);
+    console.log("Raw response:", text);
+
+    if (!res.ok) {
+      throw new Error("Order request failed");
+    }
+
+    const data = JSON.parse(text); // now only JSON expect
+
+    if (!data.success) {
+      throw new Error(data.message || "Order failed");
+    }
+
     alert(`✅ Order placed successfully for ${form.quantity} x ${product.name}!`);
     navigate("/");
-  };
+  } catch (err) {
+    console.error("Order error:", err);
+    alert(err.message || "Order failed. Please try again.");
+  }
+};
+
 
   return (
     <motion.div

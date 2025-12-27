@@ -13,4 +13,3 @@ router.get("/", getAllBookings);
 router.get("/:id", getBookingById);
 
 module.exports = router;
-

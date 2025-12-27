@@ -5,8 +5,9 @@ const { connectDB } = require("./config/db");
 const authController = require("./controllers/auth.controller");
 const userController = require("./controllers/user.controller");
 const reviewController = require("./controllers/review.controller");
-const bookingController = require("./controllers/booking.controller"); // ✅
-
+const bookingController = require("./controllers/booking.controller");
+const orderController = require("./controllers/order.controller");
+const hotelBookingController = require("./controllers/hotelBooking.controller");
 const port = process.env.PORT || 5000;
 
 async function start() {
@@ -16,8 +17,9 @@ async function start() {
     authController.init(db);
     userController.init(db);
     reviewController.init(db);
-    bookingController.init(db); // ✅
-
+    bookingController.init(db);
+    orderController.init(db);
+    hotelBookingController.init(db)
     app.listen(port, () => {
       console.log(`✅ Server running on port: ${port}`);
     });
