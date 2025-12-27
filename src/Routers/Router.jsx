@@ -9,7 +9,8 @@ import TopDestinationAll from "../Pages/TopDestination/TopDestinationAll";
 import DestinationBook from "../Pages/TopDestination/DestinationBook";
 import HotelAll from "../Pages/HotelBooking/HotelAll";
 import HotelDetails from "../Pages/HotelBooking/HotelDetails";
-import HotelBook from "../Pages/HotelBooking/HotelBook"; // ✅ new
+import HotelBook from "../Pages/HotelBooking/HotelBook";
+import HotelBookingConform from "../Pages/HotelBooking/HotelBookingConform";
 
 const Router = createBrowserRouter([
   { path: "/", element: <Homelayout /> },
@@ -25,8 +26,9 @@ const Router = createBrowserRouter([
   { path: "/destination/book", element: <DestinationBook /> },
 
   { path: "/hotel", element: <HotelAll /> },
-  { path: "/hotel/:id", element: <HotelDetails /> }, // ✅ details page
-  { path: "/hotel/book/:id", element: <HotelBook /> }, // ✅ booking page
+  { path: "/hotel/:id", element: <HotelDetails /> },
+  { path: "/hotel/book/:id", element: <HotelBook /> },
+  { path: "/hotel/confirm", element: <HotelBookingConform /> },
 
   { path: "*", element: <h1>404 Error</h1> },
 ]);

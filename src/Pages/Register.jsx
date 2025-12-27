@@ -1,11 +1,13 @@
 // src/Pages/Register.jsx
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../provider/AuthProvider";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { createNewUser } = useContext(AuthContext);
 
   const [form, setForm] = useState({
     email: "",
@@ -53,26 +55,15 @@ const Register = () => {
 
     const { firstName, lastName, email, password } = form;
     const name = `${firstName} ${lastName}`;
-    const newUser = { name, email, password };
 
     try {
-      const res = await fetch("http://localhost:5000/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setServerMessage("Registration successful!");
-        navigate("/auth/login");
-      } else {
-        setServerMessage(data.message || "Registration failed");
-      }
+      setServerMessage("");
+      await createNewUser(name, email, password);
+      setServerMessage("Registration successful!");
+      navigate("/auth/login");
     } catch (error) {
-      console.error("ERROR:", error);
-      setServerMessage("Server error. Try again later.");
+      console.error("Register ERROR:", error);
+      setServerMessage(error.message || "Server error. Try again later.");
     }
   };
 

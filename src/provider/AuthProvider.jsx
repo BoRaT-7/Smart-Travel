@@ -5,10 +5,13 @@ import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 
 export const AuthContext = createContext();
 
+const API_BASE = "http://localhost:5000/api/auth";
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Firebase listener + localStorage fallback
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
@@ -37,11 +40,17 @@ const AuthProvider = ({ children }) => {
 
   // Backend registration
   const createNewUser = async (name, email, password) => {
-    const res = await fetch("http://localhost:5000/register", {
+    const res = await fetch(`${API_BASE}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Register failed:", res.status, text);
+      throw new Error("Registration request failed");
+    }
 
     const data = await res.json();
 
@@ -63,11 +72,17 @@ const AuthProvider = ({ children }) => {
 
   // Backend email/password login
   const loginUser = async (email, password) => {
-    const res = await fetch("http://localhost:5000/login", {
+    const res = await fetch(`${API_BASE}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Login failed:", res.status, text);
+      throw new Error("Login request failed");
+    }
 
     const data = await res.json();
 
@@ -108,15 +123,15 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(mappedUser));
     setUser(mappedUser);
 
-       return mappedUser;
+    return mappedUser;
   };
 
   // LOGOUT (Firebase + local)
   const logout = async () => {
     try {
       await signOut(auth);
-    } catch (e) {
-      // ignore if the user was only backend-authenticated
+    } catch (_) {
+      // ignore
     }
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
@@ -141,4 +156,3 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
-

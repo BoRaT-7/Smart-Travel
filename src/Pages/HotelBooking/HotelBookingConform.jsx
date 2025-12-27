@@ -4,12 +4,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 const HotelBookingConform = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const hotel = location.state?.hotel; // Hotel ডেটা নেওয়া
+  const hotel = location.state?.hotel;
+  const booking = location.state?.booking;
 
-  if (!hotel) {
+  if (!hotel || !booking) {
     return (
       <div className="flex items-center justify-center h-screen text-red-500">
-        No hotel data found.
+        No booking data found.
       </div>
     );
   }
@@ -17,7 +18,7 @@ const HotelBookingConform = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
       <h1 className="text-3xl font-bold text-emerald-700 mb-4">
-        Confirm Your Booking
+        Booking Confirmed
       </h1>
 
       <div className="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full">
@@ -30,27 +31,35 @@ const HotelBookingConform = () => {
         <p className="text-gray-600 mt-1 flex items-center gap-2">
           <span className="text-red-500">📍</span> {hotel.location}
         </p>
-        <p className="text-gray-800 font-semibold mt-2">
-          ${hotel.price} / night
+
+        <p className="mt-3 text-gray-700">
+          Guest: <span className="font-semibold">{booking.name}</span>
         </p>
-        <div className="flex mt-2">
-          {Array.from({ length: hotel.rating }).map((_, i) => (
-            <span key={i} className="text-yellow-400 text-lg">★</span>
-          ))}
-        </div>
+        <p className="text-gray-700">
+          Email: <span className="font-semibold">{booking.email}</span>
+        </p>
+        <p className="text-gray-700">
+          Nights: <span className="font-semibold">{booking.nights}</span>
+        </p>
+        <p className="text-gray-700">
+          Check‑in: <span className="font-semibold">{booking.checkIn}</span>
+        </p>
+        <p className="text-gray-700">
+          Check‑out: <span className="font-semibold">{booking.checkOut}</span>
+        </p>
+
+        <p className="text-gray-800 font-semibold mt-3">
+          Total:{" "}
+          <span className="text-emerald-700">
+            {booking.total.toFixed ? booking.total.toFixed(2) : booking.total}
+          </span>
+        </p>
 
         <button
-          onClick={() => alert("Booking Confirmed! 🎉")}
+          onClick={() => navigate("/hotel")}
           className="mt-6 w-full py-2 rounded-full bg-gradient-to-r from-emerald-600 to-lime-500 text-white font-semibold hover:brightness-110 transition"
         >
-          Confirm Booking
-        </button>
-
-        <button
-          onClick={() => navigate(-1)} // back button
-          className="mt-3 w-full py-2 rounded-full border-2 border-green-600 text-green-700 font-semibold hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition"
-        >
-          Go Back
+          Back to Hotels
         </button>
       </div>
     </div>
