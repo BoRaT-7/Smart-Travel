@@ -14,6 +14,7 @@ import HotelDetails from "../Pages/HotelBooking/HotelDetails";
 import HotelBook from "../Pages/HotelBooking/HotelBook";
 import HotelBookingConform from "../Pages/HotelBooking/HotelBookingConform";
 import Contact from "../Pages/Contact";
+import GuidesPage from "../Pages/GuidesPage"; // <- new
 
 const Router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const Router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },          // "/"
       { path: "contact", element: <Contact /> },   // "/contact"
+      { path: "guides", element: <GuidesPage /> }, // "/guides"
       { path: "destination/:id", element: <TopDestinationDetails /> },
       { path: "auth/login", element: <Login /> },
       { path: "auth/register", element: <Register /> },

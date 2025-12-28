@@ -1,4 +1,4 @@
-// GuideSlider.jsx
+// src/components/GuideSlider.jsx
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import {
   FaStar,
@@ -56,9 +56,11 @@ const GuideSlider = () => {
   );
 
   const handleContactClick = (guide) => {
-    // if you later want to pass guide info:
-    // navigate(`/contact?guide=${guide.id}`);
     navigate("/contact");
+  };
+
+  const handleSeeMore = () => {
+    navigate("/guides");
   };
 
   return (
@@ -160,8 +162,12 @@ const GuideSlider = () => {
         </div>
       )}
 
+      {/* See More button -> /guides */}
       <div className="text-center mt-8">
-        <button className="border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition">
+        <button
+          onClick={handleSeeMore}
+          className="border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition"
+        >
           See More
         </button>
       </div>
