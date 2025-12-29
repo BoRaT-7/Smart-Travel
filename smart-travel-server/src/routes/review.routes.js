@@ -1,19 +1,13 @@
 // src/routes/review.routes.js
 const express = require("express");
-const {
-  addReview,
-  getAllReviews,
-  getSingleReview,
-  updateReview,
-  deleteReview,
-} = require("../controllers/review.controller");
+const reviewController = require("../controllers/review.controller");
 
 const router = express.Router();
 
-router.post("/", addReview);
-router.get("/", getAllReviews);
-router.get("/:id", getSingleReview);
-router.put("/:id", updateReview);
-router.delete("/:id", deleteReview);
+// each handler is a FUNCTION
+router.get("/", reviewController.getReviews);
+router.post("/", reviewController.createReview);
+router.put("/:id", reviewController.updateReview);
+router.delete("/:id", reviewController.deleteReview);
 
 module.exports = router;

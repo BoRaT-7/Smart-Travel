@@ -17,8 +17,6 @@ router.use("/reviews", reviewRoutes);
 router.use("/bookings", bookingRoutes);
 router.use("/orders", orderRoutes);
 router.use("/hotel-bookings", hotelBookingRoutes);
-
-// new:
 router.use("/contact", contactRoutes);
 
 module.exports = router;
