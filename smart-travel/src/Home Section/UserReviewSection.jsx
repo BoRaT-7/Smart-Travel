@@ -1,4 +1,4 @@
-// UserReviewSection.jsx
+// src/Home Section/UserReviewSection.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -25,7 +25,7 @@ const UserReviewSection = () => {
 
   // Load reviews from backend
   useEffect(() => {
-    fetch("http://localhost:5000/reviews")
+    fetch("http://localhost:5000/api/reviews")
       .then((res) => res.json())
       .then((data) => setReviews(data))
       .catch((err) => console.error("Failed to load reviews:", err));
@@ -48,7 +48,7 @@ const UserReviewSection = () => {
     setSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:5000/reviews", {
+      const res = await fetch("http://localhost:5000/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -82,12 +82,12 @@ const UserReviewSection = () => {
     }
   };
 
-  // Delete review -> DELETE /reviews/:id
+  // Delete review -> DELETE /api/reviews/:id
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this review?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/reviews/${id}`, {
+      const res = await fetch(`http://localhost:5000/api/reviews/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: currentUser.id }),
@@ -117,7 +117,7 @@ const UserReviewSection = () => {
     setEditingRating(0);
   };
 
-  // Save edited review -> PUT /reviews/:id
+  // Save edited review -> PUT /api/reviews/:id
   const saveEdit = async () => {
     if (!editingComment.trim() || editingRating === 0) {
       alert("Please add a rating and comment before saving.");
@@ -127,19 +127,20 @@ const UserReviewSection = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/reviews/${editingId}`,
+        `http://localhost:5000/api/reviews/${editingId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             comment: editingComment.trim(),
             rating: editingRating,
+            userId: currentUser.id, // needed for owner check
           }),
         }
       );
 
       const data = await res.json();
-      if (data.modifiedCount || data.acknowledged) {
+      if (data.success || data.modifiedCount || data.acknowledged) {
         setReviews((prev) =>
           prev.map((r) =>
             (r._id || r.id) === editingId
@@ -149,7 +150,7 @@ const UserReviewSection = () => {
         );
         cancelEdit();
       } else {
-        alert("Could not update review.");
+        alert(data.message || "Could not update review.");
       }
     } catch (err) {
       console.error("Edit error:", err);
@@ -391,7 +392,9 @@ const UserReviewSection = () => {
 
                     {review.reply && (
                       <div className="mt-4 border border-emerald-400/50 bg-emerald-900/40 text-emerald-100 rounded-2xl px-3 py-2 text-xs">
-                        <span className="font-semibold">Tour operator reply: </span>
+                        <span className="font-semibold">
+                          Tour operator reply:{" "}
+                        </span>
                         {review.reply}
                       </div>
                     )}
