@@ -1,4 +1,3 @@
-// src/controllers/review.controller.js
 const { ObjectId } = require("mongodb");
 
 let reviewsCollection;
@@ -17,11 +16,12 @@ exports.getReviews = async (req, res, next) => {
 
     res.json(reviews);
   } catch (err) {
+    console.error("getReviews error:", err);
     next(err);
   }
 };
 
-// POST /api/reviews  (no auth, uses body)
+// POST /api/reviews  (no JWT, uses body.userId & body.name)
 exports.createReview = async (req, res, next) => {
   try {
     const { userId, name, comment, rating } = req.body;
@@ -33,8 +33,8 @@ exports.createReview = async (req, res, next) => {
     }
 
     const doc = {
-      userId,      // string from frontend
-      name,
+      userId, // string id of user
+      name,   // first name from frontend
       comment,
       rating: Number(rating),
       date: new Date().toISOString().split("T")[0],
@@ -75,6 +75,7 @@ exports.updateReview = async (req, res, next) => {
         .json({ success: false, message: "Review not found" });
     }
 
+    // only owner can edit
     if (review.userId !== userId) {
       return res
         .status(403)
@@ -123,6 +124,7 @@ exports.deleteReview = async (req, res, next) => {
         .json({ success: false, message: "Review not found" });
     }
 
+    // only owner can delete
     if (review.userId !== userId) {
       return res
         .status(403)
