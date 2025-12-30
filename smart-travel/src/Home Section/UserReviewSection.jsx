@@ -134,7 +134,7 @@ const UserReviewSection = () => {
           body: JSON.stringify({
             comment: editingComment.trim(),
             rating: editingRating,
-            userId: currentUser.id, // needed for owner check
+            userId: currentUser.id, // needed for owner check in backend
           }),
         }
       );

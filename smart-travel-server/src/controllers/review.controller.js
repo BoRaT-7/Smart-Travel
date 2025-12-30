@@ -21,7 +21,7 @@ exports.getReviews = async (req, res, next) => {
   }
 };
 
-// POST /api/reviews
+// POST /api/reviews  (no auth, uses body)
 exports.createReview = async (req, res, next) => {
   try {
     const { userId, name, comment, rating } = req.body;
@@ -33,7 +33,7 @@ exports.createReview = async (req, res, next) => {
     }
 
     const doc = {
-      userId, // string same as frontend
+      userId,      // string from frontend
       name,
       comment,
       rating: Number(rating),
@@ -48,11 +48,12 @@ exports.createReview = async (req, res, next) => {
       reviewId: result.insertedId,
     });
   } catch (err) {
+    console.error("createReview error:", err);
     next(err);
   }
 };
 
-// PUT /api/reviews/:id (only owner)
+// PUT /api/reviews/:id  (only owner by body.userId)
 exports.updateReview = async (req, res, next) => {
   try {
     const reviewId = req.params.id;
@@ -68,7 +69,6 @@ exports.updateReview = async (req, res, next) => {
     const review = await reviewsCollection.findOne({
       _id: new ObjectId(reviewId),
     });
-
     if (!review) {
       return res
         .status(404)
@@ -97,11 +97,12 @@ exports.updateReview = async (req, res, next) => {
       modifiedCount: result.modifiedCount,
     });
   } catch (err) {
+    console.error("updateReview error:", err);
     next(err);
   }
 };
 
-// DELETE /api/reviews/:id (only owner)
+// DELETE /api/reviews/:id  (only owner by body.userId)
 exports.deleteReview = async (req, res, next) => {
   try {
     const reviewId = req.params.id;
@@ -116,7 +117,6 @@ exports.deleteReview = async (req, res, next) => {
     const review = await reviewsCollection.findOne({
       _id: new ObjectId(reviewId),
     });
-
     if (!review) {
       return res
         .status(404)
@@ -138,6 +138,7 @@ exports.deleteReview = async (req, res, next) => {
       deletedCount: result.deletedCount,
     });
   } catch (err) {
+    console.error("deleteReview error:", err);
     next(err);
   }
 };
