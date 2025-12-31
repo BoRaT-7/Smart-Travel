@@ -2,13 +2,15 @@
 require("dotenv").config();
 const app = require("./app");
 const { connectDB } = require("./config/db");
+
 const authController = require("./controllers/auth.controller");
 const userController = require("./controllers/user.controller");
 const reviewController = require("./controllers/review.controller");
 const bookingController = require("./controllers/booking.controller");
 const orderController = require("./controllers/order.controller");
 const hotelBookingController = require("./controllers/hotelBooking.controller");
-const contactController = require("./controllers/contact.controller"); // নতুন লাইন
+const contactController = require("./controllers/contact.controller");
+const transportBookingController = require("./controllers/transportBooking.controller"); // NEW
 
 const port = process.env.PORT || 5000;
 
@@ -22,7 +24,8 @@ async function start() {
     bookingController.init(db);
     orderController.init(db);
     hotelBookingController.init(db);
-    contactController.init(db); // নতুন লাইন
+    contactController.init(db);
+    transportBookingController.init(db); // NEW
 
     app.listen(port, () => {
       console.log(`✅ Server running on port: ${port}`);
