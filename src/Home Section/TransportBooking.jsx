@@ -29,6 +29,7 @@ const TransportBooking = () => {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [bookingId, setBookingId] = useState("");
 
   const locations = [
     "Dhaka",
@@ -81,20 +82,49 @@ const TransportBooking = () => {
     setDate(today);
   }, []);
 
-  const handleBooking = (e) => {
+  const handleBooking = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!pickup || !dropoff) return setError("Please select pickup and drop-off points!");
-    if (pickup === dropoff) return setError("Pickup and drop-off cannot be the same!");
+    if (!pickup || !dropoff)
+      return setError("Please select pickup and drop-off points!");
+    if (pickup === dropoff)
+      return setError("Pickup and drop-off cannot be the same!");
     if (!paymentMethod) return setError("Select a payment method!");
-    if (!paymentNumber) return setError(`Enter your ${paymentMethod} number!`);
+    if (!paymentNumber)
+      return setError(`Enter your ${paymentMethod} number!`);
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const res = await fetch("http://localhost:5000/api/transport/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transportType,
+          pickup,
+          dropoff,
+          date,
+          time,
+          arrivalTime,
+          passengers,
+          paymentMethod,
+          paymentNumber,
+          price: calculatePrice(),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Booking failed");
+      }
+
+      setBookingId(data.id || `TR-${Math.floor(100000 + Math.random() * 900000)}`);
       setBookingConfirmed(true);
-    }, 1800);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
@@ -105,6 +135,9 @@ const TransportBooking = () => {
     setPaymentNumber("");
     setBookingConfirmed(false);
     setError("");
+    setEstimatedTime("");
+    setTime("");
+    setArrivalTime("");
   };
 
   const swapLocations = () => {
@@ -113,8 +146,6 @@ const TransportBooking = () => {
       setDropoff(pickup);
     }
   };
-
-  const bookingId = `TR-${Math.floor(100000 + Math.random() * 900000)}`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-lime-100 flex justify-center items-center p-4">
@@ -151,7 +182,7 @@ const TransportBooking = () => {
                       onClick={() => setTransportType(type)}
                       className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-sm font-medium border transition-all ${
                         transportType === type
-                          ? "bg-emerald-600 text-white"
+                          ? "bg-emerald-600 text-white shadow-md"
                           : "bg-gray-100 text-gray-700 hover:bg-emerald-50"
                       }`}
                     >
@@ -265,41 +296,55 @@ const TransportBooking = () => {
                   Payment
                 </label>
                 <div className="flex gap-2">
-                  {["bKash", "Nagad", "Rocket"].map((method) => (
-                    <button
-                      key={method}
-                      type="button"
-                      onClick={() => setPaymentMethod(method)}
-                      className={`flex-1 py-2 rounded-lg text-sm font-medium text-white transition ${
-                        method === "bKash"
-                          ? "bg-pink-600"
-                          : method === "Nagad"
-                          ? "bg-orange-500"
-                          : "bg-purple-600"
-                      } ${
-                        paymentMethod === method
-                          ? "ring-2 ring-emerald-400"
-                          : "opacity-80 hover:opacity-100"
-                      }`}
-                    >
-                      <FaMobileAlt className="inline mr-1" />
-                      {method}
-                    </button>
-                  ))}
+                  {["bKash", "Nagad", "Rocket"].map((method) => {
+                    const baseColor =
+                      method === "bKash"
+                        ? "bg-pink-600"
+                        : method === "Nagad"
+                        ? "bg-orange-500"
+                        : "bg-purple-600";
+                    return (
+                      <button
+                        key={method}
+                        type="button"
+                        onClick={() => {
+                          setPaymentMethod(method);
+                          setPaymentNumber("");
+                        }}
+                        className={`flex-1 py-2 rounded-lg text-sm font-medium text-white transition flex items-center justify-center gap-1 ${baseColor} ${
+                          paymentMethod === method
+                            ? "ring-2 ring-emerald-400 shadow-md"
+                            : "opacity-80 hover:opacity-100"
+                        }`}
+                      >
+                        <FaMobileAlt className="inline" />
+                        {method}
+                      </button>
+                    );
+                  })}
                 </div>
 
-                {paymentMethod && (
-                  <div className="relative mt-2">
-                    <FaMobileAlt className="absolute top-2.5 left-2 text-gray-400 text-sm" />
-                    <input
-                      type="text"
-                      value={paymentNumber}
-                      onChange={(e) => setPaymentNumber(e.target.value)}
-                      placeholder={`${paymentMethod} Number`}
-                      className="w-full pl-7 p-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-500"
-                    />
-                  </div>
-                )}
+                {/* Only show input when a method is selected */}
+                <AnimatePresence>
+                  {paymentMethod && (
+                    <motion.div
+                      key="payment-input"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      className="relative mt-3"
+                    >
+                      <FaMobileAlt className="absolute top-2.5 left-2 text-gray-400 text-sm" />
+                      <input
+                        type="text"
+                        value={paymentNumber}
+                        onChange={(e) => setPaymentNumber(e.target.value)}
+                        placeholder={`${paymentMethod} Number`}
+                        className="w-full pl-7 p-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-500"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Error */}

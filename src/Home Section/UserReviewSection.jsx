@@ -1,15 +1,23 @@
-// UserReviewSection.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { motion } from "framer-motion";
-
-// DEMO current user (TODO: replace with real auth user)
-const currentUser = {
-  id: "665a1b2c3d4e5f6a7b8c9d0",
-  name: "Test User",
-};
+import { AuthContext } from "../provider/Authprovider"; // adjust path
 
 const UserReviewSection = () => {
+  const { user } = useContext(AuthContext);
+
+  // Build currentUser from auth (id + first name)
+  const currentUser = user
+    ? {
+        id: user._id || user.id || user.uid,
+        name: user.displayName
+          ? user.displayName.split(" ")[0]
+          : user.email
+          ? user.email.split("@")[0]
+          : "Traveler",
+      }
+    : null;
+
   const [reviews, setReviews] = useState([]);
   const [query, setQuery] = useState("");
   const [comment, setComment] = useState("");
@@ -25,7 +33,7 @@ const UserReviewSection = () => {
 
   // Load reviews from backend
   useEffect(() => {
-    fetch("http://localhost:5000/reviews")
+    fetch("http://localhost:5000/api/reviews")
       .then((res) => res.json())
       .then((data) => setReviews(data))
       .catch((err) => console.error("Failed to load reviews:", err));
@@ -41,19 +49,25 @@ const UserReviewSection = () => {
   // Submit NEW review
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!currentUser) {
+      alert("You must be logged in to write a review.");
+      return;
+    }
     if (!comment.trim() || rating === 0) {
       alert("Please add a rating and comment before submitting.");
       return;
     }
+
     setSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:5000/reviews", {
+      const res = await fetch("http://localhost:5000/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: currentUser.id,
-          name: currentUser.name,
+          name: currentUser.name, // first name
           comment: comment.trim(),
           rating,
         }),
@@ -82,12 +96,16 @@ const UserReviewSection = () => {
     }
   };
 
-  // Delete review -> DELETE /reviews/:id
+  // Delete review -> DELETE /api/reviews/:id
   const handleDelete = async (id) => {
+    if (!currentUser) {
+      alert("You must be logged in.");
+      return;
+    }
     if (!window.confirm("Delete this review?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/reviews/${id}`, {
+      const res = await fetch(`http://localhost:5000/api/reviews/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: currentUser.id }),
@@ -117,8 +135,12 @@ const UserReviewSection = () => {
     setEditingRating(0);
   };
 
-  // Save edited review -> PUT /reviews/:id
+  // Save edited review -> PUT /api/reviews/:id
   const saveEdit = async () => {
+    if (!currentUser) {
+      alert("You must be logged in.");
+      return;
+    }
     if (!editingComment.trim() || editingRating === 0) {
       alert("Please add a rating and comment before saving.");
       return;
@@ -127,11 +149,12 @@ const UserReviewSection = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/reviews/${editingId}`,
+        `http://localhost:5000/api/reviews/${editingId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            userId: currentUser.id,
             comment: editingComment.trim(),
             rating: editingRating,
           }),
@@ -139,7 +162,7 @@ const UserReviewSection = () => {
       );
 
       const data = await res.json();
-      if (data.modifiedCount || data.acknowledged) {
+      if (data.success || data.modifiedCount || data.acknowledged) {
         setReviews((prev) =>
           prev.map((r) =>
             (r._id || r.id) === editingId
@@ -149,7 +172,7 @@ const UserReviewSection = () => {
         );
         cancelEdit();
       } else {
-        alert("Could not update review.");
+        alert(data.message || "Could not update review.");
       }
     } catch (err) {
       console.error("Edit error:", err);
@@ -271,7 +294,8 @@ const UserReviewSection = () => {
               className="flex gap-6 overflow-x-auto px-1 pb-3 pt-1 scroll-smooth snap-x snap-mandatory scrollbar-hide"
             >
               {filteredReviews.map((review, index) => {
-                const isOwn = review.userId === currentUser.id;
+                const isOwn =
+                  currentUser && review.userId === currentUser.id;
                 const isEditing = editingId === (review._id || review.id);
 
                 return (
@@ -391,7 +415,9 @@ const UserReviewSection = () => {
 
                     {review.reply && (
                       <div className="mt-4 border border-emerald-400/50 bg-emerald-900/40 text-emerald-100 rounded-2xl px-3 py-2 text-xs">
-                        <span className="font-semibold">Tour operator reply: </span>
+                        <span className="font-semibold">
+                          Tour operator reply:{" "}
+                        </span>
                         {review.reply}
                       </div>
                     )}
@@ -417,7 +443,9 @@ const UserReviewSection = () => {
               </h3>
               <p className="text-sm text-sky-200/80">
                 Logged in as{" "}
-                <span className="font-semibold">{currentUser.name}</span>
+                <span className="font-semibold">
+                  {currentUser ? currentUser.name : "Guest"}
+                </span>
               </p>
             </div>
           </div>
