@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../provider/Authprovider";
+import AuthProvider, { AuthContext } from "../provider/AuthProvider";
 import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,10 +33,12 @@ const Header = () => {
       backdrop-blur-xl border-b border-white/10 shadow-xl"
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center px-4 lg:px-10 py-3 text-white">
-
         {/* Logo */}
         <motion.div whileHover={{ scale: 1.05 }}>
-          <Link to="/" className="flex items-center gap-1 text-2xl lg:text-3xl font-extrabold">
+          <Link
+            to="/"
+            className="flex items-center gap-1 text-2xl lg:text-3xl font-extrabold"
+          >
             <motion.span
               className="text-cyan-300 text-4xl"
               animate={{ y: [0, -5, 0] }}
@@ -64,7 +66,7 @@ const Header = () => {
           ))}
         </ul>
 
-        {/* User Section */}
+        {/* User Section (Desktop) */}
         <div className="hidden lg:flex items-center gap-3">
           {user ? (
             <>
@@ -106,7 +108,7 @@ const Header = () => {
           )}
         </div>
 
-        {/* Mobile Button */}
+        {/* Mobile Menu Button */}
         <div className="lg:hidden">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
