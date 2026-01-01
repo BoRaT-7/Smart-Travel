@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { AuthProvider } from "../provider/AuthProvider"; // ✅ ঠিক path + case
+import { AuthContext } from "../provider/AuthProvider"; // adjust path
 
 const UserReviewSection = () => {
-  const { user } = useContext(AuthProvider);
+  const { user } = useContext(AuthContext);
 
   // Build currentUser from auth (id + first name)
   const currentUser = user
