@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { AuthContext } from "../provider/Authprovider"; // adjust path
+import { AuthContext } from "../provider/AuthProvider"; // ✅ ঠিক path + case
 
 const UserReviewSection = () => {
   const { user } = useContext(AuthContext);
