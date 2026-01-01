@@ -1,0 +1,4 @@
+[build]
+  base    = "smart-travel"
+  command = "npm run build"
+  publish = "dist"
