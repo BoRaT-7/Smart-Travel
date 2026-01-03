@@ -1,20 +1,19 @@
 // src/pages/AdminDashboard.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAdminAuth } from "../context/AuthContext";
 import Sidebar from "../Components/SideBar";
-
 import Navbar from "../Components/Navber";
 
 const AdminDashboard = () => {
-  const { admin, token } = useAuth();
+  const { admin, token } = useAdminAuth();
   const navigate = useNavigate();
 
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!token || !admin || admin.role !== "admin") {
+    if (!admin || admin.role !== "admin") {
       navigate("/admin/login");
       return;
     }
@@ -22,9 +21,9 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const res = await fetch("http://localhost:5000/api/admin/dashboard", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : {},
         });
 
         const json = await res.json();
@@ -38,9 +37,10 @@ const AdminDashboard = () => {
     };
 
     fetchData();
-  }, [token, admin, navigate]);
+  }, [admin, token, navigate]);
 
-  if (!token || !admin) {
+  // admin না থাকলে কিছুই render করবো না
+  if (!admin) {
     return null;
   }
 
@@ -61,19 +61,27 @@ const AdminDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-white p-4 rounded shadow">
                   <p className="text-sm text-gray-500">Total Users</p>
-                  <p className="text-2xl font-bold">{data.stats.totalUsers}</p>
+                  <p className="text-2xl font-bold">
+                    {data.stats.totalUsers}
+                  </p>
                 </div>
                 <div className="bg-white p-4 rounded shadow">
                   <p className="text-sm text-gray-500">Admins</p>
-                  <p className="text-2xl font-bold">{data.stats.totalAdmins}</p>
+                  <p className="text-2xl font-bold">
+                    {data.stats.totalAdmins}
+                  </p>
                 </div>
                 <div className="bg-white p-4 rounded shadow">
                   <p className="text-sm text-gray-500">Bookings</p>
-                  <p className="text-2xl font-bold">{data.stats.totalBookings}</p>
+                  <p className="text-2xl font-bold">
+                    {data.stats.totalBookings}
+                  </p>
                 </div>
                 <div className="bg-white p-4 rounded shadow">
                   <p className="text-sm text-gray-500">Reviews</p>
-                  <p className="text-2xl font-bold">{data.stats.totalReviews}</p>
+                  <p className="text-2xl font-bold">
+                    {data.stats.totalReviews}
+                  </p>
                 </div>
               </div>
 
@@ -95,7 +103,10 @@ const AdminDashboard = () => {
                   <ul className="space-y-1 text-sm">
                     {data.recentBookings.map((b) => (
                       <li key={b._id} className="flex justify-between">
-                        <span>{b.destination || "N/A"}</span>
+                        <span className="font-medium">
+  {b?.destination?.name ?? "N/A"}
+</span>
+
                         <span className="text-gray-500">
                           {b.status || "pending"}
                         </span>

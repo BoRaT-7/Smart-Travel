@@ -1,9 +1,10 @@
 // src/context/AuthContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
 
-const AuthContext = createContext(null);
+const AdminAuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+// Admin এর জন্য আলাদা provider
+export const AdminAuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(() => {
     const saved = localStorage.getItem("adminUser");
     return saved ? JSON.parse(saved) : null;
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (user, jwtToken) => {
     setAdmin(user);
-    setToken(jwtToken);
+    setToken(jwtToken || "");
   };
 
   const logout = () => {
@@ -38,10 +39,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ admin, token, login, logout }}>
+    <AdminAuthContext.Provider value={{ admin, token, login, logout }}>
       {children}
-    </AuthContext.Provider>
+    </AdminAuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// hook
+export const useAdminAuth = () => useContext(AdminAuthContext);

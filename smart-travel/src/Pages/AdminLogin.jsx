@@ -1,10 +1,10 @@
-// src/pages/AdminLogin.jsx
+// src/Pages/AdminLogin.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAdminAuth,  } from "../context/AuthContext";
 
 const AdminLogin = () => {
-  const { login } = useAuth();
+  const { login } = useAdminAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ email: "", password: "" });
@@ -28,11 +28,14 @@ const AdminLogin = () => {
       });
 
       const data = await res.json();
-      if (!res.ok) {
+      if (!res.ok || !data.success) {
         throw new Error(data.message || "Login failed");
       }
 
-      login(data.user, data.token);
+      // important: AuthContext এ user সেট করছি
+      login(data.user, null); // যদি এখনো token না দাও
+
+      // এরপর navigate
       navigate("/admin/dashboard");
     } catch (err) {
       setError(err.message);

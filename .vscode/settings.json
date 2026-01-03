@@ -1,0 +1,7 @@
+{
+  "search.useGlobalIgnoreFiles": true,
+  "search.exclude": {
+    "{destination} {selectedPackage} {tour} {pkg}": true
+  },
+  "search.useParentIgnoreFiles": true
+}
