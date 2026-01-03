@@ -1,10 +1,14 @@
 // src/controllers/auth.controller.js
+
 let usersCollection;
 
+// server.js থেকে init(db) কল হবে
 function init(db) {
   usersCollection = db.collection("users");
+  console.log("✅ Auth controller initialized (users collection ready)");
 }
 
+// ========== REGISTER (normal user) ==========
 async function register(req, res, next) {
   try {
     const { name, email, password } = req.body;
@@ -27,7 +31,8 @@ async function register(req, res, next) {
     const result = await usersCollection.insertOne({
       name,
       email,
-      password, // NOTE: real project e hash korte hobe
+      password, // NOTE: real project e hash করে রাখা উচিত
+      role: "user", // NEW: default role
       createdAt: new Date(),
     });
 
@@ -45,6 +50,7 @@ async function register(req, res, next) {
   }
 }
 
+// ========== NORMAL LOGIN ==========
 async function login(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -58,7 +64,6 @@ async function login(req, res, next) {
       });
     }
 
-    // ekhane token nai, sudhu plain user pathাচ্ছি
     res.send({
       success: true,
       message: "Login successful",
@@ -66,6 +71,7 @@ async function login(req, res, next) {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role || "user",
       },
     });
   } catch (err) {
@@ -73,4 +79,39 @@ async function login(req, res, next) {
   }
 }
 
-module.exports = { init, register, login };
+// ========== ADMIN LOGIN ==========
+async function adminLogin(req, res, next) {
+  try {
+    const { email, password } = req.body;
+
+    // শুধু role: "admin" ইউজার খুঁজবে
+    const user = await usersCollection.findOne({ email, role: "admin" });
+
+    if (!user || user.password !== password) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid admin credentials",
+      });
+    }
+
+    res.send({
+      success: true,
+      message: "Admin login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = {
+  init,
+  register,
+  login,
+  adminLogin,
+};
