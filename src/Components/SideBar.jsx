@@ -1,9 +1,9 @@
 // src/Components/SideBar.jsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAdminAuth } from "../context/AuthContext";
 
 const SideBar = () => {
-  const { admin, logout } = useAuth();
+    const { admin, logout } = useAdminAuth(); 
   const location = useLocation();
   const navigate = useNavigate();
 

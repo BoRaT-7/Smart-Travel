@@ -46,7 +46,9 @@ const HotelBooking = () => {
 
   if (error)
     return (
-      <div className="text-center py-20 text-red-500 font-semibold">{error}</div>
+      <div className="text-center py-20 text-red-500 font-semibold">
+        {error}
+      </div>
     );
 
   return (
@@ -124,7 +126,8 @@ const HotelBooking = () => {
             <div className="p-5">
               <h3 className="text-lg font-bold text-gray-800">{hotel.name}</h3>
               <p className="flex items-center text-gray-600 text-sm mt-1">
-                <FaMapMarkerAlt className="mr-1 text-red-500" /> {hotel.location}
+                <FaMapMarkerAlt className="mr-1 text-red-500" />{" "}
+                {hotel.location}
               </p>
               <p className="text-gray-700 font-semibold mt-2">
                 ${hotel.price} / night
@@ -135,27 +138,26 @@ const HotelBooking = () => {
                 ))}
               </div>
 
-             {/* 🟢 Buttons Row */}
-<div className="flex items-center gap-3 mt-5">
-  {/* Hotel Details */}
-  <motion.button
-    onClick={() => navigate(`/hotel/${hotel.id}`)}
-    whileTap={{ scale: 0.95 }}
-    className="flex-1 py-2 rounded-full text-green-700 border-2 border-green-600 text-lg font-semibold shadow-md bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
-  >
-    Hotel Details
-  </motion.button>
+              {/* 🟢 Buttons Row */}
+              <div className="flex items-center gap-3 mt-5">
+                {/* Hotel Details */}
+                <motion.button
+                  onClick={() => navigate(`/hotel/${hotel.id}`)}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex-1 py-2 rounded-full text-green-700 border-2 border-green-600 text-lg font-semibold shadow-md bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
+                >
+                  Hotel Details
+                </motion.button>
 
-  {/* Book Now */}
-  <motion.button
-    onClick={() => navigate(`/hotel/book/${hotel.id}`)} // ✅ Navigate to booking page
-    whileTap={{ scale: 0.95 }}
-    className="flex-1 py-2 rounded-full text-green-700 border-2 border-green-600 text-lg font-semibold shadow-md bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
-  >
-    Book Now
-  </motion.button>
-</div>
-
+                {/* Book Now */}
+                <motion.button
+                  onClick={() => navigate(`/hotel/book/${hotel.id}`)} // ✅ Navigate to booking page
+                  whileTap={{ scale: 0.95 }}
+                  className="flex-1 py-2 rounded-full text-green-700 border-2 border-green-600 text-lg font-semibold shadow-md bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
+                >
+                  Book Now
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         ))}
@@ -166,7 +168,10 @@ const HotelBooking = () => {
         <div className="text-center mt-12">
           <motion.button
             onClick={() => navigate("/hotel")}
-            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(16,185,129,0.4)" }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0 0 20px rgba(16,185,129,0.4)",
+            }}
             whileTap={{ scale: 0.95 }}
             className="px-10 py-3 font-semibold text-green-700 border-2 border-green-600 text-lg rounded-full bg-transparent shadow-md hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
           >

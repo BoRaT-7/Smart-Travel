@@ -1,4 +1,4 @@
-// Router.jsx
+// src/Routers/Router.jsx
 import { createBrowserRouter } from "react-router-dom";
 import Homelayout from "../Layout/Homelayout";
 import Home from "../Pages/Home";
@@ -14,15 +14,21 @@ import HotelDetails from "../Pages/HotelBooking/HotelDetails";
 import HotelBook from "../Pages/HotelBooking/HotelBook";
 import HotelBookingConform from "../Pages/HotelBooking/HotelBookingConform";
 import Contact from "../Pages/Contact";
-import GuidesPage from "../Pages/GuidesPage"; // <- new
+import GuidesPage from "../Pages/GuidesPage";
+
+// NEW: admin অংশ
+import AdminLayout from "../Layout/AdminLayout";
+import AdminLogin from "../Pages/AdminLogin";
+import AdminDashboard from "../Pages/AdminDashboard";
 
 const Router = createBrowserRouter([
+  // ========== Public / User site ==========
   {
     path: "/",
     element: <Homelayout />,
     children: [
-      { index: true, element: <Home /> },          // "/"
-      { path: "contact", element: <Contact /> },   // "/contact"
+      { index: true, element: <Home /> }, // "/"
+      { path: "contact", element: <Contact /> }, // "/contact"
       { path: "guides", element: <GuidesPage /> }, // "/guides"
       { path: "destination/:id", element: <TopDestinationDetails /> },
       { path: "auth/login", element: <Login /> },
@@ -37,6 +43,18 @@ const Router = createBrowserRouter([
       { path: "hotel/confirm", element: <HotelBookingConform /> },
     ],
   },
+
+  // ========== Admin routes ==========
+  {
+    path: "/admin",
+    element: <AdminLayout />, // ভিতরে AdminAuthProvider wrap হবে
+    children: [
+      { path: "login", element: <AdminLogin /> }, // "/admin/login"
+      { path: "dashboard", element: <AdminDashboard /> }, // "/admin/dashboard"
+    ],
+  },
+
+  // ========== 404 ==========
   { path: "*", element: <h1>404 Error</h1> },
 ]);
 
