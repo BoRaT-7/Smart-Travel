@@ -1,26 +1,24 @@
 // src/controllers/admin.controller.js
-// সব ধরনের ড্যাশবোর্ড ডাটা এই কন্ট্রোলার থেকে যাবে
 
 let usersCollection;
 let bookingsCollection;
 let hotelBookingsCollection;
 let transportBookingsCollection;
 let tripPlansCollection;
-let gearOrdersCollection;   // ✅ gearOrders কালেকশন
+let ordersCollection;        // ✅ নতুন: orders
 let shopOrdersCollection;
 let destinationsCollection;
 let guidesCollection;
 let reviewsCollection;
 
-// init ফাংশন – app.js সার্ভার থেকে ডাটাবেজ ইনজেক্ট করবে
 function init(db) {
   usersCollection = db.collection("users");
   bookingsCollection = db.collection("bookings");
   hotelBookingsCollection = db.collection("hotelBookings");
   transportBookingsCollection = db.collection("transportBookings");
   tripPlansCollection = db.collection("tripPlans");
-  gearOrdersCollection = db.collection("gearOrders");      // ✅ তোমার order.controller এর সাথে একই নাম
-  shopOrdersCollection = db.collection("shopOrders");
+  ordersCollection = db.collection("orders");       // ✅ order.controller এর init এর মতো
+  shopOrdersCollection = db.collection("shopOrders"); // চাইলে বাদ দিতে পারো যদি ব্যবহার না করো
   destinationsCollection = db.collection("destinations");
   guidesCollection = db.collection("guides");
   reviewsCollection = db.collection("reviews");
@@ -29,7 +27,6 @@ function init(db) {
 // GET /api/admin/dashboard
 async function getDashboard(req, res, next) {
   try {
-    // একসাথে সব count + recent list আনবো (Promise.all)
     const [
       totalUsers,
       totalAdmins,
@@ -37,7 +34,7 @@ async function getDashboard(req, res, next) {
       totalHotelBookings,
       totalTransportBookings,
       totalTripPlans,
-      totalGearOrders,
+      totalOrders,
       totalShopOrders,
       totalDestinations,
       totalGuides,
@@ -45,23 +42,21 @@ async function getDashboard(req, res, next) {
       recentUsers,
       recentBookings,
       recentTripPlans,
-      recentGearOrders,
+      recentOrders,
       recentShopOrders,
     ] = await Promise.all([
-      // ====== STATS ======
       usersCollection.countDocuments(),
       usersCollection.countDocuments({ role: "admin" }),
       bookingsCollection.countDocuments(),
       hotelBookingsCollection.countDocuments(),
       transportBookingsCollection.countDocuments(),
       tripPlansCollection.countDocuments(),
-      gearOrdersCollection.countDocuments(),        // ✅ এখানে gearOrders
+      ordersCollection.countDocuments(),          // ✅ orders
       shopOrdersCollection.countDocuments(),
       destinationsCollection.countDocuments(),
       guidesCollection.countDocuments(),
       reviewsCollection.countDocuments(),
 
-      // ====== RECENT LISTS ======
       usersCollection
         .find()
         .sort({ createdAt: -1 })
@@ -81,7 +76,7 @@ async function getDashboard(req, res, next) {
         .limit(5)
         .toArray(),
 
-      gearOrdersCollection
+      ordersCollection
         .find()
         .sort({ createdAt: -1 })
         .limit(5)
@@ -94,7 +89,6 @@ async function getDashboard(req, res, next) {
         .toArray(),
     ]);
 
-    // ফাইনাল রেসপন্স – React dashboard এখানে যে key গুলো ইউজ করবে
     res.send({
       stats: {
         totalUsers,
@@ -103,7 +97,7 @@ async function getDashboard(req, res, next) {
         totalHotelBookings,
         totalTransportBookings,
         totalTripPlans,
-        totalGearOrders,      // ✅ React এ data?.stats?.totalGearOrders
+        totalOrders,          // ✅ এখানে এখন orders
         totalShopOrders,
         totalDestinations,
         totalGuides,
@@ -112,7 +106,7 @@ async function getDashboard(req, res, next) {
       recentUsers,
       recentBookings,
       recentTripPlans,
-      recentGearOrders,       // ✅ React এ data?.recentGearOrders
+      recentOrders,          // ✅ orders এর recent list
       recentShopOrders,
     });
   } catch (err) {

@@ -1,3 +1,4 @@
+// src/controllers/hotelBooking.controller.js
 const { ObjectId } = require("mongodb");
 
 let hotelBookingsCollection;
@@ -6,6 +7,10 @@ function init(db) {
   hotelBookingsCollection = db.collection("hotelBookings");
 }
 
+/**
+ * POST /api/hotel-bookings
+ * Public: create a new hotel booking (no token required)
+ */
 async function createHotelBooking(req, res, next) {
   try {
     console.log("🏨 Incoming hotel booking:", req.body);
@@ -25,6 +30,7 @@ async function createHotelBooking(req, res, next) {
       hotelRating,
     } = req.body;
 
+    // Basic validation
     if (!name || !email || !phone || !address || !hotelId || !hotelName) {
       return res.status(400).send({
         success: false,
@@ -67,6 +73,10 @@ async function createHotelBooking(req, res, next) {
   }
 }
 
+/**
+ * GET /api/hotel-bookings
+ * Public: get all hotel bookings
+ */
 async function getAllHotelBookings(req, res, next) {
   try {
     const bookings = await hotelBookingsCollection
@@ -79,9 +89,14 @@ async function getAllHotelBookings(req, res, next) {
   }
 }
 
+/**
+ * GET /api/hotel-bookings/:id
+ * Public: get a single hotel booking by id
+ */
 async function getHotelBookingById(req, res, next) {
   try {
     const { id } = req.params;
+
     const booking = await hotelBookingsCollection.findOne({
       _id: new ObjectId(id),
     });

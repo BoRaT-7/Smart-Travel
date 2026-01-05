@@ -5,10 +5,13 @@ const {
   getAllHotelBookings,
   getHotelBookingById,
 } = require("../controllers/hotelBooking.controller");
+// const { requireUser } = require("../middleware/auth"); // ❌ ব্যবহার কোরো না
 
 const router = express.Router();
 
+// ✅ Public: token ছাড়াই booking
 router.post("/", createHotelBooking);
+
 router.get("/", getAllHotelBookings);
 router.get("/:id", getHotelBookingById);
 

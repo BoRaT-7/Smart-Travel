@@ -4,13 +4,13 @@ const { ObjectId } = require("mongodb");
 let ordersCollection;
 
 function init(db) {
-  ordersCollection = db.collection("gearOrders");
+  ordersCollection = db.collection("orders"); // 👈 মূল orders collection
 }
 
 // POST /api/orders
 async function createOrder(req, res, next) {
   try {
-    console.log("📦 Incoming order:", req.body);
+    console.log("🛒 Incoming order:", req.body);
 
     const {
       name,
@@ -23,6 +23,8 @@ async function createOrder(req, res, next) {
       productPrice,
       productImage,
       productDescription,
+      totalAmount,
+      payment,
     } = req.body;
 
     if (!name || !email || !phone || !address || !productId || !productName) {
@@ -34,21 +36,25 @@ async function createOrder(req, res, next) {
     }
 
     const qty = Number(quantity) || 1;
-    const unit = parseFloat(String(productPrice).replace(/[^0-9.]/g, "")) || 0;
-    const total = qty * unit;
+    const price =
+      typeof productPrice === "string"
+        ? parseFloat(String(productPrice).replace(/[^0-9.]/g, "")) || 0
+        : Number(productPrice) || 0;
+
+    const total = Number(totalAmount) || qty * price;
 
     const order = {
       customer: { name, email, phone, address },
       product: {
         id: productId,
         name: productName,
-        price: productPrice,
+        price,
         image: productImage,
         description: productDescription,
       },
       quantity: qty,
-      unitAmount: unit,
-      totalAmount: Number(total.toFixed(2)),
+      payment: payment || "cash",
+      totalAmount: total,
       status: "pending",
       createdAt: new Date(),
     };
@@ -61,7 +67,7 @@ async function createOrder(req, res, next) {
       orderId: result.insertedId,
     });
   } catch (err) {
-    console.error("Create order error:", err);
+    console.error("Order create error:", err);
     next(err);
   }
 }
@@ -100,4 +106,9 @@ async function getOrderById(req, res, next) {
   }
 }
 
-module.exports = { init, createOrder, getAllOrders, getOrderById };
+module.exports = {
+  init,
+  createOrder,
+  getAllOrders,
+  getOrderById,
+};

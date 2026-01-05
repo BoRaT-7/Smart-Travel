@@ -1,3 +1,4 @@
+// src/controllers/review.controller.js
 const { ObjectId } = require("mongodb");
 
 let reviewsCollection;
@@ -21,7 +22,7 @@ exports.getReviews = async (req, res, next) => {
   }
 };
 
-// POST /api/reviews  (no JWT, uses body.userId & body.name)
+// POST /api/reviews (no JWT, uses body.userId & body.name)
 exports.createReview = async (req, res, next) => {
   try {
     const { userId, name, comment, rating } = req.body;
@@ -33,8 +34,8 @@ exports.createReview = async (req, res, next) => {
     }
 
     const doc = {
-      userId, // string id of user
-      name,   // first name from frontend
+      userId,
+      name,
       comment,
       rating: Number(rating),
       date: new Date().toISOString().split("T")[0],
@@ -53,7 +54,7 @@ exports.createReview = async (req, res, next) => {
   }
 };
 
-// PUT /api/reviews/:id  (only owner by body.userId)
+// PUT /api/reviews/:id (only owner by body.userId)
 exports.updateReview = async (req, res, next) => {
   try {
     const reviewId = req.params.id;
@@ -75,7 +76,6 @@ exports.updateReview = async (req, res, next) => {
         .json({ success: false, message: "Review not found" });
     }
 
-    // only owner can edit
     if (review.userId !== userId) {
       return res
         .status(403)
@@ -103,7 +103,7 @@ exports.updateReview = async (req, res, next) => {
   }
 };
 
-// DELETE /api/reviews/:id  (only owner by body.userId)
+// DELETE /api/reviews/:id (only owner by body.userId)
 exports.deleteReview = async (req, res, next) => {
   try {
     const reviewId = req.params.id;
@@ -124,7 +124,6 @@ exports.deleteReview = async (req, res, next) => {
         .json({ success: false, message: "Review not found" });
     }
 
-    // only owner can delete
     if (review.userId !== userId) {
       return res
         .status(403)

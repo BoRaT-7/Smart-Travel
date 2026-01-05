@@ -1,12 +1,21 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+// src/Components/UserReviewSection.jsx
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+} from "react";
+import {
+  FaStar,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 import { motion } from "framer-motion";
-import { AuthContext } from "../provider/AuthProvider"; // adjust path
+import { AuthContext } from "../provider/AuthProvider";
 
 const UserReviewSection = () => {
   const { user } = useContext(AuthContext);
 
-  // Build currentUser from auth (id + first name)
   const currentUser = user
     ? {
         id: user._id || user.id || user.uid,
@@ -31,7 +40,6 @@ const UserReviewSection = () => {
 
   const sliderRef = useRef(null);
 
-  // Load reviews from backend
   useEffect(() => {
     fetch("http://localhost:5000/api/reviews")
       .then((res) => res.json())
@@ -39,14 +47,12 @@ const UserReviewSection = () => {
       .catch((err) => console.error("Failed to load reviews:", err));
   }, []);
 
-  // Filter reviews
   const filteredReviews = reviews.filter(
     (review) =>
       review.name.toLowerCase().includes(query.toLowerCase()) ||
       review.comment.toLowerCase().includes(query.toLowerCase())
   );
 
-  // Submit NEW review
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -67,7 +73,7 @@ const UserReviewSection = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: currentUser.id,
-          name: currentUser.name, // first name
+          name: currentUser.name,
           comment: comment.trim(),
           rating,
         }),
@@ -96,7 +102,6 @@ const UserReviewSection = () => {
     }
   };
 
-  // Delete review -> DELETE /api/reviews/:id
   const handleDelete = async (id) => {
     if (!currentUser) {
       alert("You must be logged in.");
@@ -122,7 +127,6 @@ const UserReviewSection = () => {
     }
   };
 
-  // Start editing own review
   const startEdit = (review) => {
     setEditingId(review._id || review.id);
     setEditingComment(review.comment);
@@ -135,7 +139,6 @@ const UserReviewSection = () => {
     setEditingRating(0);
   };
 
-  // Save edited review -> PUT /api/reviews/:id
   const saveEdit = async () => {
     if (!currentUser) {
       alert("You must be logged in.");
@@ -181,7 +184,6 @@ const UserReviewSection = () => {
     }
   };
 
-  // Slider controls
   const scrollByCard = (direction) => {
     if (!sliderRef.current) return;
     const cardWidth = 320;
@@ -189,18 +191,18 @@ const UserReviewSection = () => {
     sliderRef.current.scrollBy({ left: offset, behavior: "smooth" });
   };
 
-  // Average rating
   const averageRating =
     reviews.length > 0
       ? (
-          reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length
+          reviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
+          reviews.length
         ).toFixed(1)
       : 0;
 
   return (
     <section className="py-20 bg-gradient-to-br from-sky-950 via-sky-900 to-emerald-800">
       <div className="max-w-6xl mx-auto px-4 md:px-6 space-y-10">
-        {/* Header / stats */}
+        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div className="space-y-3">
             <p className="text-xs font-semibold tracking-[0.25em] uppercase text-emerald-300">
@@ -330,11 +332,12 @@ const UserReviewSection = () => {
                       </div>
                     </div>
 
-                    {/* Rating stars (view or edit mode) */}
+                    {/* Rating */}
                     <div className="flex items-center gap-1 mb-3 text-yellow-400">
                       {Array.from({ length: 5 }).map((_, i) => {
-                        const active =
-                          isEditing ? editingRating > i : review.rating > i;
+                        const active = isEditing
+                          ? editingRating > i
+                          : review.rating > i;
                         return (
                           <button
                             key={i}
@@ -358,11 +361,13 @@ const UserReviewSection = () => {
                       })}
                     </div>
 
-                    {/* Comment: view or edit */}
+                    {/* Comment */}
                     {isEditing ? (
                       <textarea
                         value={editingComment}
-                        onChange={(e) => setEditingComment(e.target.value)}
+                        onChange={(e) =>
+                          setEditingComment(e.target.value)
+                        }
                         rows={3}
                         className="w-full px-3 py-2 rounded-xl text-sm bg-slate-900/80 border border-emerald-400/60 text-sky-50 focus:outline-none focus:ring-2 focus:ring-emerald-400 resize-none"
                       />
@@ -474,7 +479,9 @@ const UserReviewSection = () => {
                   >
                     <FaStar
                       className={
-                        rating >= star ? "text-yellow-400" : "text-slate-700"
+                        rating >= star
+                          ? "text-yellow-400"
+                          : "text-slate-700"
                       }
                       size={22}
                     />

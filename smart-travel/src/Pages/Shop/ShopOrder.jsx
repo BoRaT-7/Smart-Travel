@@ -1,3 +1,4 @@
+// src/Pages/Shop/ShopOrder.jsx
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
@@ -26,56 +27,59 @@ const ShopOrder = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Dynamically calculate total price
   const totalPrice = useMemo(() => {
     const price = parseFloat(product.price?.replace(/[^0-9.]/g, "")) || 0;
-    return (price * form.quantity).toFixed(2);
+    const qty = Number(form.quantity) || 1;
+    return (price * qty).toFixed(2);
   }, [form.quantity, product.price]);
 
-  // ✅ Send order to backend
   const handleOrder = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const res = await fetch("http://localhost:5000/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        address: form.address,
-        quantity: Number(form.quantity),
-        productId: product.id || product._id || product.name,
-        productName: product.name,
-        productPrice: product.price,
-        productImage: product.image_url,
-        productDescription: product.description,
-      }),
-    });
+    try {
+      const res = await fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+          quantity: Number(form.quantity),
+          productId: product.id || product._id || product.name,
+          productName: product.name,
+          productPrice: product.price,
+          productImage: product.image_url,
+          productDescription: product.description,
+          totalAmount: Number(totalPrice),
+          payment: "cash",
+        }),
+      });
 
-    const text = await res.text(); // <- raw response
-    console.log("Status:", res.status);
-    console.log("Raw response:", text);
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
 
-    if (!res.ok) {
-      throw new Error("Order request failed");
+      console.log("ORDER STATUS:", res.status, "DATA:", data);
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Order request failed");
+      }
+
+      alert(
+        `✅ Order placed successfully for ${form.quantity} x ${
+          product.name || "product"
+        }!`
+      );
+      navigate("/");
+    } catch (err) {
+      console.error("Order error:", err);
+      alert(err.message || "Order failed. Please try again.");
     }
-
-    const data = JSON.parse(text); // now only JSON expect
-
-    if (!data.success) {
-      throw new Error(data.message || "Order failed");
-    }
-
-    alert(`✅ Order placed successfully for ${form.quantity} x ${product.name}!`);
-    navigate("/");
-  } catch (err) {
-    console.error("Order error:", err);
-    alert(err.message || "Order failed. Please try again.");
-  }
-};
-
+  };
 
   return (
     <motion.div
@@ -90,14 +94,13 @@ const ShopOrder = () => {
         animate={{ scale: 1, y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
       >
-        {/* ---------------- LEFT SIDE: Product Image + Details ---------------- */}
+        {/* Left: Product */}
         <motion.div
           className="md:w-1/2 bg-white/10 border-b md:border-b-0 md:border-r border-emerald-800/30 flex flex-col justify-start p-5"
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Product Image */}
           <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl border border-emerald-800/30 mb-6">
             <img
               src={product.image_url}
@@ -106,7 +109,6 @@ const ShopOrder = () => {
             />
           </div>
 
-          {/* Product Details */}
           <div className="text-center md:text-left px-3">
             <h2 className="text-2xl font-bold text-emerald-300">
               {product.name || "Product Name"}
@@ -121,14 +123,13 @@ const ShopOrder = () => {
           </div>
         </motion.div>
 
-        {/* ---------------- RIGHT SIDE: Order Form ---------------- */}
+        {/* Right: Form */}
         <motion.div
           className="md:w-1/2 p-8"
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-lime-400">
               Complete Your Order
@@ -138,10 +139,8 @@ const ShopOrder = () => {
             </p>
           </div>
 
-          {/* Order Form */}
           <form onSubmit={handleOrder} className="space-y-5">
             <div className="grid sm:grid-cols-2 gap-5">
-              {/* Name */}
               <div className="relative">
                 <FaUser className="absolute left-3 top-3 text-emerald-400" />
                 <input
@@ -155,7 +154,6 @@ const ShopOrder = () => {
                 />
               </div>
 
-              {/* Email */}
               <div className="relative">
                 <FaEnvelope className="absolute left-3 top-3 text-emerald-400" />
                 <input
@@ -170,7 +168,6 @@ const ShopOrder = () => {
               </div>
             </div>
 
-            {/* Phone */}
             <div className="relative">
               <FaPhone className="absolute left-3 top-3 text-emerald-400" />
               <input
@@ -184,7 +181,6 @@ const ShopOrder = () => {
               />
             </div>
 
-            {/* Address */}
             <div className="relative">
               <FaMapMarkerAlt className="absolute left-3 top-3 text-emerald-400" />
               <textarea
@@ -198,7 +194,6 @@ const ShopOrder = () => {
               />
             </div>
 
-            {/* Quantity */}
             <div>
               <label className="block text-gray-300 mb-1">Quantity</label>
               <input
@@ -211,7 +206,6 @@ const ShopOrder = () => {
               />
             </div>
 
-            {/* Order Summary */}
             <motion.div
               className="mt-6 bg-white/10 border border-emerald-700/40 rounded-xl p-5 shadow-inner"
               initial={{ opacity: 0, y: 10 }}
@@ -239,7 +233,6 @@ const ShopOrder = () => {
               </div>
             </motion.div>
 
-            {/* Buttons */}
             <div className="flex justify-between items-center mt-6">
               <motion.button
                 type="button"
@@ -255,7 +248,8 @@ const ShopOrder = () => {
                 type="submit"
                 whileHover={{
                   scale: 1.05,
-                  background: "linear-gradient(to right, #059669, #A3E635)",
+                  background:
+                    "linear-gradient(to right, #059669, #A3E635)",
                   color: "#fff",
                 }}
                 whileTap={{ scale: 0.95 }}

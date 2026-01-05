@@ -1,3 +1,4 @@
+// src/Pages/TopDestination/DestinationBook.jsx
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -38,7 +39,10 @@ const DestinationBook = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "quantity" ? Number(value) || 1 : value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -50,7 +54,7 @@ const DestinationBook = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          quantity: Number(form.quantity),
+          quantity: Number(form.quantity) || 1,
           destinationId: destination.id,
           destinationName: destination.destination,
           destinationPrice: destination.price,
@@ -67,12 +71,12 @@ const DestinationBook = () => {
         throw new Error(data.message || "Booking failed");
       }
 
+      const total = (Number(form.quantity) || 1) * destination.price;
+
       alert(
         `✅ Booking confirmed!\n${form.quantity} x ${
           destination.destination
-        }\nTotal: ${form.quantity * destination.price} ${
-          destination.currency
-        }`
+        }\nTotal: ${total} ${destination.currency}`
       );
 
       navigate("/packages");
@@ -80,6 +84,8 @@ const DestinationBook = () => {
       alert(err.message || "Booking failed");
     }
   };
+
+  const total = (Number(form.quantity) || 1) * destination.price;
 
   return (
     <>
@@ -123,9 +129,24 @@ const DestinationBook = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {[
-                { name: "name", icon: <FaUser />, type: "text", placeholder: "Full Name" },
-                { name: "email", icon: <FaEnvelope />, type: "email", placeholder: "Email" },
-                { name: "phone", icon: <FaPhone />, type: "tel", placeholder: "Phone" },
+                {
+                  name: "name",
+                  icon: <FaUser />,
+                  type: "text",
+                  placeholder: "Full Name",
+                },
+                {
+                  name: "email",
+                  icon: <FaEnvelope />,
+                  type: "email",
+                  placeholder: "Email",
+                },
+                {
+                  name: "phone",
+                  icon: <FaPhone />,
+                  type: "tel",
+                  placeholder: "Phone",
+                },
               ].map((field) => (
                 <div key={field.name} className="relative">
                   <span className="absolute left-3 top-3 text-cyan-300">
@@ -170,8 +191,7 @@ const DestinationBook = () => {
               </div>
 
               <p className="text-lg font-semibold text-cyan-300">
-                Total: {form.quantity * destination.price}{" "}
-                {destination.currency}
+                Total: {total} {destination.currency}
               </p>
 
               <div className="flex gap-3">
