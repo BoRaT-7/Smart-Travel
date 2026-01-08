@@ -12,7 +12,6 @@ const GearShop = () => {
 
   const navigate = useNavigate();
 
-  // Fetch product data
   useEffect(() => {
     fetch("/Gear Shop/data.json")
       .then((res) => res.json())
@@ -29,7 +28,7 @@ const GearShop = () => {
   useEffect(() => setVisible(8), [query]);
 
   const handleSeeMore = () => {
-    navigate("/shop"); // Go to GearShopall page
+    navigate("/shop");
   };
 
   const filteredProducts = useMemo(
@@ -44,14 +43,16 @@ const GearShop = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center py-20">
-        <span className="loading loading-spinner loading-lg text-emerald-400"></span>
+      <div className="flex justify-center items-center py-24">
+        <span className="loading loading-spinner loading-lg text-cyan-400"></span>
       </div>
     );
 
   if (error)
     return (
-      <div className="text-center py-20 text-red-400 font-semibold">{error}</div>
+      <div className="text-center py-24 text-red-400 font-semibold">
+        {error}
+      </div>
     );
 
   return (
@@ -59,53 +60,53 @@ const GearShop = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="min-h-screen bg-[#F8F8F5] text-gray-800"
+      className="min-h-screen bg-gradient-to-br from-[#050B18] via-[#08172E] to-[#020617] text-white"
     >
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -25 }}
+        initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center py-12 rounded-b-3xl shadow-lg"
+        transition={{ duration: 0.9 }}
+        className="text-center py-16 px-4 backdrop-blur-xl bg-white/5 border-b border-cyan-400/20"
       >
         <motion.h1
           initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 0.7 }}
-          className="font-extrabold text-4xl sm:text-5xl text-emerald-600"
+          transition={{ duration: 0.8 }}
+          className="font-extrabold text-4xl sm:text-5xl bg-gradient-to-r from-cyan-400 to-sky-500 bg-clip-text text-transparent"
         >
-          Premium Travel Gear
+          SmartTravel Gear Store
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-gray-600 mt-4 text-base sm:text-lg max-w-2xl mx-auto"
+          className="text-gray-300 mt-4 max-w-2xl mx-auto"
         >
-          Discover durable, stylish, and high-quality travel gear made for explorers.
+          Premium travel gear designed for modern explorers.
         </motion.p>
 
-        {/* Search Bar */}
+        {/* Search */}
         <motion.form
           onSubmit={(e) => e.preventDefault()}
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-6 flex max-w-xl mx-auto bg-white rounded-full shadow-md overflow-hidden border border-emerald-300 relative"
+          className="mt-8 flex max-w-xl mx-auto bg-white/10 backdrop-blur-xl rounded-full border border-cyan-400/30 overflow-hidden relative"
         >
           <input
             type="text"
-            placeholder="Search your gear..."
+            placeholder="Search travel gear..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-grow px-5 py-3 text-gray-800 placeholder-gray-400 bg-transparent focus:outline-none"
+            className="flex-grow px-6 py-3 bg-transparent text-white placeholder-gray-400 focus:outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+              className="absolute right-16 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white"
             >
               <FaTimes />
             </button>
@@ -114,11 +115,11 @@ const GearShop = () => {
             type="submit"
             whileHover={{
               scale: 1.05,
-              background: "linear-gradient(to right, #059669, #A3E635)",
+              background:
+                "linear-gradient(to right, #06b6d4, #0ea5e9)",
             }}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300 }}
-            className="bg-gradient-to-r from-emerald-600 to-lime-500 text-white px-6 py-3 rounded-r-full flex items-center gap-2 font-semibold"
+            className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-sky-500 text-white font-semibold flex items-center gap-2"
           >
             <FaSearch /> Search
           </motion.button>
@@ -128,17 +129,16 @@ const GearShop = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center mt-6 text-gray-600 flex flex-col items-center gap-3"
+            className="mt-6 text-gray-400"
           >
-            <p>No matching gear found.</p>
-            <div className="text-3xl animate-pulse">🎒</div>
+            No matching gear found 🎒
           </motion.div>
         )}
       </motion.div>
 
       {/* Product Grid */}
       <motion.div
-        className="grid gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-14"
+        className="grid gap-8 px-6 mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         initial="hidden"
         animate="visible"
         variants={{
@@ -154,72 +154,70 @@ const GearShop = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
               whileHover={{
-                scale: 1.03,
-                rotateY: 2,
-                boxShadow: "0px 10px 25px rgba(16,185,129,0.2)",
+                scale: 1.04,
+                boxShadow: "0 0 35px rgba(34,211,238,0.25)",
               }}
-              className="bg-white shadow-md hover:shadow-lg border border-emerald-200 rounded-2xl overflow-hidden transition-all duration-500"
+              className="rounded-2xl overflow-hidden bg-white/10 backdrop-blur-xl border border-cyan-400/20"
             >
-              <motion.figure whileHover={{ scale: 1.05 }}>
-                <img
-                  src={item.image_url}
-                  alt={item.name}
-                  className="w-full h-56 object-cover"
-                />
-              </motion.figure>
-              <div className="p-5 text-center">
-                <h2 className="text-lg font-semibold text-emerald-600">{item.name}</h2>
-                <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+              <img
+                src={item.image_url}
+                alt={item.name}
+                className="w-full h-56 object-cover"
+              />
 
-                <div className="flex justify-between items-center mt-3 px-2">
-                  <p className="text-lg font-semibold text-lime-600">
+              <div className="p-5 text-center">
+                <h2 className="text-lg font-semibold text-cyan-400">
+                  {item.name}
+                </h2>
+                <p className="text-sm text-gray-300 mt-1">
+                  {item.description}
+                </p>
+
+                <div className="flex justify-between items-center mt-4">
+                  <p className="text-lg font-semibold text-sky-400">
                     {item.price} {item.currency}
                   </p>
-                  <div className="flex items-center">
+                  <div>
                     {Array.from({ length: item.rating }).map((_, i) => (
-                      <span key={i} className="text-yellow-400 text-lg">★</span>
+                      <span key={i} className="text-yellow-400">★</span>
                     ))}
                   </div>
                 </div>
 
-                {/* ✅ Order Now button fixed */}
                 <motion.button
-                  onClick={() => navigate("/shoporder", { state: { product: item } })} // ✅ এই লাইনটাই মূল পরিবর্তন
+                  onClick={() =>
+                    navigate("/shoporder", { state: { product: item } })
+                  }
                   whileHover={{
-                    background: "linear-gradient(to right, #059669, #A3E635)",
+                    background:
+                      "linear-gradient(to right, #06b6d4, #0ea5e9)",
                     color: "#fff",
                     scale: 1.03,
                   }}
                   whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="w-full py-2.5 mt-5 rounded-lg font-semibold text-emerald-600 border-2 border-emerald-300 bg-transparent transition-all duration-300"
+                  className="w-full mt-5 py-2.5 rounded-lg font-semibold border border-cyan-400 text-cyan-400 bg-transparent"
                 >
                   {item.button_text || "Order Now"}
                 </motion.button>
-
               </div>
             </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>
 
-      {/* See More Button */}
+      {/* Show More */}
       {visible < filteredProducts.length && (
-        <div className="text-center mt-16 px-6 pb-16">
+        <div className="text-center mt-20 pb-20 px-6">
           <motion.button
             onClick={handleSeeMore}
             whileHover={{
-              scale: 1.03,
-              boxShadow: "0px 10px 25px rgba(16,185,129,0.2)",
+              scale: 1.05,
+              boxShadow: "0 0 30px rgba(34,211,238,0.4)",
             }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 250 }}
-            className="w-full max-w-md px-8 py-3 font-semibold text-emerald-600 border-2 border-emerald-300 rounded-full bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 transition-all duration-300"
+            className="px-10 py-3 rounded-full font-semibold text-cyan-400 border border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-sky-500 hover:text-white transition"
           >
-            <span className="text-lg font-semibold tracking-wide">Show More →</span>
+            Show More →
           </motion.button>
         </div>
       )}

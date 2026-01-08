@@ -4,15 +4,11 @@ import {
   FaCar,
   FaBus,
   FaMotorcycle,
-  FaMapMarkerAlt,
-  FaUser,
-  FaCheckCircle,
-  FaCalendarAlt,
-  FaClock,
-  FaMobileAlt,
   FaExchangeAlt,
+  FaCheckCircle,
+  FaMobileAlt,
   FaSpinner,
-  FaTicketAlt,
+  FaPhoneAlt,
 } from "react-icons/fa";
 
 const TransportBooking = () => {
@@ -26,6 +22,7 @@ const TransportBooking = () => {
   const [estimatedTime, setEstimatedTime] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [paymentNumber, setPaymentNumber] = useState("");
+  const [contactPhone, setContactPhone] = useState(""); // ✅ NEW
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -54,10 +51,8 @@ const TransportBooking = () => {
   const calculatePrice = () => {
     if (!pickup || !dropoff || pickup === dropoff) return 0;
     const hours = travelTimes[pickup]?.[dropoff] || 1;
-    const baseRate =
-      transportType === "Car" ? 80 : transportType === "Bus" ? 50 : 30;
-    const total = baseRate * hours * passengers;
-    return total;
+    const rate = transportType === "Car" ? 80 : transportType === "Bus" ? 50 : 30;
+    return rate * hours * passengers;
   };
 
   useEffect(() => {
@@ -66,65 +61,33 @@ const TransportBooking = () => {
       if (hours) {
         setEstimatedTime(`${hours} hours`);
         const now = new Date();
-        const arrival = new Date(now.getTime() + hours * 60 * 60 * 1000);
+        const arrival = new Date(now.getTime() + hours * 3600000);
         setTime(now.toTimeString().slice(0, 5));
         setArrivalTime(arrival.toTimeString().slice(0, 5));
       }
-    } else {
-      setEstimatedTime("");
-      setTime("");
-      setArrivalTime("");
     }
   }, [pickup, dropoff]);
 
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    setDate(today);
+    setDate(new Date().toISOString().split("T")[0]);
   }, []);
 
-  const handleBooking = async (e) => {
+  const handleBooking = (e) => {
     e.preventDefault();
     setError("");
 
-    if (!pickup || !dropoff)
-      return setError("Please select pickup and drop-off points!");
-    if (pickup === dropoff)
-      return setError("Pickup and drop-off cannot be the same!");
-    if (!paymentMethod) return setError("Select a payment method!");
-    if (!paymentNumber)
-      return setError(`Enter your ${paymentMethod} number!`);
+    if (!pickup || !dropoff) return setError("Select pickup & drop-off!");
+    if (pickup === dropoff) return setError("Pickup & drop-off cannot be same!");
+    if (!paymentMethod) return setError("Select payment method!");
+    if (!paymentNumber) return setError("Enter payment number!");
+    if (!contactPhone) return setError("Enter contact phone number!");
 
     setLoading(true);
-    try {
-      const res = await fetch("http://localhost:5000/api/transport/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          transportType,
-          pickup,
-          dropoff,
-          date,
-          time,
-          arrivalTime,
-          passengers,
-          paymentMethod,
-          paymentNumber,
-          price: calculatePrice(),
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Booking failed");
-      }
-
-      setBookingId(data.id || `TR-${Math.floor(100000 + Math.random() * 900000)}`);
+    setTimeout(() => {
+      setBookingId(`TR-${Math.floor(100000 + Math.random() * 900000)}`);
       setBookingConfirmed(true);
-    } catch (err) {
-      setError(err.message);
-    } finally {
       setLoading(false);
-    }
+    }, 1500);
   };
 
   const handleReset = () => {
@@ -133,11 +96,10 @@ const TransportBooking = () => {
     setPassengers(1);
     setPaymentMethod("");
     setPaymentNumber("");
+    setContactPhone("");
     setBookingConfirmed(false);
-    setError("");
     setEstimatedTime("");
-    setTime("");
-    setArrivalTime("");
+    setError("");
   };
 
   const swapLocations = () => {
@@ -148,263 +110,146 @@ const TransportBooking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-lime-100 flex justify-center items-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-sky-900 via-cyan-900 to-blue-950 flex items-center justify-center p-4">
       <motion.section
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md backdrop-blur-xl bg-white/80 border border-emerald-100 shadow-2xl rounded-3xl p-6"
+        className="w-full max-w-md backdrop-blur-2xl bg-white/10 border border-cyan-400/20 rounded-3xl p-6 shadow-[0_0_40px_rgba(34,211,238,0.25)]"
       >
-        <h2 className="text-3xl font-extrabold text-center bg-gradient-to-r from-emerald-700 to-lime-600 bg-clip-text text-transparent mb-4">
+        <h2 className="text-3xl font-extrabold text-center bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-500 bg-clip-text text-transparent mb-4">
           Smart Transport Booking
         </h2>
 
         <AnimatePresence mode="wait">
           {!bookingConfirmed ? (
-            <motion.form
-              onSubmit={handleBooking}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="space-y-4"
-            >
-              {/* Transport Type */}
-              <div>
-                <label className="font-semibold text-gray-700 mb-1 block text-sm">
-                  Vehicle Type
-                </label>
-                <div className="flex gap-2">
-                  {["Car", "Bus", "Bike"].map((type) => (
-                    <motion.button
-                      key={type}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={() => setTransportType(type)}
-                      className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-sm font-medium border transition-all ${
-                        transportType === type
-                          ? "bg-emerald-600 text-white shadow-md"
-                          : "bg-gray-100 text-gray-700 hover:bg-emerald-50"
-                      }`}
-                    >
-                      {type === "Car" && <FaCar />}
-                      {type === "Bus" && <FaBus />}
-                      {type === "Bike" && <FaMotorcycle />}
-                      {type}
-                    </motion.button>
-                  ))}
-                </div>
+            <motion.form onSubmit={handleBooking} className="space-y-4">
+              {/* Transport */}
+              <div className="flex gap-2">
+                {["Car", "Bus", "Bike"].map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setTransportType(type)}
+                    className={`flex-1 py-2 rounded-xl font-semibold flex items-center justify-center gap-1 ${
+                      transportType === type
+                        ? "bg-gradient-to-r from-cyan-500 to-sky-600 text-white"
+                        : "bg-white/10 text-cyan-100"
+                    }`}
+                  >
+                    {type === "Car" && <FaCar />}
+                    {type === "Bus" && <FaBus />}
+                    {type === "Bike" && <FaMotorcycle />}
+                    {type}
+                  </button>
+                ))}
               </div>
 
-              {/* Pickup / Drop */}
+              {/* Location */}
               <div className="grid grid-cols-2 gap-3 relative">
-                <div className="relative">
-                  <FaMapMarkerAlt className="absolute top-2.5 left-2 text-emerald-500 text-sm" />
-                  <select
-                    value={pickup}
-                    onChange={(e) => setPickup(e.target.value)}
-                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg focus:border-emerald-500 text-sm"
-                  >
-                    <option value="">Pickup</option>
-                    {locations.map((loc) => (
-                      <option key={loc} value={loc}>
-                        {loc}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <select
+                  value={pickup}
+                  onChange={(e) => setPickup(e.target.value)}
+                  className="bg-white/10 text-white p-2 rounded-lg"
+                >
+                  <option value="">Pickup</option>
+                  {locations.map((l) => (
+                    <option key={l}>{l}</option>
+                  ))}
+                </select>
 
-                <div className="relative">
-                  <FaMapMarkerAlt className="absolute top-2.5 left-2 text-red-500 text-sm" />
-                  <select
-                    value={dropoff}
-                    onChange={(e) => setDropoff(e.target.value)}
-                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg focus:border-red-500 text-sm"
-                  >
-                    <option value="">Drop-off</option>
-                    {locations
-                      .filter((loc) => loc !== pickup)
-                      .map((loc) => (
-                        <option key={loc} value={loc}>
-                          {loc}
-                        </option>
-                      ))}
-                  </select>
-                </div>
+                <select
+                  value={dropoff}
+                  onChange={(e) => setDropoff(e.target.value)}
+                  className="bg-white/10 text-white p-2 rounded-lg"
+                >
+                  <option value="">Drop</option>
+                  {locations.filter((l) => l !== pickup).map((l) => (
+                    <option key={l}>{l}</option>
+                  ))}
+                </select>
 
                 <button
                   type="button"
                   onClick={swapLocations}
-                  title="Swap"
-                  className="absolute -right-4 top-6 bg-emerald-500 text-white p-1 rounded-full shadow hover:bg-emerald-600 transition"
+                  className="absolute -right-4 top-2 bg-cyan-500 p-2 rounded-full text-white"
                 >
-                  <FaExchangeAlt size={12} />
+                  <FaExchangeAlt />
                 </button>
               </div>
 
               {estimatedTime && (
-                <p className="text-center text-sm text-emerald-700 font-medium">
-                  ⏱ {estimatedTime} • Arrival: {arrivalTime}
+                <p className="text-center text-cyan-300 text-sm">
+                  ⏱ {estimatedTime} • Arrival {arrivalTime}
                 </p>
               )}
 
-              {/* Date / Time */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="relative">
-                  <FaCalendarAlt className="absolute top-2.5 left-2 text-gray-400 text-sm" />
-                  <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-500"
-                  />
-                </div>
-                <div className="relative">
-                  <FaClock className="absolute top-2.5 left-2 text-gray-400 text-sm" />
-                  <input
-                    type="time"
-                    value={time}
-                    readOnly
-                    className="w-full pl-7 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm"
-                  />
-                </div>
-              </div>
+              <input
+                type="number"
+                min="1"
+                value={passengers}
+                onChange={(e) => setPassengers(+e.target.value)}
+                className="w-full bg-white/10 text-white p-2 rounded-lg"
+                placeholder="Passengers"
+              />
 
-              {/* Passengers */}
-              <div className="relative">
-                <FaUser className="absolute top-2.5 left-2 text-gray-400 text-sm" />
-                <input
-                  type="number"
-                  min="1"
-                  value={passengers}
-                  onChange={(e) => setPassengers(Number(e.target.value))}
-                  className="w-full pl-7 p-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-500"
-                  placeholder="Passengers"
-                />
-              </div>
-
-              {/* Price */}
-              <div className="text-right text-gray-700 text-sm font-medium">
-                Total:{" "}
-                <span className="text-emerald-600 font-semibold">
-                  ${calculatePrice()}
-                </span>
-              </div>
-
-              {/* Payment */}
-              <div>
-                <label className="font-semibold text-gray-700 mb-1 block text-sm">
-                  Payment
-                </label>
-                <div className="flex gap-2">
-                  {["bKash", "Nagad", "Rocket"].map((method) => {
-                    const baseColor =
-                      method === "bKash"
-                        ? "bg-pink-600"
-                        : method === "Nagad"
-                        ? "bg-orange-500"
-                        : "bg-purple-600";
-                    return (
-                      <button
-                        key={method}
-                        type="button"
-                        onClick={() => {
-                          setPaymentMethod(method);
-                          setPaymentNumber("");
-                        }}
-                        className={`flex-1 py-2 rounded-lg text-sm font-medium text-white transition flex items-center justify-center gap-1 ${baseColor} ${
-                          paymentMethod === method
-                            ? "ring-2 ring-emerald-400 shadow-md"
-                            : "opacity-80 hover:opacity-100"
-                        }`}
-                      >
-                        <FaMobileAlt className="inline" />
-                        {method}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Only show input when a method is selected */}
-                <AnimatePresence>
-                  {paymentMethod && (
-                    <motion.div
-                      key="payment-input"
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      className="relative mt-3"
-                    >
-                      <FaMobileAlt className="absolute top-2.5 left-2 text-gray-400 text-sm" />
-                      <input
-                        type="text"
-                        value={paymentNumber}
-                        onChange={(e) => setPaymentNumber(e.target.value)}
-                        placeholder={`${paymentMethod} Number`}
-                        className="w-full pl-7 p-2 border border-gray-300 rounded-lg text-sm focus:border-emerald-500"
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Error */}
-              {error && (
-                <p className="text-red-500 text-xs font-semibold text-center">
-                  ⚠️ {error}
-                </p>
-              )}
-
-              {/* Confirm Button */}
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                disabled={loading}
-                className={`w-full py-2.5 text-sm font-semibold text-white rounded-lg transition flex items-center justify-center ${
-                  loading
-                    ? "bg-gray-400"
-                    : "bg-emerald-600 hover:bg-emerald-700"
-                }`}
-              >
-                {loading ? (
-                  <>
-                    <FaSpinner className="animate-spin mr-2" /> Processing...
-                  </>
-                ) : (
-                  "Confirm Booking"
-                )}
-              </motion.button>
-            </motion.form>
-          ) : (
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="text-center space-y-2"
-            >
-              <FaCheckCircle className="text-5xl text-emerald-600 mx-auto" />
-              <h3 className="text-lg font-bold text-gray-800">
-                Booking Confirmed!
-              </h3>
-              <div className="flex justify-center items-center gap-2 text-sm text-gray-600">
-                <FaTicketAlt className="text-emerald-500" />
-                Booking ID: <b>{bookingId}</b>
-              </div>
-              <p className="text-sm text-gray-600">
-                {transportType} from <b>{pickup}</b> to <b>{dropoff}</b> on{" "}
-                {date}
-              </p>
-              <p className="text-sm text-gray-600">
-                Arrival: {arrivalTime} • Payment: {paymentMethod}
-              </p>
-              <p className="font-semibold text-emerald-600 text-sm">
+              <p className="text-right text-cyan-300 font-semibold">
                 Total: ${calculatePrice()}
               </p>
-              <motion.button
-                whileTap={{ scale: 0.95 }}
+
+              {/* Payment */}
+              <div className="flex gap-2">
+                {["bKash", "Nagad", "Rocket"].map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setPaymentMethod(m)}
+                    className={`flex-1 py-2 rounded-lg ${
+                      paymentMethod === m ? "bg-cyan-500 text-white" : "bg-white/10 text-white"
+                    }`}
+                  >
+                    <FaMobileAlt className="inline mr-1" /> {m}
+                  </button>
+                ))}
+              </div>
+
+              {paymentMethod && (
+                <>
+                  <input
+                    value={paymentNumber}
+                    onChange={(e) => setPaymentNumber(e.target.value)}
+                    placeholder={`${paymentMethod} Number`}
+                    className="w-full bg-white/10 text-white p-2 rounded-lg"
+                  />
+
+                  <input
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    placeholder="Contact Phone Number"
+                    className="w-full bg-white/10 text-white p-2 rounded-lg"
+                  />
+                </>
+              )}
+
+              {error && <p className="text-red-400 text-xs text-center">{error}</p>}
+
+              <button
+                disabled={loading}
+                className="w-full py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 text-white font-semibold"
+              >
+                {loading ? <FaSpinner className="animate-spin mx-auto" /> : "Confirm Booking"}
+              </button>
+            </motion.form>
+          ) : (
+            <motion.div className="text-center space-y-2">
+              <FaCheckCircle className="text-5xl text-cyan-400 mx-auto" />
+              <h3 className="text-white font-bold">Booking Confirmed</h3>
+              <p className="text-cyan-300">ID: {bookingId}</p>
+              <button
                 onClick={handleReset}
-                className="mt-3 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-sm font-semibold"
+                className="mt-3 px-4 py-2 bg-cyan-500 text-white rounded-lg"
               >
                 Book Another
-              </motion.button>
+              </button>
             </motion.div>
           )}
         </AnimatePresence>

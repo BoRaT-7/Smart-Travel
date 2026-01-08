@@ -114,7 +114,7 @@ const HotelBook = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 mt-10">
-      <Header />
+     
 
       <section className="max-w-4xl mx-auto py-10 px-6">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -231,7 +231,7 @@ const HotelBook = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };
