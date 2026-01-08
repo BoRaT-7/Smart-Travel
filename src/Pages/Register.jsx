@@ -219,7 +219,7 @@ const Register = () => {
           </form>
         </div>
       </main>
-      <Footer />
+  
     </div>
   );
 };

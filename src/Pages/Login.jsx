@@ -46,7 +46,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+     
       <main className="flex-1">
         <div className="flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between bg-gradient-to-r from-emerald-900 to-green-800 relative w-full min-h-screen">
           {/* Hero */}
@@ -153,7 +153,7 @@ const Login = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      
     </div>
   );
 };

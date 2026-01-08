@@ -64,45 +64,47 @@ const GuideSlider = () => {
   };
 
   return (
-    <div className="w-full bg-[#F8F8F5] py-12">
-      <h2 className="text-3xl font-bold text-center mb-6 text-emerald-600">
+    <div className="w-full py-16 bg-gradient-to-br from-[#050B18] via-[#08172E] to-[#020617] text-white">
+      <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-8 bg-gradient-to-r from-cyan-400 to-sky-500 bg-clip-text text-transparent">
         Meet Our Tour Guides
       </h2>
 
       {/* Search Bar */}
-      <div className="flex justify-center mb-8">
-        <div className="relative w-full max-w-md">
+      <div className="flex justify-center mb-10 px-4">
+        <div className="relative w-full max-w-md bg-white/10 backdrop-blur-xl rounded-full border border-cyan-400/30">
           <input
             type="text"
             placeholder="Search guides by name or location..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full px-5 py-3 pr-12 rounded-full border border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-800 placeholder-gray-400 bg-white transition"
+            className="w-full px-6 py-3 pr-14 rounded-full bg-transparent text-white placeholder-gray-400 focus:outline-none"
           />
           {query && (
             <button
               onClick={() => setQuery("")}
-              className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+              className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white transition"
             >
               <FaTimes />
             </button>
           )}
-          <FaSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-600 text-lg" />
+          <FaSearch className="absolute right-5 top-1/2 -translate-y-1/2 text-cyan-400 text-lg" />
         </div>
       </div>
 
       {/* Guides Slider */}
       {filteredGuides.length === 0 ? (
-        <p className="text-center text-gray-500 py-10">No guides found.</p>
+        <p className="text-center text-gray-400 py-12">
+          No guides found.
+        </p>
       ) : (
         <div
           ref={containerRef}
-          className="flex gap-6 overflow-x-auto px-4 scrollbar-hide scroll-smooth"
+          className="flex gap-6 overflow-x-auto px-6 scrollbar-hide scroll-smooth"
         >
           {filteredGuides.map((guide) => (
             <div
               key={guide.id}
-              className="flex-shrink-0 w-64 bg-white rounded-2xl shadow-md overflow-hidden border border-emerald-200 hover:shadow-lg transition-all"
+              className="flex-shrink-0 w-64 bg-white/10 backdrop-blur-xl rounded-2xl border border-cyan-400/20 overflow-hidden hover:shadow-[0_0_30px_rgba(34,211,238,0.25)] transition-all duration-300"
             >
               <div className="relative">
                 <img
@@ -110,45 +112,50 @@ const GuideSlider = () => {
                   alt={guide.name}
                   className="h-48 w-full object-cover"
                 />
-                <div className="absolute top-2 right-2 flex flex-col space-y-2">
+                <div className="absolute top-3 right-3 flex flex-col space-y-2">
                   <a
                     href={guide.social?.whatsapp || "#"}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <FaWhatsapp className="text-emerald-600 bg-white p-1 rounded-full w-7 h-7" />
+                    <FaWhatsapp className="text-cyan-500 bg-white/90 p-1.5 rounded-full w-7 h-7" />
                   </a>
                   <a
                     href={guide.social?.instagram || "#"}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <FaInstagram className="text-pink-500 bg-white p-1 rounded-full w-7 h-7" />
+                    <FaInstagram className="text-pink-500 bg-white/90 p-1.5 rounded-full w-7 h-7" />
                   </a>
                   <a
                     href={guide.social?.facebook || "#"}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <FaFacebook className="text-blue-600 bg-white p-1 rounded-full w-7 h-7" />
+                    <FaFacebook className="text-blue-500 bg-white/90 p-1.5 rounded-full w-7 h-7" />
                   </a>
                 </div>
               </div>
+
               <div className="p-4">
                 <button
                   onClick={() => handleContactClick(guide)}
-                  className="w-full border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition"
+                  className="w-full mb-3 border border-cyan-400 text-cyan-400 px-5 py-2 rounded-full font-medium bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-cyan-500 hover:to-sky-500 transition-all duration-300"
                 >
                   Contact
                 </button>
-                <h3 className="text-lg font-semibold text-gray-800">
+
+                <h3 className="text-lg font-semibold text-cyan-400">
                   {guide.name}
                 </h3>
-                <p className="flex items-center text-gray-600 text-sm">
-                  <FaMapMarkerAlt className="mr-1 text-red-500" />{" "}
+
+                <p className="flex items-center text-gray-300 text-sm">
+                  <FaMapMarkerAlt className="mr-1 text-sky-400" />
                   {guide.location}
                 </p>
-                <p className="text-gray-500 text-sm">{guide.role}</p>
+
+                <p className="text-gray-400 text-sm">{guide.role}</p>
+
                 <div className="flex mt-2">
                   {Array.from({ length: Math.floor(guide.rating) }).map(
                     (_, i) => (
@@ -162,11 +169,11 @@ const GuideSlider = () => {
         </div>
       )}
 
-      {/* See More button -> /guides */}
-      <div className="text-center mt-8">
+      {/* See More */}
+      <div className="text-center mt-10">
         <button
           onClick={handleSeeMore}
-          className="border-2 border-emerald-600 bg-transparent text-emerald-600 px-5 py-2 rounded-full font-medium hover:bg-gradient-to-r hover:from-emerald-600 hover:to-lime-500 hover:text-white hover:brightness-110 transition"
+          className="border border-cyan-400 text-cyan-400 px-6 py-2 rounded-full font-medium bg-transparent hover:text-white hover:bg-gradient-to-r hover:from-cyan-500 hover:to-sky-500 transition-all duration-300"
         >
           See More
         </button>

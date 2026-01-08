@@ -46,10 +46,13 @@ const HotelBook = () => {
     }
   }, [checkIn, checkOut, hotel]);
 
-  if (!hotel)
+  if (!hotel) {
     return (
-      <div className="flex justify-center py-20 text-gray-500">Loading...</div>
+      <div className="flex justify-center py-20 text-gray-500">
+        Loading...
+      </div>
     );
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -67,7 +70,7 @@ const HotelBook = () => {
     try {
       const res = await fetch("http://localhost:5000/api/hotel-bookings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }, // 🔹 কোনো token নেই
         body: JSON.stringify({
           name: form.name,
           email: form.email,
@@ -111,7 +114,7 @@ const HotelBook = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 mt-10">
-      <Header />
+     
 
       <section className="max-w-4xl mx-auto py-10 px-6">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -215,7 +218,8 @@ const HotelBook = () => {
                 type="submit"
                 whileHover={{
                   scale: 1.05,
-                  background: "linear-gradient(to right, #059669, #A3E635)",
+                  background:
+                    "linear-gradient(to right, #059669, #A3E635)",
                 }}
                 whileTap={{ scale: 0.95 }}
                 className="col-span-2 bg-gradient-to-r from-emerald-600 to-lime-500 text-white py-3 rounded-lg font-bold shadow-md mt-2"
@@ -227,7 +231,7 @@ const HotelBook = () => {
         </div>
       </section>
 
-      <Footer />
+      
     </div>
   );
 };
